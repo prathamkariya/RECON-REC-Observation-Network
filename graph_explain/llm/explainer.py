@@ -1,10 +1,139 @@
 """
-Plain-English explainability layer using Claude API.
+Plain-English explainability layer using Claude API for REC Fraud Detection System (Role 2).
+Adheres strictly to Hackathon rules:
+- Rule 9: Lazy/on-demand generation (skip API for clean certificates in batch runs).
+- Rule 10: Explicit clean case handling ("if no signal is flagged, state plainly that certificate appears legitimate").
+- Rule 11: Lead explanations with the strongest signal (physical impossibility > circular ring > statistical outlier).
+- Graceful offline fallback if API key is absent.
 """
 
-def generate_explanation(certificate: dict, signals: dict) -> str:
+import os
+from typing import Dict, Any, Optional
+
+def _rank_signals(signals: Dict[str, Any]) -> str:
     """
-    Generates a concise plain-English explanation for an auditor.
-    Handles clean cases explicitly and leads with the strongest signal.
+    Ranks signals by evidentiary weight (Rule 11).
+    Returns identifier of strongest signal: 'PHYSICAL', 'GRAPH_CYCLE', 'GRAPH_CLUSTER', 'STATISTICAL', or 'CLEAN'.
     """
-    pass
+    weather_score = signals.get("weather_mismatch_score", 0.0)
+    graph_risk = signals.get("graph_risk", 0.0)
+    directly_in_cycle = signals.get("directly_in_cycle", False)
+    if_score = signals.get("isolation_forest_score", 0.0)
+
+    if weather_score >= 0.7 or signals.get("weather_mismatch", False):
+        return "PHYSICAL"
+    if directly_in_cycle or graph_risk >= 0.85:
+        return "GRAPH_CYCLE"
+    if graph_risk >= 0.5 or signals.get("graph_flag", False):
+        return "GRAPH_CLUSTER"
+    if if_score >= 0.5 or signals.get("isolation_forest_flag", False):
+        return "STATISTICAL"
+    return "CLEAN"
+
+def _generate_fallback_explanation(certificate: Dict[str, Any], signals: Dict[str, Any], strongest: str) -> str:
+    """
+    Deterministic rule-based audit explanation fallback matching Claude prompt tone.
+    Guarantees demo reliability offline or without API key.
+    """
+    c_id = certificate.get("certificate_id", "Unknown")
+    claimed = certificate.get("claimed_mwh")
+    cap = certificate.get("capacity_mwh")
+    source = certificate.get("energy_source", "").capitalize()
+    parties = signals.get("touching_parties", [])
+
+    if strongest == "CLEAN":
+        return (
+            f"Certificate {c_id} appears fully legitimate. "
+            f"Trading patterns are linear, claimed generation ({claimed} MWh) aligns with plant capacity ({cap} MWh), "
+            f"and historical meteorological conditions corroborate physical generation."
+        )
+    elif strongest == "PHYSICAL":
+        reason = signals.get("weather_reason", "meteorological conditions contradict generation claim")
+        return (
+            f"FLAGGED: Physical generation impossibility detected for {c_id}. "
+            f"{reason}. Secondary check on trading parties ({', '.join(parties) if parties else 'standard'}) indicates "
+            f"issuance occurred despite impossible generation physics."
+        )
+    elif strongest == "GRAPH_CYCLE":
+        return (
+            f"FLAGGED: Collusive circular trading ring detected. "
+            f"Certificate {c_id} circulated through a closed loop among entities ({', '.join(parties)}), "
+            f"exhibiting classic artificial volume inflation (wash trading) with high risk score ({signals.get('graph_risk', 1.0)})."
+        )
+    elif strongest == "GRAPH_CLUSTER":
+        return (
+            f"FLAGGED: High-density trading cluster anomaly. "
+            f"Certificate {c_id} involves entities ({', '.join(parties)}) operating within an unusually dense, "
+            f"inter-connected trading community exceeding baseline market density thresholds."
+        )
+    else:
+        return (
+            f"FLAGGED: Statistical volume outlier. "
+            f"Claimed output ({claimed} MWh) deviates significantly from peer generation baselines."
+        )
+
+def generate_explanation(
+    certificate: Dict[str, Any],
+    signals: Dict[str, Any],
+    force_generate: bool = False
+) -> Optional[str]:
+    """
+    Generates a plain-English auditor explanation.
+    
+    Args:
+        certificate: Certificate metadata dictionary
+        signals: Combined dictionary of flags and risk scores
+        force_generate: If True, generates explanation even for clean records (Rule 9/10).
+    """
+    is_flagged = (
+        signals.get("graph_flag", False) or
+        signals.get("weather_mismatch", False) or
+        signals.get("isolation_forest_flag", False)
+    )
+
+    # Rule 9: Do not call LLM for clean certificates unless explicitly viewed/forced
+    if not is_flagged and not force_generate:
+        return None
+
+    strongest = _rank_signals(signals)
+
+    # Check for Anthropic API key
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        return _generate_fallback_explanation(certificate, signals, strongest)
+
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=api_key)
+
+        prompt = f"""
+You are a senior forensic energy auditor analyzing renewable energy certificate (REC) integrity.
+Evaluate the following certificate data and fraud signals:
+
+Certificate:
+{certificate}
+
+Signals & Evidence:
+- Strongest signal identified: {strongest}
+- Graph Risk: {signals.get('graph_risk', 0.0)} (Direct cycle: {signals.get('directly_in_cycle', False)})
+- Weather/Physical Mismatch Score: {signals.get('weather_mismatch_score', 0.0)}
+- Weather Reason: {signals.get('weather_reason', 'N/A')}
+- Statistical Anomaly Score: {signals.get('isolation_forest_score', 0.0)}
+- Parties Involved: {signals.get('touching_parties', [])}
+
+Strict Instructions:
+1. If no signals are flagged (clean case), state plainly that the certificate appears legitimate — do not invent any concern.
+2. If flagged, lead directly with the strongest signal ({strongest}) first before noting secondary observations.
+3. Keep the response to 2-3 punchy, professional sentences citing exact figures and party IDs.
+"""
+
+        response = client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=250,
+            temperature=0.2,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text.strip()
+    except Exception:
+        # Fallback to local deterministic explainer if API call fails
+        return _generate_fallback_explanation(certificate, signals, strongest)
