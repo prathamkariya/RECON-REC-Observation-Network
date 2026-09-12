@@ -67,12 +67,24 @@ def compose_and_store(payload: CertificateCreate) -> Certificate:
     return certificate
 
 
+def _with_fresh_verification(certificate: Certificate) -> Certificate:
+    """Ledger integrity can change after a cert is written (that's the whole
+    point of tamper-evidence), so every read path re-checks it live instead
+    of trusting the verified flag frozen at compose_and_store() time."""
+    verification = ledger_client.verify(certificate.certificate_id)
+    certificate.ledger.verified = verification.get("verified", False)
+    return certificate
+
+
 def list_certificates() -> List[Certificate]:
-    return list(_CERT_STORE.values())
+    return [_with_fresh_verification(c) for c in _CERT_STORE.values()]
 
 
 def get_certificate(certificate_id: str) -> Optional[Certificate]:
-    return _CERT_STORE.get(certificate_id)
+    certificate = _CERT_STORE.get(certificate_id)
+    if certificate is None:
+        return None
+    return _with_fresh_verification(certificate)
 
 
 def summary() -> dict:
