@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .routers import analytics, recs, verify
+from .routers import analytics, audit, recs, verify
 
 app = FastAPI(
     title="RECON REC Fraud Detection API",
@@ -24,6 +24,8 @@ app.add_middleware(
 app.include_router(recs.router, prefix="/recs", tags=["Certificates"])
 app.include_router(verify.router, prefix="/verify", tags=["Ledger"])
 app.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
+app.include_router(audit.router, prefix="/audit", tags=["Audit Chat"])
+app.include_router(audit.router, prefix="/api/v1/audit", tags=["Audit Chat"], include_in_schema=False)
 
 
 @app.get("/")
