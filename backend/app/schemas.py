@@ -131,6 +131,19 @@ class CertificateRetireResponse(BaseModel):
     status: str
 
 
+class CertificateTransferRequest(BaseModel):
+    """Inbound payload for POST /certificates/{token_id}/transfer."""
+
+    to_address: str = Field(description="Wallet address to transfer the certificate NFT to.")
+
+
+class CertificateTransferResponse(BaseModel):
+    token_id: int
+    tx_hash: str
+    owner_address: str
+    status: str
+
+
 class CertificateListItem(BaseModel):
     """One row for GET /certificates — the off-chain database view, so
     listing many certificates doesn't require one chain read each. Use

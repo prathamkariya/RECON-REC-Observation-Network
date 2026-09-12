@@ -10,7 +10,7 @@ import { useSyncExternalStore } from "react";
 // one gap that real data can't cover.
 export type ActivityEvent = {
   id: string;
-  type: "minted" | "retired" | "duplicate_rejected";
+  type: "minted" | "retired" | "transferred" | "duplicate_rejected";
   tokenId?: number;
   plantId?: string;
   message: string;

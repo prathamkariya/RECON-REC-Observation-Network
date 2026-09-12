@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
@@ -8,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCertificate } from "@/lib/hooks/use-certificates";
 import { RiskBadge } from "@/components/certificate/risk-badge";
 import { OnChainProofPanel } from "@/components/certificate/onchain-proof-panel";
+import { TransferButton, TransferPanel } from "@/components/certificate/transfer-dialog";
 import { LifecycleTimeline } from "@/components/certificate/lifecycle-timeline";
 import { formatDateTime, formatMwh } from "@/lib/format";
 import { api } from "@/lib/api";
@@ -16,6 +18,7 @@ import { ApiError } from "@/lib/api-error";
 
 export default function CertificateDetailPage() {
   const params = useParams<{ id: string }>();
+  const [transferOpen, setTransferOpen] = useState(false);
   const tokenId = Number(params.id);
   const { data: certificate, isLoading, isError, error } = useCertificate(tokenId);
   const queryClient = useQueryClient();
@@ -65,15 +68,22 @@ export default function CertificateDetailPage() {
         </div>
 
         {certificate.status === "issued" && (
-          <Button
-            variant="outline"
-            onClick={() => retireMutation.mutate()}
-            disabled={retireMutation.isPending}
-          >
-            {retireMutation.isPending ? "Retiring…" : "Retire certificate"}
-          </Button>
+          <div className="flex gap-2">
+            <TransferButton onClick={() => setTransferOpen((value) => !value)} />
+            <Button
+              variant="outline"
+              onClick={() => retireMutation.mutate()}
+              disabled={retireMutation.isPending}
+            >
+              {retireMutation.isPending ? "Retiring…" : "Retire certificate"}
+            </Button>
+          </div>
         )}
       </div>
+
+      {transferOpen && certificate.status === "issued" && (
+        <TransferPanel tokenId={tokenId} onClose={() => setTransferOpen(false)} />
+      )}
 
       {retireMutation.isError && (
         <p className="flex items-center gap-2 text-sm text-risk">

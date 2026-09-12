@@ -6,7 +6,7 @@ the database. Mirrors service.py's composition pattern but targets the
 on-chain registry instead of the hash-chain ledger.
 """
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -64,6 +64,20 @@ def assess(payload: CertificateIssueRequest) -> RiskAssessment:
 
 def issue_certificate(db: Session, payload: CertificateIssueRequest) -> OnChainCertificate:
     to_address = payload.to_address or web3_client.get_backend_address()
+
+    # Pre-flight the duplicate check as a free view call, before running the
+    # (slow) risk pipeline. isRecordUsed answers the same question the mint
+    # would revert on, so this turns a wasted pipeline run + reverted gas
+    # estimate into an immediate, unambiguous 409.
+    plant_id = payload.plant.id
+    energy_mwh = round(payload.generation.mwh_claimed)
+    generation_timestamp = int(payload.generation.end.timestamp())
+    if web3_client.is_record_used(plant_id, energy_mwh, generation_timestamp):
+        raise web3_client.DuplicateRecordError(
+            f"Generation record ({plant_id}, {energy_mwh} MWh, {generation_timestamp}) "
+            f"has already been certified on-chain."
+        )
+
     result = assess(payload)
     plant_id, energy_mwh, generation_timestamp, fraud_score, risk_reasons, explanation = (
         result.plant_id,
@@ -148,3 +162,29 @@ def retire_certificate(db: Session, token_id: int) -> Optional[OnChainCertificat
     db.commit()
     db.refresh(row)
     return row
+
+
+def transfer_certificate(
+    db: Session, token_id: int, to_address: str
+) -> Optional[Tuple[OnChainCertificate, str]]:
+    """Transfers a certificate to a new owner and re-syncs the off-chain row.
+
+    Returns (row, transfer_tx_hash) — the hash isn't persisted on the row (the
+    table tracks mint and retire hashes, and a certificate can be transferred
+    any number of times), so it's returned alongside for the API response.
+
+    The on-chain contract blocks transfers of retired certificates (a retired
+    REC has been consumed against a claim; letting it move again would let the
+    same MWh be resold), so that rule is enforced by the chain, not here.
+    """
+    row = db.get(OnChainCertificate, token_id)
+    if row is None:
+        return None
+
+    result = web3_client.transfer_certificate(
+        token_id, from_address=row.owner_address, to_address=to_address
+    )
+    row.owner_address = result["owner"]
+    db.commit()
+    db.refresh(row)
+    return row, result["tx_hash"]

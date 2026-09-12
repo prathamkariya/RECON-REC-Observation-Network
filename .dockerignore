@@ -15,6 +15,7 @@ __pycache__/
 *.so
 .venv/
 venv/
+myenv/
 ENV/
 .pytest_cache/
 .coverage
@@ -26,6 +27,9 @@ node_modules/
 dashboard/node_modules/
 dashboard/.next/
 dashboard/out/
+contracts/node_modules/
+contracts/artifacts/
+contracts/cache/
 
 # --- Local databases ---
 *.db

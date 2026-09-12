@@ -119,6 +119,8 @@ def test_issue_returns_502_when_the_chain_is_unreachable(client_with_db, monkeyp
 
     monkeypatch.setattr(web3_client, "mint_certificate", _explode)
     monkeypatch.setattr(web3_client, "get_backend_address", lambda: "0x" + "11" * 20)
+    # issue_certificate pre-flights a duplicate check against the chain before minting.
+    monkeypatch.setattr(web3_client, "is_record_used", lambda *args: False)
 
     response = client_with_db.post("/certificates/issue", json=issue_body())
 
@@ -133,6 +135,8 @@ def test_issue_returns_403_when_the_wallet_is_not_an_authorized_issuer(client_wi
 
     monkeypatch.setattr(web3_client, "mint_certificate", _explode)
     monkeypatch.setattr(web3_client, "get_backend_address", lambda: "0x" + "11" * 20)
+    # issue_certificate pre-flights a duplicate check against the chain before minting.
+    monkeypatch.setattr(web3_client, "is_record_used", lambda *args: False)
 
     assert client_with_db.post("/certificates/issue", json=issue_body()).status_code == 403
 
@@ -220,7 +224,7 @@ def test_retiring_a_certificate_owned_by_the_backend_succeeds(client_with_db, ch
     assert client_with_db.get(f"/certificates/{issued['token_id']}").json()["retired_on_chain"] is True
 
 
-def test_retiring_twice_returns_409_not_502(client_with_db, chain):
+def test_retiring_twice_returns_409_not_502(client_with_db, chain, requires_custom_errors):
     """"Already retired" and "Record already certified" both contain "already",
     so the revert classifier used to report a second retire as a duplicate
     record and the API answered 502."""

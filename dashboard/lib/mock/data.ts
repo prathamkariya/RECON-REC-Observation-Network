@@ -4,6 +4,7 @@ import type {
   CertificateIssueResponse,
   CertificateListItem,
   CertificateRetireResponse,
+  CertificateTransferResponse,
   OnChainCertificate,
 } from "@/lib/types";
 import { ApiError } from "@/lib/api-error";
@@ -198,5 +199,26 @@ export const mockApi = {
     cert.retired_on_chain = true;
     cert.retire_tx_hash = `0x${"d4".repeat(32)}`;
     return { token_id: tokenId, tx_hash: cert.retire_tx_hash, status: "retired" };
+  },
+
+  async transferCertificate(tokenId: number, toAddress: string): Promise<CertificateTransferResponse> {
+    await delay(900);
+    const cert = getStore().certs.get(tokenId);
+    if (!cert) throw new ApiError(404, `Certificate ${tokenId} not found`);
+    // Mirrors the contract's own rule: a retired REC has been consumed against
+    // a claim, so letting it move again would let the same MWh be resold.
+    if (cert.retired_on_chain) {
+      throw new ApiError(409, `Certificate ${tokenId} is retired and can no longer be transferred.`);
+    }
+    if (cert.owner_address.toLowerCase() !== MOCK_BACKEND_ADDRESS.toLowerCase()) {
+      throw new ApiError(403, "Backend wallet is not the owner of this certificate; the transfer must be signed by the owner's wallet.");
+    }
+    cert.owner_address = toAddress;
+    return {
+      token_id: tokenId,
+      tx_hash: `0x${"e5".repeat(32)}`,
+      owner_address: toAddress,
+      status: cert.status,
+    };
   },
 };

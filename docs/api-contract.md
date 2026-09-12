@@ -99,14 +99,41 @@ endpoint can tell a mocked rollup from a fully validated one.
 - **GET** `/`
 - **Response**: which of ML / graph / weather / explain / ledger are
   currently backed by mock vs. real data, per `backend/app/config.py`'s
-  `USE_REAL_*` flags.
+  `USE_REAL_*` flags, plus a `chain` object reporting whether the on-chain
+  registry is actually usable:
+```json
+{
+  "chain": {
+    "rpc_url": "http://127.0.0.1:8545",
+    "connected": true,
+    "contract_address": "0x5FbD...",
+    "issuer_wallet": "0xf39F...",
+    "ready": true
+  }
+}
+```
+`ready: false` is why every `/certificates` route will fail — check it before
+debugging a 502. The issuer wallet is a public address; the private key is
+never exposed by any endpoint.
 - **GET** `/health` → `{"status": "ok"}` (container healthcheck).
 
-## On-chain endpoints (`/certificates`)
+## On-chain certificates (`/certificates`)
 
-Certificates minted on `RECRegistry.sol` (ERC-721). These need `RPC_URL`,
-`CONTRACT_ADDRESS` and `BACKEND_PRIVATE_KEY` configured — except
-`/analyze`, which is deliberately chain-free.
+A separate pipeline from `/recs`. Where `/recs` scores a certificate and writes
+it to the hash-chain ledger, `/certificates` scores it and **mints an ERC-721**
+on `RECRegistry.sol`, then stores the off-chain half (raw payload, reasoning,
+tx hash) in the database. See `contracts/README.md` for the contract itself.
+
+Deployed on Sepolia at
+[`0x28190548E1e84fcaC6EEcc5fECaDE138e6154B59`](https://sepolia.etherscan.io/address/0x28190548E1e84fcaC6EEcc5fECaDE138e6154B59#code)
+(source verified), with a local Hardhat deployment alongside it. A mint on a
+public network takes roughly 15-20 seconds to confirm, so `/certificates/issue`
+is a slow endpoint by nature — the UI shows analysis as a separate step
+(`/certificates/analyze`) partly for that reason.
+
+These routes need `RPC_URL` reachable, a deployed contract, and a funded
+`BACKEND_PRIVATE_KEY` issuer wallet — see `GET /` above — except `/analyze`,
+which is deliberately chain-free.
 
 ### 7. Analyze without minting
 - **POST** `/certificates/analyze`
@@ -121,41 +148,77 @@ Certificates minted on `RECRegistry.sol` (ERC-721). These need `RPC_URL`,
 ```
 - **Response** `200`: `{ "fraud_score": 0-100, "risk_reasons": ["..."], "explanation": "..." }`
 
-Runs the same ML → graph → weather pipeline as `POST /recs`, but mints
-nothing and stores nothing, so the frontend can show analysis as its own step
-before the user commits. Needs no wallet or RPC configured.
+Runs the same ML → graph → weather pipeline as `POST /recs`, but touches
+neither the chain nor the database, so the UI can show analysis as a distinct
+step before the user commits to minting. Needs no wallet or RPC configured.
 
-### 8. Issue (mint) a certificate
-- **POST** `/certificates/issue` — same request body as `/analyze`
+### 8. Issue (mint)
+- **POST** `/certificates/issue` → `201` — same request body as `/analyze`.
+  Omit `to_address` to mint to the backend's own issuer wallet — callers never
+  need a connected wallet.
 - **Response** `201`: `{ token_id, tx_hash, owner_address, plant_id, energy_mwh, generation_timestamp, fraud_score, risk_reasons, explanation, status }`
-- `409` — this generation record was already certified. The contract rejects a
-  repeat `(plantId, energyMWh, generationTimestamp)`; this is the
-  double-counting guarantee.
-- `403` — the backend wallet is not an authorized issuer on the contract.
-- `502` — the chain is unreachable or the transaction reverted for another reason.
+- Duplicate generation records are rejected with `409` via a free `isRecordUsed`
+  view call **before** the risk pipeline runs, so a duplicate costs no gas and
+  no pipeline time. The contract itself also rejects a repeat
+  `(plantId, energyMWh, generationTimestamp)` — the double-counting guarantee.
 
-### 9. List issued certificates
-- **GET** `/certificates`
-- **Response**: `CertificateListItem[]` — the off-chain rows, so listing many
-  certificates costs no chain reads. Use #10 for live-verified detail.
+| Status | Meaning |
+| --- | --- |
+| `201` | minted; returns `token_id`, `tx_hash`, score, reasons, explanation |
+| `409` | this `(plantId, energyMWh, generationTimestamp)` is already certified |
+| `403` | the backend wallet isn't an authorized issuer |
+| `422` | the contract rejected an argument (e.g. fraud score > 100) |
+| `502` | the chain call failed for any other reason |
 
-### 10. Get one certificate (chain + database merged)
+### 9. Get one certificate (chain + database merged)
 - **GET** `/certificates/{token_id}`
-- **Response**: the on-chain struct (`plant_id`, `energy_mwh`, `fraud_score`,
-  `retired_on_chain`, `owner_address`) merged with the off-chain row
-  (`risk_reasons`, `explanation`, `raw_record`, `mint_tx_hash`, `status`).
-- `404` unknown `token_id` · `502` chain unreachable.
+- Merges the **live** on-chain `getCertificate()` + `ownerOf()` (`plant_id`,
+  `energy_mwh`, `fraud_score`, `retired_on_chain`, `owner_address`) with the
+  off-chain database row (`risk_reasons`, `explanation`, `raw_record`,
+  `mint_tx_hash`, `status`).
+- `404` if the token doesn't exist on-chain or we hold no row for it ·
+  `502` chain unreachable.
 
-### 11. Retire a certificate
+### 10. List certificates
+- **GET** `/certificates`
+- **Response**: `CertificateListItem[]` — off-chain rows only, so listing stays
+  fast with no chain read per item. Use #9 for live-verified detail.
+
+### 11. Transfer
+- **POST** `/certificates/{token_id}/transfer`
+- Body: `{to_address}`. Returns the new owner and the transfer tx hash.
+
+| Status | Meaning |
+| --- | --- |
+| `200` | transferred |
+| `409` | the certificate is retired and can no longer move |
+| `403` | the backend wallet doesn't own it (see the custodial note below) |
+| `404` | unknown token |
+| `422` | the contract rejected an argument (e.g. an invalid receiver) |
+| `502` | the chain call failed for any other reason |
+
+### 12. Retire
 - **POST** `/certificates/{token_id}/retire`
 - **Response** `200`: `{ token_id, tx_hash, status: "retired" }`
-- `409` already retired · `403` the backend wallet is not the owner (a
-  certificate minted straight to a user's wallet must be retired by that
-  wallet) · `404` unknown `token_id` · `502` chain unreachable.
+- Marks the certificate consumed. Irreversible, and blocks all future transfers.
+
+| Status | Meaning |
+| --- | --- |
+| `200` | retired |
+| `409` | already retired |
+| `403` | the backend wallet doesn't own it |
+| `404` | unknown token |
+| `502` | chain unreachable |
+
+**Custodial constraint.** The backend signs only as its own wallet. Transfer and
+retire therefore work only while the backend custodies the certificate. If one
+is minted directly to an end-user wallet, that user must sign those actions
+from their own wallet client-side — the API returns `403` with an explanation
+rather than sending a transaction that would revert.
 
 ## Auditor chat
 
-### 12. Ask about a certificate
+### 13. Ask about a certificate
 - **POST** `/audit/chat` (also mounted at `/api/v1/audit/chat`)
 - **Request body**: `{ "certificate_id": "REC-1001", "query": "Why was this flagged?" }`
 - **Response**: `{ "certificate_id": "REC-1001", "reply": "..." }`
@@ -166,7 +229,7 @@ Role 2's deterministic offline fallback.
 
 ## Admin
 
-### 13. Preload the fraud-ring graph
+### 14. Preload the fraud-ring graph
 - **POST** `/admin/graph-preload`
 - **Request body**: `{ "transactions": [...], "certificates": [{ "certificate_id", "generator_id" }] }`
 - **Response**: `{ "preloaded": <count> }`

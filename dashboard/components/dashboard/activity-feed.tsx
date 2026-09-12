@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, ShieldAlert, XCircle } from "lucide-react";
+import { CheckCircle2, Send, ShieldAlert, XCircle } from "lucide-react";
 import type { CertificateListItem } from "@/lib/types";
 import type { ActivityEvent } from "@/lib/activity-log";
 import { useLocalActivityLog } from "@/lib/activity-log";
@@ -36,12 +36,14 @@ function certsToEvents(certs: CertificateListItem[]): ActivityEvent[] {
 const ICONS: Record<ActivityEvent["type"], typeof CheckCircle2> = {
   minted: CheckCircle2,
   retired: ShieldAlert,
+  transferred: Send,
   duplicate_rejected: XCircle,
 };
 
 const ICON_TONE: Record<ActivityEvent["type"], string> = {
   minted: "text-verified",
   retired: "text-recon-ink-dim",
+  transferred: "text-recon-ink",
   duplicate_rejected: "text-risk",
 };
 
