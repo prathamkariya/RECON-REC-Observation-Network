@@ -7,13 +7,26 @@ Outputs exact contract shape specified for Role 3 (Ledger) and Role 4 (Backend).
 import sys
 import os
 
-# Ensure project root is in sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Support two invocation modes:
+#   1. From repo root: `python -m graph_explain.pipeline` or as imported module
+#   2. From graph_explain/: `python pipeline.py` or `pytest tests/`
+_HERE = os.path.abspath(os.path.dirname(__file__))
+_REPO_ROOT = os.path.abspath(os.path.join(_HERE, ".."))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
 
 from typing import List, Dict, Any
-from graph_explain.graph.fraud_ring import compute_graph_signal
-from graph_explain.weather.weather_client import compute_weather_mismatch
-from graph_explain.llm.explainer import generate_explanation
+
+try:
+    from graph_explain.graph.fraud_ring import compute_graph_signal
+    from graph_explain.weather.weather_client import compute_weather_mismatch
+    from graph_explain.llm.explainer import generate_explanation
+except ImportError:
+    from graph.fraud_ring import compute_graph_signal
+    from weather.weather_client import compute_weather_mismatch
+    from llm.explainer import generate_explanation
 
 def analyze_dataset(
     transactions: List[Dict[str, Any]],
