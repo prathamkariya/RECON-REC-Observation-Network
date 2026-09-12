@@ -66,9 +66,15 @@ pytest --cov=backend/app --cov=ledger_cloud --cov-report=term-missing
 Test-only dependencies (pytest, httpx, eth-tester, py-solc-x) are in
 `requirements-dev.txt`.
 
-The on-chain tests compile `tests/fixtures/RECRegistry.sol` with solc and
-deploy it to an in-process EVM, so they exercise `web3_client`'s real code
-path with **no Hardhat node or testnet running**.
+The on-chain tests deploy the **real** `contracts/contracts/RECRegistry.sol`
+(from Hardhat's compiled artifact, or compiled with solc as a fallback) to a
+fresh contract per test. With no node running they use an in-process EVM and
+skip the revert-classification tests, because eth-tester destroys custom-error
+selectors. Start a node to run the full suite:
+
+```bash
+cd contracts && npm install && npx hardhat node
+```
 
 Or run the pre-loaded demo server (5 fixtures: clean, over-capacity, trading
 ring, night-time solar, tampered ledger):

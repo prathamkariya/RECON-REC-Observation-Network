@@ -7,5 +7,5 @@ pythonpath = ["."]
 testpaths = ["backend/tests"]
 addopts = "-q --strict-markers"
 markers = [
-    "chain: exercises the on-chain path against an in-process eth-tester EVM (slower)",
+    "chain: exercises the on-chain path against the real RECRegistry (live Hardhat node, or in-process eth-tester) (slower)",
 ]

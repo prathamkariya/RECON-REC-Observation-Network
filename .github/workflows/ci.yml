@@ -30,8 +30,8 @@ jobs:
         run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
 
       - name: Run tests
-        # The on-chain tests compile RECRegistry.sol with solc and run it on an
-        # in-process EVM, so no chain or RPC endpoint is needed here.
+        # No chain or compiled contract here, so the on-chain tests skip; they
+        # run in full against a live Hardhat node in onchain.yml.
         run: pytest --cov=backend/app --cov=ledger_cloud --cov-report=term-missing
 
   runtime-deps:

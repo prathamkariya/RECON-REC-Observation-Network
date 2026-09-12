@@ -1,14 +1,17 @@
-# Full RECON stack: Postgres + backend API + dashboard.
+# Full RECON stack: Postgres + local EVM chain + backend API + dashboard.
 #
 #   cp .env.docker.example .env      # optional — every value has a default
 #   docker compose up --build
 #
 #   Dashboard  http://localhost:3000
 #   API + docs http://localhost:8000/docs
+#   Chain RPC  http://localhost:8545
 #
 # The stack runs with no configuration at all: every USE_REAL_* source defaults
-# to its mock, so nothing here needs an API key, a wallet, or a chain. Fill in
-# .env as those arrive and `docker compose up -d --build` to pick them up.
+# to its mock, so nothing here needs an API key. The `chain` service runs a
+# local Hardhat node with RECRegistry deployed into it, so the /certificates
+# routes work out of the box too. Fill in .env as real services arrive and
+# `docker compose up -d --build` to pick them up.
 
 services:
   db:
@@ -32,6 +35,33 @@ services:
       retries: 5
       start_period: 10s
 
+  # A local EVM node with RECRegistry deployed into it on startup, so the stack
+  # has a working chain out of the box. It publishes the deployed address into
+  # the chain_artifacts volume, which the backend reads — the address is
+  # therefore always the one this container actually deployed, never a stale
+  # one committed in the repo.
+  #
+  # For a public deployment instead, set RPC_URL / CONTRACT_ADDRESS /
+  # BACKEND_PRIVATE_KEY in .env and the backend will use those; this service
+  # can then be left running or removed, it makes no difference.
+  chain:
+    build:
+      context: ./contracts
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      # Published so the BROWSER can reach it for independent on-chain
+      # verification, not just the backend container.
+      - "${CHAIN_PORT:-8545}:8545"
+    volumes:
+      - chain_artifacts:/chain-artifacts
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8545',{method:'POST',headers:{'content-type':'application/json'},body:'{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}'}).then(r=>r.json()).then(j=>process.exit(j.result?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
   backend:
     build:
       context: .
@@ -39,6 +69,8 @@ services:
     restart: unless-stopped
     depends_on:
       db:
+        condition: service_healthy
+      chain:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-recon}:${POSTGRES_PASSWORD:-recon_dev_password}@db:5432/${POSTGRES_DB:-recon}
@@ -60,11 +92,17 @@ services:
       # the host-side one, because the request comes from the user's browser.
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
 
-      # On-chain registry. Unset means the /certificates routes report a
-      # configuration error; every other route works without them.
-      RPC_URL: ${RPC_URL:-}
+      # On-chain registry. Defaults point at the `chain` service above; override
+      # in .env to use Sepolia (RPC_URL=https://eth-sepolia..., plus a funded key).
+      RPC_URL: ${RPC_URL:-http://chain:8545}
+      # Optional — the deployed address is read from CONTRACT_ABI_PATH.
       CONTRACT_ADDRESS: ${CONTRACT_ADDRESS:-}
-      BACKEND_PRIVATE_KEY: ${BACKEND_PRIVATE_KEY:-}
+      # Hardhat's first default account, funded on a local node. Publicly known
+      # — it must never be used on a network with real value.
+      BACKEND_PRIVATE_KEY: ${BACKEND_PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+      CONTRACT_ABI_PATH: ${CONTRACT_ABI_PATH:-/chain-artifacts/RECRegistry.json}
+    volumes:
+      - chain_artifacts:/chain-artifacts:ro
     ports:
       - "${BACKEND_PORT:-8000}:8000"
 
@@ -83,7 +121,13 @@ services:
         NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:-}
         NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID:-}
         NEXT_PUBLIC_SEPOLIA_RPC_URL: ${NEXT_PUBLIC_SEPOLIA_RPC_URL:-https://rpc.sepolia.org}
-        NEXT_PUBLIC_CONTRACT_ADDRESS: ${NEXT_PUBLIC_CONTRACT_ADDRESS:-}
+        NEXT_PUBLIC_LOCAL_RPC_URL: ${NEXT_PUBLIC_LOCAL_RPC_URL:-http://127.0.0.1:8545}
+        # A fresh Hardhat node deploys from account #0 at nonce 0, and a
+        # CREATE address is a pure function of (sender, nonce) — so the local
+        # chain's registry is always at this address. Set both to a Sepolia
+        # deployment for a public demo.
+        NEXT_PUBLIC_CONTRACT_ADDRESS: ${NEXT_PUBLIC_CONTRACT_ADDRESS:-0x5FbDB2315678afecb367f032d93F642f64180aa3}
+        NEXT_PUBLIC_CHAIN_ID: ${NEXT_PUBLIC_CHAIN_ID:-31337}
     restart: unless-stopped
     depends_on:
       - backend
@@ -92,3 +136,4 @@ services:
 
 volumes:
   postgres_data:
+  chain_artifacts:

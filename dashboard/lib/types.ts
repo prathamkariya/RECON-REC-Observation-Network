@@ -75,6 +75,17 @@ export type CertificateListItem = {
   created_at: string;
 };
 
+export type CertificateTransferRequest = {
+  to_address: string;
+};
+
+export type CertificateTransferResponse = {
+  token_id: number;
+  tx_hash: string;
+  owner_address: string;
+  status: "issued" | "retired";
+};
+
 export type CertificateRetireResponse = {
   token_id: number;
   tx_hash: string;

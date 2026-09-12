@@ -3,15 +3,20 @@ Adapter for the on-chain REC registry (RECRegistry.sol, ERC-721).
 
 Connects to RPC_URL (a local Hardhat node by default, or a real Sepolia
 endpoint in prod) and signs transactions with the backend issuer wallet
-(BACKEND_PRIVATE_KEY — never logged, never returned to callers). The one
-on-chain rule the rest of the app needs to react to is the duplicate
-generation-record revert; that's translated into DuplicateRecordError so the
-API layer can return 409 instead of a raw Web3 exception.
+(BACKEND_PRIVATE_KEY — never logged, never returned to callers).
+
+Reverts are translated into typed exceptions so the API layer can map them to
+the right status code (409 duplicate, 403 not authorized, 404 unknown token,
+409 already retired) instead of leaking a raw Web3 exception. The contract
+uses custom errors, so classification is done by 4-byte selector — computed
+from the loaded ABI, not by matching on human-readable revert strings.
 """
 import json
+import threading
 from pathlib import Path
 from typing import Optional
 
+from eth_utils import function_abi_to_4byte_selector, to_hex
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 from web3.logs import DISCARD
@@ -30,28 +35,142 @@ class DuplicateRecordError(ChainError):
 
 class NotAuthorizedError(ChainError):
     """The backend wallet isn't allowed to perform this action (not an authorized
-    issuer, or not the current token owner for a retire)."""
-
-
-class AlreadyRetiredError(ChainError):
-    """retireCertificate reverted because this certificate is already retired.
-    A distinct condition from DuplicateRecordError — both revert strings contain
-    "already", so classification order matters (see _classify_revert)."""
+    issuer, or not the current token owner for a retire/transfer)."""
 
 
 class CertificateNotFoundError(ChainError):
     """No certificate exists for the given tokenId."""
 
 
+class AlreadyRetiredError(ChainError):
+    """The certificate has already been retired — it can't be retired twice or
+    transferred afterwards. Distinct from DuplicateRecordError: retiring a spent
+    certificate is not the same failure as double-certifying a generation record."""
+
+
+class InvalidArgumentError(ChainError):
+    """The contract rejected an argument (e.g. a fraud score outside 0-100)."""
+
+
+# Custom error name -> the typed exception the API layer reacts to. Covers our
+# own errors plus the OpenZeppelin ERC-721/Ownable errors that can surface
+# through the same calls.
+_ERROR_NAME_MAP = {
+    "RecordAlreadyCertified": DuplicateRecordError,
+    "NotAuthorizedIssuer": NotAuthorizedError,
+    "NotCertificateOwner": NotAuthorizedError,
+    "OwnableUnauthorizedAccount": NotAuthorizedError,
+    "ERC721InsufficientApproval": NotAuthorizedError,
+    "ERC721IncorrectOwner": NotAuthorizedError,
+    "CertificateDoesNotExist": CertificateNotFoundError,
+    "ERC721NonexistentToken": CertificateNotFoundError,
+    "CertificateAlreadyRetired": AlreadyRetiredError,
+    "FraudScoreOutOfRange": InvalidArgumentError,
+    "ERC721InvalidReceiver": InvalidArgumentError,
+    "ERC721InvalidSender": InvalidArgumentError,
+}
+
 _w3: Optional[Web3] = None
 _contract = None
 _account = None
+_abi: Optional[list] = None
+_selector_map: Optional[dict] = None
+
+# One wallet signs every transaction, so two concurrent requests would otherwise
+# read the same nonce and one would be dropped as a replacement. Serialising the
+# read-build-sign-send window is enough: the node counts the transaction as
+# pending the moment it's accepted, so the next caller reads the next nonce.
+# A public-network mint takes ~15s, almost all of it waiting for the receipt —
+# so the lock is released before that wait, not held across it.
+_nonce_lock = threading.Lock()
 
 
 def _load_abi() -> list:
-    with open(settings.CONTRACT_ABI_PATH) as f:
+    global _abi
+    if _abi is None:
+        path = Path(settings.CONTRACT_ABI_PATH)
+        if not path.exists():
+            raise ChainError(
+                f"Contract ABI not found at {path}. Deploy the contract first "
+                f"(cd contracts && npm run deploy:local) — the deploy script writes "
+                f"the compiled ABI and address here."
+            )
+        with open(path) as f:
+            data = json.load(f)
+        _abi = data["abi"] if isinstance(data, dict) and "abi" in data else data
+    return _abi
+
+
+def deployment_info() -> dict:
+    """The recorded deployment for the connected chain — address, network,
+    deploy tx — for /status and for humans debugging which chain they're on."""
+    artifact = _load_artifact()
+    deployments = artifact.get("deployments")
+    if not isinstance(deployments, dict):
+        return {}
+    try:
+        return deployments.get(str(get_w3().eth.chain_id), {})
+    except Exception:
+        return {}
+
+
+def _load_artifact() -> dict:
+    path = Path(settings.CONTRACT_ABI_PATH)
+    if not path.exists():
+        return {}
+    with open(path) as f:
         data = json.load(f)
-    return data["abi"] if isinstance(data, dict) and "abi" in data else data
+    return data if isinstance(data, dict) else {}
+
+
+def deployed_address() -> Optional[str]:
+    """Resolve which contract to talk to.
+
+    Order: CONTRACT_ADDRESS (explicit override) > the deployment recorded for
+    the chain we're actually connected to > the artifact's default. Resolving
+    by *connected* chain id is what lets a local Hardhat deployment and a
+    Sepolia one coexist in one artifact: pointing RPC_URL at a local node can
+    never accidentally talk to the Sepolia address, and vice versa.
+    """
+    if settings.CONTRACT_ADDRESS:
+        return settings.CONTRACT_ADDRESS
+
+    artifact = _load_artifact()
+    deployments = artifact.get("deployments")
+    if not isinstance(deployments, dict):
+        # Older single-address artifact shape.
+        return artifact.get("address")
+
+    chain_id = None
+    try:
+        chain_id = get_w3().eth.chain_id
+    except Exception:
+        pass
+
+    if chain_id is not None:
+        entry = deployments.get(str(chain_id))
+        if entry:
+            return entry.get("address")
+        # Connected to a chain we have no deployment for — refusing to fall
+        # back is the point: a "default" address from another network would
+        # read as an empty/absent contract rather than an obvious error.
+        return None
+
+    default_id = artifact.get("defaultChainId")
+    entry = deployments.get(str(default_id)) if default_id is not None else None
+    return entry.get("address") if entry else None
+
+
+def _get_selector_map() -> dict:
+    """4-byte error selector (hex) -> custom error name, derived from the ABI."""
+    global _selector_map
+    if _selector_map is None:
+        _selector_map = {}
+        for entry in _load_abi():
+            if entry.get("type") == "error":
+                selector = to_hex(function_abi_to_4byte_selector(entry))
+                _selector_map[selector.lower()] = entry["name"]
+    return _selector_map
 
 
 def get_w3() -> Web3:
@@ -73,10 +192,14 @@ def get_w3() -> Web3:
 def get_contract():
     global _contract
     if _contract is None:
-        if not settings.CONTRACT_ADDRESS:
-            raise ChainError("CONTRACT_ADDRESS is not configured")
+        address = deployed_address()
+        if not address:
+            raise ChainError(
+                "CONTRACT_ADDRESS is not configured and no deployed address was "
+                "recorded in the ABI artifact — deploy the contract first."
+            )
         _contract = get_w3().eth.contract(
-            address=Web3.to_checksum_address(settings.CONTRACT_ADDRESS),
+            address=Web3.to_checksum_address(address),
             abi=_load_abi(),
         )
     return _contract
@@ -97,21 +220,63 @@ def get_backend_address() -> str:
     return _get_account().address
 
 
-def _classify_revert(message: str) -> ChainError:
-    """Best-effort mapping from a require() revert string to a typed error.
-    Tune these substrings once the real contract's exact messages are known —
-    this only needs to be close enough to route 409 vs 403 vs 500 correctly."""
+def reset_cache() -> None:
+    """Drops the memoised provider/contract/account. Only for tests and for
+    re-reading config after a redeploy."""
+    global _w3, _contract, _account, _abi, _selector_map
+    _w3 = _contract = _account = _abi = _selector_map = None
+
+
+def _extract_error_data(exc: Exception) -> Optional[str]:
+    """The ABI-encoded revert payload, if the provider surfaced one. web3 puts
+    it on ContractCustomError.data; some providers only put it in the message."""
+    data = getattr(exc, "data", None)
+    if isinstance(data, str) and data.startswith("0x"):
+        return data
+    if isinstance(data, dict):  # some RPC errors nest it
+        inner = data.get("data")
+        if isinstance(inner, str) and inner.startswith("0x"):
+            return inner
+    # Last resort: some providers only put the payload in the message text.
+    # Skip anything 42 characters long — that's an address (custom errors often
+    # carry one), and its first 4 bytes are not a selector.
+    message = str(exc)
+    marker = message.find("0x")
+    if marker != -1:
+        candidate = message[marker:].split()[0].strip("'\"),")
+        if len(candidate) >= 10 and len(candidate) != 42 and (len(candidate) - 2) % 2 == 0:
+            return candidate
+    return None
+
+
+def _classify_revert(exc: Exception) -> ChainError:
+    """Maps a revert to a typed error.
+
+    Preferred path: decode the 4-byte custom-error selector against the ABI —
+    exact, and immune to revert-string wording. Falls back to substring matching
+    for contracts still using require() strings, where "already retired" must NOT
+    be read as a duplicate record.
+    """
+    message = str(exc)
+
+    data = _extract_error_data(exc)
+    if data:
+        selector = data[:10].lower()
+        name = _get_selector_map().get(selector)
+        if name:
+            error_cls = _ERROR_NAME_MAP.get(name, ChainError)
+            return error_cls(f"{name}: {message}")
+
     lowered = message.lower()
-    # "Already retired" must be matched before the generic "already" branch —
-    # otherwise retiring a retired certificate reports as a duplicate record.
+    # Order matters: check the retired case before the generic "already".
     if "retired" in lowered:
         return AlreadyRetiredError(message)
-    if "already" in lowered or "duplicate" in lowered or "used" in lowered:
-        return DuplicateRecordError(message)
-    if "no such" in lowered or "nonexistent" in lowered:
+    if "no such" in lowered or "nonexistent" in lowered or "does not exist" in lowered:
         return CertificateNotFoundError(message)
     if "authoriz" in lowered or "issuer" in lowered or "owner" in lowered:
         return NotAuthorizedError(message)
+    if "already" in lowered or "duplicate" in lowered or "certified" in lowered:
+        return DuplicateRecordError(message)
     return ChainError(message)
 
 
@@ -134,23 +299,41 @@ def _send_and_wait(func_call, account, timeout: int = 120):
     # build_transaction — build_transaction silently calls estimate_gas
     # itself to fill in "gas" when it's missing, and a revert raised from
     # inside that internal call would otherwise bypass this error handling.
-    try:
-        gas_estimate = func_call.estimate_gas({"from": account.address})
-    except Exception as exc:
-        if _is_revert_error(exc):
-            raise _classify_revert(str(exc)) from exc
-        raise
+    with _nonce_lock:
+        # Both the gas estimate and the nonce are taken here, under the lock.
+        # Estimating outside it is a real bug, not just untidy: estimates are
+        # made against whatever state exists at the time, but nonces fix the
+        # execution order. A transaction estimated when the issuer already held
+        # tokens (a cheap mint) could be handed an earlier nonce and then
+        # execute first, when the mint was still the expensive one — and run
+        # out of gas. Estimating under the lock keeps the two consistent.
+        try:
+            gas_estimate = func_call.estimate_gas({"from": account.address})
+        except Exception as exc:
+            if _is_revert_error(exc):
+                raise _classify_revert(exc) from exc
+            raise
 
-    tx = func_call.build_transaction(
-        {
-            "from": account.address,
-            "nonce": w3.eth.get_transaction_count(account.address),
-            "gas": int(gas_estimate * 1.2),
-        }
-    )
+        tx = func_call.build_transaction(
+            {
+                "from": account.address,
+                # "pending" counts transactions this wallet has already sent but
+                # that aren't mined yet. With "latest" (the default), a second
+                # mint sent during the ~15s a public-network mint takes to
+                # confirm would reuse the in-flight nonce and be rejected as an
+                # underpriced replacement.
+                "nonce": w3.eth.get_transaction_count(account.address, "pending"),
+                # Estimation still can't see other pending transactions on a
+                # public network, so keep headroom above the estimate. Unused
+                # gas is refunded; an underestimate costs the whole fee.
+                "gas": int(gas_estimate * 1.3),
+            }
+        )
+        signed = account.sign_transaction(tx)
+        tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
 
-    signed = account.sign_transaction(tx)
-    tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
+    # Deliberately outside the lock — waiting for a receipt is the slow part,
+    # and holding the lock across it would serialise every mint end to end.
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=timeout)
 
     if receipt.status == 0:
@@ -158,7 +341,7 @@ def _send_and_wait(func_call, account, timeout: int = 120):
             w3.eth.call(tx, block_identifier=receipt.blockNumber)
         except Exception as exc:
             if _is_revert_error(exc):
-                raise _classify_revert(str(exc)) from exc
+                raise _classify_revert(exc) from exc
         raise ChainError(f"Transaction {_tx_hash_hex(tx_hash)} reverted with no revert reason")
 
     return receipt
@@ -172,6 +355,16 @@ def _extract_token_id(contract, receipt, to_address: str) -> int:
         if event["args"]["to"].lower() == to_address.lower():
             return event["args"]["tokenId"]
     raise ChainError("Mint succeeded but no Transfer event was found to extract tokenId")
+
+
+def is_chain_available() -> bool:
+    """True when the node is reachable and a contract address is configured.
+    Used by /status and by callers that want to fail fast with a clear message
+    instead of after a long pipeline run."""
+    try:
+        return get_w3().is_connected() and deployed_address() is not None
+    except Exception:
+        return False
 
 
 def mint_certificate(
@@ -215,6 +408,30 @@ def retire_certificate(token_id: int, owner_address: str) -> dict:
     return {"tx_hash": _tx_hash_hex(receipt.transactionHash)}
 
 
+def transfer_certificate(token_id: int, from_address: str, to_address: str) -> dict:
+    """Transfers a certificate to a new owner.
+
+    Same custodial constraint as retire_certificate: the backend can only sign
+    as its own wallet, so this works for certificates it custodies. A retired
+    certificate can't be transferred — the contract reverts, surfaced here as
+    AlreadyRetiredError.
+    """
+    contract = get_contract()
+    account = _get_account()
+    from_checksum = Web3.to_checksum_address(from_address)
+    to_checksum = Web3.to_checksum_address(to_address)
+
+    if account.address.lower() != from_checksum.lower():
+        raise NotAuthorizedError(
+            f"Backend wallet {account.address} is not the owner of certificate "
+            f"{token_id} ({from_address}); the transfer must be signed by the owner's wallet."
+        )
+
+    func_call = contract.functions.transferFrom(from_checksum, to_checksum, int(token_id))
+    receipt = _send_and_wait(func_call, account)
+    return {"tx_hash": _tx_hash_hex(receipt.transactionHash), "owner": to_checksum}
+
+
 def get_certificate(token_id: int) -> dict:
     """Returns the on-chain Certificate struct merged with ownerOf(). Raises
     CertificateNotFoundError if tokenId doesn't exist."""
@@ -225,12 +442,15 @@ def get_certificate(token_id: int) -> dict:
         ).call()
         owner = contract.functions.ownerOf(int(token_id)).call()
     except Exception as exc:
-        # Only web3's HTTPProvider raises ContractLogicError for a revert;
-        # eth-tester and other providers raise their own types. Catching just
-        # ContractLogicError let an unknown tokenId surface as a 502 instead
-        # of a 404.
         if _is_revert_error(exc):
-            raise CertificateNotFoundError(f"No certificate with tokenId {token_id}") from exc
+            error = _classify_revert(exc)
+            # Any revert from a read of a specific tokenId means "no such token"
+            # as far as the API is concerned.
+            raise (
+                error
+                if isinstance(error, CertificateNotFoundError)
+                else CertificateNotFoundError(f"No certificate with tokenId {token_id}")
+            ) from exc
         raise
 
     return {
@@ -245,5 +465,8 @@ def get_certificate(token_id: int) -> dict:
 
 
 def is_record_used(plant_id: str, energy_mwh: int, generation_timestamp: int) -> bool:
+    """Cheap pre-flight duplicate check — a view call, no gas, no revert.
+    Lets the API return a clean 409 before running the pipeline and attempting
+    a mint that would revert anyway."""
     contract = get_contract()
     return contract.functions.isRecordUsed(plant_id, int(energy_mwh), int(generation_timestamp)).call()
