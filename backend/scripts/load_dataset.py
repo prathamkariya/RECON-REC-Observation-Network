@@ -145,6 +145,32 @@ def print_risk_distribution(risk_scores: list):
     print(f"\n  mean: {sum(risk_scores) / total:.3f}   min: {min(risk_scores):.3f}   max: {max(risk_scores):.3f}")
 
 
+def preload_graph(cert_rows: list, txns_by_cert: dict, base_url: str) -> None:
+    """
+    Warms the server's real-graph batch cache (POST /admin/graph-preload)
+    before the per-certificate load loop, so each individual POST /recs
+    call hits an O(1) cached lookup instead of recomputing Role 2's
+    Louvain community detection from scratch -- which gets progressively
+    slower as the known graph grows (see backend/app/clients/graph_client.py).
+    Harmless no-op if USE_REAL_GRAPH is off; safe to always call.
+    """
+    all_transactions = [t for rows in txns_by_cert.values() for t in rows]
+    all_certificates = [
+        {"certificate_id": row["certificate_id"], "generator_id": row["generator_id"]}
+        for row in cert_rows
+    ]
+    try:
+        resp = requests.post(
+            f"{base_url}/admin/graph-preload",
+            json={"transactions": all_transactions, "certificates": all_certificates},
+            timeout=120,
+        )
+        resp.raise_for_status()
+        print(f"Graph preload: {resp.json()}", file=sys.stderr)
+    except requests.RequestException as e:
+        print(f"Graph preload skipped (non-fatal): {e}", file=sys.stderr)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Load Role 1's real synthetic dataset into this service via POST /recs.",
@@ -161,6 +187,8 @@ def main():
         rows = list(csv.DictReader(f))
     if args.limit:
         rows = rows[: args.limit]
+
+    preload_graph(rows, txns_by_cert, args.base_url)
 
     seen_counts: dict = {}
     duplicates = []
