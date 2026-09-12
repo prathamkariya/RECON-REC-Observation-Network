@@ -62,7 +62,7 @@ module is ready — no code changes needed on this side:
 
 | Flag | Wires in | Needs |
 |---|---|---|
-| `USE_REAL_ML` | `ml/model.py` | — |
+| `USE_REAL_ML` | `ml/handoff/final_stat_risk.json` (Role 1's tuned model output) | — |
 | `USE_REAL_GRAPH` | `graph_explain/graph/fraud_ring.py` | `networkx` |
 | `USE_REAL_WEATHER` | `graph_explain/weather/weather_client.py` (Open-Meteo) | network access |
 | `USE_REAL_EXPLAIN` | `graph_explain/llm/explainer.py` (Claude) | `ANTHROPIC_API_KEY` |
@@ -73,6 +73,18 @@ degrade to the mock heuristic on failure or timeout — a slow API never hangs
 or crashes a request. If a real client errors for any other reason (import
 error, bad return shape), every adapter falls back to its mock so a broken
 teammate module never blocks the pipeline.
+
+**Bulk loading with `USE_REAL_GRAPH=true`:** Role 2's real graph analysis is
+a whole-dataset computation, not something that can be built up one request
+at a time without getting progressively slower. Call
+`POST /admin/graph-preload` once with the full known transactions and
+certificates *before* bulk-loading individual certificates (see
+`backend/scripts/load_dataset.py`, which does this automatically) — it
+caches every certificate's result so subsequent `POST /recs` calls are O(1)
+instead of recomputing Louvain community detection from scratch each time.
+Certificates never part of a preload still work via live, one-at-a-time
+analysis; there's no other option since Role 2's algorithm has no
+incremental-update mode.
 
 ## Endpoints
 
