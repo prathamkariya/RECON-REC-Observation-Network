@@ -44,7 +44,19 @@ def _load_cache() -> dict:
     return {}
 
 
+_MEMORY_CACHE: dict | None = None
+
+
+def _get_cache() -> dict:
+    global _MEMORY_CACHE
+    if _MEMORY_CACHE is None:
+        _MEMORY_CACHE = _load_cache()
+    return _MEMORY_CACHE
+
+
 def _save_cache(cache: dict) -> None:
+    global _MEMORY_CACHE
+    _MEMORY_CACHE = cache
     try:
         with open(CACHE_FILE, "w") as f:
             json.dump(cache, f, indent=2)
@@ -74,7 +86,12 @@ def ist_to_utc(ist_timestamp: datetime) -> datetime:
 # Open-Meteo historical weather client with caching
 # ---------------------------------------------------------------------------
 
-def get_historical_weather(lat: float, lon: float, date_utc: datetime) -> dict | None:
+def get_historical_weather(
+    lat: float,
+    lon: float,
+    date_utc: datetime,
+    allow_network: bool = True
+) -> dict | None:
     """
     Fetches historical hourly weather for a given lat/lon/date from
     Open-Meteo's archive API. Caches responses locally keyed by
@@ -87,14 +104,14 @@ def get_historical_weather(lat: float, lon: float, date_utc: datetime) -> dict |
     Returns Open-Meteo response dict, or None on any fetch error.
     Fails safe (returns None) — callers must handle None gracefully.
     """
-    # Round for cache-key stability — weather doesn't differ meaningfully
-    # between e.g. 25.5671 and 25.5673; rounding avoids cache misses on
-    # trivially different float coordinates from the same plant.
     cache_key = f"{round(lat, 2)}_{round(lon, 2)}_{date_utc.strftime('%Y-%m-%d')}"
-    cache = _load_cache()
+    cache = _get_cache()
 
     if cache_key in cache:
         return cache[cache_key]
+
+    if not allow_network or os.environ.get("RECON_OFFLINE_WEATHER") == "1":
+        return None
 
     try:
         response = requests.get(
@@ -104,9 +121,6 @@ def get_historical_weather(lat: float, lon: float, date_utc: datetime) -> dict |
                 "longitude": lon,
                 "start_date": date_utc.strftime("%Y-%m-%d"),
                 "end_date": date_utc.strftime("%Y-%m-%d"),
-                # Requesting both solar and wind variables in one call regardless
-                # of energy_source — one API call serves any cert on that date,
-                # and Open-Meteo charges per request, not per variable.
                 "hourly": "cloud_cover,shortwave_radiation,wind_speed_100m",
                 "timezone": "UTC",
             },
@@ -231,7 +245,11 @@ def fetch_weather_data(lat: float, lon: float, date_str: str) -> dict | None:
     return get_historical_weather(lat, lon, date_utc)
 
 
-def compute_weather_mismatch(certificate: dict, weather_data: dict | None = None) -> dict:
+def compute_weather_mismatch(
+    certificate: dict,
+    weather_data: dict | None = None,
+    allow_network: bool = True
+) -> dict:
     """
     Fuses timing and capacity plausibility into one weather_mismatch signal.
 
@@ -283,27 +301,37 @@ def compute_weather_mismatch(certificate: dict, weather_data: dict | None = None
 
         generation_hour_ist = dt_ist.hour  # IST hour — correct per locked decision #1
 
-        # Fetch weather if not pre-provided
-        if weather_data is None:
-            # Convert to UTC only for the API call
-            dt_utc = ist_to_utc(dt_ist.replace(tzinfo=None)
-                                 if dt_ist.tzinfo else dt_ist)
-            date_str_utc = dt_utc.strftime("%Y-%m-%d")
-            weather_data = get_historical_weather(lat, lon,
-                                                  datetime.strptime(date_str_utc, "%Y-%m-%d"))
-
-        # Extract weather at the UTC hour corresponding to the IST generation time
-        if weather_data is not None:
-            dt_ist_naive = dt_ist.replace(tzinfo=None) if dt_ist.tzinfo else dt_ist
-            dt_utc_for_hour = ist_to_utc(dt_ist_naive)
-            utc_hour = dt_utc_for_hour.hour
-            cloud_cover, radiation, _ = _extract_hourly_values(weather_data, utc_hour)
+        if (
+            generation_hour_ist < SOLAR_DAYLIGHT_START_HOUR
+            or generation_hour_ist >= SOLAR_DAYLIGHT_END_HOUR
+        ):
+            # Unambiguous night-time solar claim — no network API call needed
+            timing_score = 1.0
         else:
-            cloud_cover, radiation = None, None
+            # Within daylight hours: weight by real irradiance if available.
+            if weather_data is None:
+                # Convert to UTC only for the API call
+                dt_utc = ist_to_utc(dt_ist.replace(tzinfo=None)
+                                     if dt_ist.tzinfo else dt_ist)
+                date_str_utc = dt_utc.strftime("%Y-%m-%d")
+                weather_data = get_historical_weather(
+                    lat, lon,
+                    datetime.strptime(date_str_utc, "%Y-%m-%d"),
+                    allow_network=allow_network
+                )
 
-        timing_score = _solar_timing_mismatch_score(
-            generation_hour_ist, cloud_cover, radiation
-        )
+            # Extract weather at the UTC hour corresponding to the IST generation time
+            if weather_data is not None:
+                dt_ist_naive = dt_ist.replace(tzinfo=None) if dt_ist.tzinfo else dt_ist
+                dt_utc_for_hour = ist_to_utc(dt_ist_naive)
+                utc_hour = dt_utc_for_hour.hour
+                cloud_cover, radiation, _ = _extract_hourly_values(weather_data, utc_hour)
+            else:
+                cloud_cover, radiation = None, None
+
+            timing_score = _solar_timing_mismatch_score(
+                generation_hour_ist, cloud_cover, radiation
+            )
     # energy_source == "wind": timing_score stays 0.0
     # (uniform 24h distribution confirmed — applying day/night would generate
     #  false positives on legitimate night-time wind generation)
