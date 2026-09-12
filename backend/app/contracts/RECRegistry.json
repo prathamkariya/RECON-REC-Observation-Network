@@ -1,0 +1,119 @@
+{
+  "contractName": "RECRegistry",
+  "_note": "Hand-written ABI matching the documented RECRegistry.sol interface (issueCertificate, retireCertificate, getCertificate, isRecordUsed, ownerOf) — no compiled artifact was available in this repo. If you have the real artifacts/contracts/RECRegistry.sol/RECRegistry.json, drop it in here (or point CONTRACT_ABI_PATH at it) so the exact function selectors match what's deployed.",
+  "abi": [
+    {
+      "type": "function",
+      "name": "issueCertificate",
+      "stateMutability": "nonpayable",
+      "inputs": [
+        { "name": "to", "type": "address", "internalType": "address" },
+        { "name": "plantId", "type": "string", "internalType": "string" },
+        { "name": "energyMWh", "type": "uint256", "internalType": "uint256" },
+        { "name": "generationTimestamp", "type": "uint256", "internalType": "uint256" },
+        { "name": "fraudScore", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [
+        { "name": "tokenId", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "retireCertificate",
+      "stateMutability": "nonpayable",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getCertificate",
+      "stateMutability": "view",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct RECRegistry.Certificate",
+          "components": [
+            { "name": "plantId", "type": "string", "internalType": "string" },
+            { "name": "energyMWh", "type": "uint256", "internalType": "uint256" },
+            { "name": "generationTimestamp", "type": "uint256", "internalType": "uint256" },
+            { "name": "fraudScore", "type": "uint256", "internalType": "uint256" },
+            { "name": "retired", "type": "bool", "internalType": "bool" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isRecordUsed",
+      "stateMutability": "view",
+      "inputs": [
+        { "name": "plantId", "type": "string", "internalType": "string" },
+        { "name": "energyMWh", "type": "uint256", "internalType": "uint256" },
+        { "name": "generationTimestamp", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [
+        { "name": "", "type": "bool", "internalType": "bool" }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "ownerOf",
+      "stateMutability": "view",
+      "inputs": [
+        { "name": "tokenId", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [
+        { "name": "", "type": "address", "internalType": "address" }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "authorizedIssuers",
+      "stateMutability": "view",
+      "inputs": [
+        { "name": "", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [
+        { "name": "", "type": "bool", "internalType": "bool" }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "Transfer",
+      "anonymous": false,
+      "inputs": [
+        { "name": "from", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "to", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "tokenId", "type": "uint256", "indexed": true, "internalType": "uint256" }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "CertificateIssued",
+      "anonymous": false,
+      "inputs": [
+        { "name": "tokenId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "to", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "plantId", "type": "string", "indexed": false, "internalType": "string" },
+        { "name": "energyMWh", "type": "uint256", "indexed": false, "internalType": "uint256" },
+        { "name": "generationTimestamp", "type": "uint256", "indexed": false, "internalType": "uint256" },
+        { "name": "fraudScore", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "CertificateRetired",
+      "anonymous": false,
+      "inputs": [
+        { "name": "tokenId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "owner", "type": "address", "indexed": true, "internalType": "address" }
+      ]
+    }
+  ]
+}
