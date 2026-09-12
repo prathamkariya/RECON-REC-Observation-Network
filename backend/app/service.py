@@ -6,6 +6,7 @@ teammates' outputs; it doesn't produce fraud signals itself.
 from typing import Dict, List, Optional
 
 from .clients import explain_client, graph_client, ledger_client, ml_client, weather_client
+from .config import settings
 from .schemas import Certificate, CertificateCreate, LedgerProof
 
 _CERT_STORE: Dict[str, Certificate] = {}
@@ -87,11 +88,31 @@ def get_certificate(certificate_id: str) -> Optional[Certificate]:
     return _with_fresh_verification(certificate)
 
 
+def _data_sources() -> dict:
+    """Mirrors the "/" root endpoint's mock-vs-real report, inline on the
+    rollup itself -- a viewer of just /analytics/summary (e.g. a dashboard)
+    would otherwise have no way to tell these numbers apart from a fully
+    validated, real rollup."""
+    return {
+        "ml": "real" if settings.USE_REAL_ML else "mock",
+        "graph": "real" if settings.USE_REAL_GRAPH else "mock",
+        "weather": "real" if settings.USE_REAL_WEATHER else "mock",
+        "explain": "real" if settings.USE_REAL_EXPLAIN else "mock",
+        "ledger": "real" if settings.USE_REAL_LEDGER else "mock",
+    }
+
+
 def summary() -> dict:
     certs = list_certificates()
     total = len(certs)
     if total == 0:
-        return {"total_certificates": 0, "flagged": 0, "average_risk_score": 0.0, "top_reasons": []}
+        return {
+            "total_certificates": 0,
+            "flagged": 0,
+            "average_risk_score": 0.0,
+            "top_reasons": [],
+            "data_sources": _data_sources(),
+        }
 
     flagged = [c for c in certs if c.risk_score >= FLAGGED_THRESHOLD]
     avg_risk = round(sum(c.risk_score for c in certs) / total, 3)
@@ -107,4 +128,5 @@ def summary() -> dict:
         "flagged": len(flagged),
         "average_risk_score": avg_risk,
         "top_reasons": [r for r, _ in top_reasons],
+        "data_sources": _data_sources(),
     }
