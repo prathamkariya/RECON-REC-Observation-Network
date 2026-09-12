@@ -36,14 +36,39 @@ backend/
 
 ## Run it (fully mocked, zero external dependencies)
 
-From the **repo root** (imports are anchored there so real client branches
-can later reach sibling packages like `ml/`, `graph_explain/`, `ledger_cloud/`):
+With Docker, from the repo root — brings up Postgres, the API and the
+dashboard together:
+
+```bash
+docker compose up --build
+```
+
+Or locally. Run from the **repo root** (imports are anchored there so the real
+client branches can reach sibling packages like `ml/`, `graph_explain/`,
+`ledger_cloud/`):
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r backend/requirements.txt
 uvicorn backend.app.main:app --reload --port 8000
 ```
+
+## Tests
+
+```bash
+pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+pytest                     # 179 tests
+pytest -m "not chain"      # skip the in-process EVM tests (faster)
+pytest --cov=backend/app --cov=ledger_cloud --cov-report=term-missing
+```
+
+`requirements.txt` is runtime-only — what the Docker image installs.
+Test-only dependencies (pytest, httpx, eth-tester, py-solc-x) are in
+`requirements-dev.txt`.
+
+The on-chain tests compile `tests/fixtures/RECRegistry.sol` with solc and
+deploy it to an in-process EVM, so they exercise `web3_client`'s real code
+path with **no Hardhat node or testnet running**.
 
 Or run the pre-loaded demo server (5 fixtures: clean, over-capacity, trading
 ring, night-time solar, tampered ledger):
