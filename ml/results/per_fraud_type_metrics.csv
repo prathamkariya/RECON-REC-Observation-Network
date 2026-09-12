@@ -1,6 +1,6 @@
 fraud_type,n_in_holdout,precision,recall,f1
-circular_trading,7,0.026,0.143,0.043
-duplicate_serial,10,0.256,1.0,0.408
-impossible_timing,8,0.205,1.0,0.34
-over_capacity,7,0.154,0.857,0.261
-timestamp_collision,8,0.026,0.125,0.043
+circular_trading,7,0.027,0.143,0.045
+duplicate_serial,10,0.27,1.0,0.426
+impossible_timing,8,0.216,1.0,0.356
+over_capacity,7,0.162,0.857,0.273
+timestamp_collision,8,0.054,0.25,0.089
