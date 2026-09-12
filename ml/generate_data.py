@@ -334,8 +334,11 @@ if __name__ == "__main__":
     certs_df = generate_mock_certificates(count=1200)
     txns_df = generate_mock_transactions(certs_df)
 
-    certs_df.to_csv("/mnt/user-data/outputs/certificates.csv", index=False)
-    txns_df.to_csv("/mnt/user-data/outputs/transactions.csv", index=False)
+    import os
+    output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
+    os.makedirs(output_dir, exist_ok=True)
+    certs_df.to_csv(os.path.join(output_dir, "certificates.csv"), index=False)
+    txns_df.to_csv(os.path.join(output_dir, "transactions.csv"), index=False)
 
     print("=== CERTIFICATES ===")
     print(f"Total rows: {len(certs_df)}")
