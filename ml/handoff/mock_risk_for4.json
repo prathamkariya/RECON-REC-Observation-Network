@@ -1,34 +1,34 @@
 [
-    {
-        "certificate_id": "CERT_MOCK_001",
-        "statistical_risk": 0.04
-    },
-    {
-        "certificate_id": "CERT_MOCK_002",
-        "statistical_risk": 0.12
-    },
-    {
-        "certificate_id": "CERT_MOCK_003",
-        "statistical_risk": 0.31
-    },
-    {
-        "certificate_id": "CERT_MOCK_004",
-        "statistical_risk": 0.48
-    },
-    {
-        "certificate_id": "CERT_MOCK_005",
-        "statistical_risk": 0.55
-    },
-    {
-        "certificate_id": "CERT_MOCK_006",
-        "statistical_risk": 0.67
-    },
-    {
-        "certificate_id": "CERT_MOCK_007",
-        "statistical_risk": 0.82
-    },
-    {
-        "certificate_id": "CERT_MOCK_008",
-        "statistical_risk": 0.94
-    }
+  {
+    "certificate_id": "CERT_MOCK_001",
+    "statistical_risk": 0.04
+  },
+  {
+    "certificate_id": "CERT_MOCK_002",
+    "statistical_risk": 0.12
+  },
+  {
+    "certificate_id": "CERT_MOCK_003",
+    "statistical_risk": 0.31
+  },
+  {
+    "certificate_id": "CERT_MOCK_004",
+    "statistical_risk": 0.48
+  },
+  {
+    "certificate_id": "CERT_MOCK_005",
+    "statistical_risk": 0.55
+  },
+  {
+    "certificate_id": "CERT_MOCK_006",
+    "statistical_risk": 0.67
+  },
+  {
+    "certificate_id": "CERT_MOCK_007",
+    "statistical_risk": 0.82
+  },
+  {
+    "certificate_id": "CERT_MOCK_008",
+    "statistical_risk": 0.94
+  }
 ]

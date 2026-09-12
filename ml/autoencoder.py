@@ -33,13 +33,15 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-DATA_DIR = Path(__file__).resolve().parent / "fresh_run2" / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+if not DATA_DIR.exists():
+    DATA_DIR = Path(__file__).resolve().parent / "data"
 FEATURES_PATH = DATA_DIR / "features.csv"
 LABELS_PATH = DATA_DIR / "labels.csv"
 
-CONTAMINATION = 0.15  # matches the TUNED Isolation Forest contamination (see train_model.py) — keeps the benchmark comparison fair
+CONTAMINATION = 0.17
 RANDOM_STATE = 42
-TEST_SIZE = 0.20  # same ~80/20 split as train_model.py
+TEST_SIZE = 0.20  # same ~80/20 split as model.py
 
 # Bottleneck architecture: 7 scaled features -> compress -> reconstruct.
 # Small on purpose ("plain autoencoder", per the doc) - this is a benchmark,
@@ -124,14 +126,13 @@ def main():
     plt.title("Precision-Recall Curve — Autoencoder (benchmark) holdout")
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    output_dir = Path(__file__).resolve().parent / "outputs"
-    output_dir.mkdir(exist_ok=True)
-    plt.savefig(output_dir / "autoencoder_precision_recall_curve.png", dpi=150)
+    results_dir = Path(__file__).resolve().parent / "results"
+    results_dir.mkdir(exist_ok=True)
 
-    per_type_df.to_csv(output_dir / "autoencoder_per_fraud_type_metrics.csv", index=False)
+    plt.savefig(results_dir / "autoencoder.png", dpi=150)
+    per_type_df.to_csv(results_dir / "autoencoder_per_file_metrics.csv", index=False)
 
-    print(f"\nSaved: {output_dir / 'autoencoder_precision_recall_curve.png'}")
-    print(f"Saved: {output_dir / 'autoencoder_per_fraud_type_metrics.csv'}")
+    print(f"\nSaved to: {results_dir}")
 
     print("""
 === FOR THE REPORT'S COMPARISON TABLE ===

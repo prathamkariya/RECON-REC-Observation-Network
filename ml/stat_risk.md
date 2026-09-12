@@ -5,71 +5,68 @@
 
 ## What it is
 
-`statistical_risk` is the Isolation Forest's anomaly score, min-max normalized
-to **[0.0, 1.0]**. It answers one question: *"how statistically unusual is
-this certificate's feature profile, compared to the rest of the dataset?"*
+`statistical_risk` is the Calibrated Hybrid Model's output in **[0.0, 1.0]**,
+combining an Isolation Forest anomaly score calibrated via Platt scaling (logistic
+sigmoid) with deterministic physical-impossibility anchors:
+$$P_{\text{Hybrid}} = \max(P_{\text{IF}}, \text{timestamp\_collision\_flag}, \text{serial\_duplicate\_flag})$$
 
-- **0.0** = the least anomalous certificate in the dataset (fits typical
-  patterns most closely)
-- **1.0** = the most anomalous certificate in the dataset
-- It is **relative to this dataset**, not an absolute fraud probability. A
-  score of 0.9 does not mean "90% chance of fraud" — it means "more
-  statistically unusual than ~90% of certificates in this batch."
+- **0.0 - 0.28** = statistically normal / unremarkable operation
+- **0.282** = the calibrated decision threshold matching the target contamination rate (17%)
+- **0.28 - 0.99** = statistically atypical patterns (generation timing anomalies, plant z-score deviations, velocity surges)
+- **1.00** = guaranteed physical or identity impossibility (exact timestamp collision on the same plant, or duplicate serial number clone)
+
+Because scores are calibrated probabilities, they are mathematically sound for
+independent survival multiplication ($S = 1 - \prod(1 - P_i)$) in the backend's
+Noisy-OR risk fusion engine.
 
 ## What feeds into it
 
-Seven engineered features, fed into the Isolation Forest:
+Ten engineered features, fed into the pipeline:
 `capacity_utilization_ratio`, `time_of_day_plausibility`, `issuance_velocity`,
 `buyer_concentration`, `serial_duplicate_flag`, `per_plant_utilization_zscore`,
-`generator_benford_deviation`. See Role 1's feature_engineering.py for exact
-definitions.
+`generator_benford_deviation`, `timestamp_collision_flag`, `per_plant_min_gap_hours`,
+`transfer_velocity`. See Role 1's `feature_engineering.py` for exact definitions.
 
-## Model configuration (tuned)
+## Model configuration (Calibrated Hybrid Model)
 
-Isolation Forest with `contamination=0.15`, `max_samples=512`,
-`n_estimators=100`. Tuned via a swept comparison against the doc's original
-starting point (`contamination=0.17`, `max_samples='auto'`) — this
-combination improved holdout F1 from 0.658 to 0.701 with no per-fraud-type
-regression. See `contamination_sweep.py` and
-`sweep_max_samples_n_estimators.py` for the full sweep results.
+Isolation Forest (`contamination=0.17`, `max_samples=512`, `n_estimators=100`, `random_state=42`)
++ Platt Scaling calibrator + Hard Physical Impossibility Anchoring:
+- **Holdout Precision**: 0.789
+- **Holdout Recall**: 0.750 (30 of 40 holdout frauds detected)
+- **Holdout F1-Score**: 0.769
+- **ROC-AUC**: 0.878
+- **Brier Calibration Score**: 0.0941
+- **Calibrated Threshold**: $T = 0.282$
 
-## Rough interpretation bands (from the current dataset's distribution)
+## Interpretation bands (from the current dataset's distribution)
 
 | `statistical_risk` | Percentile | Suggested framing |
 |---|---|---|
-| 0.00 - 0.14 | below 50th | Statistically unremarkable |
-| 0.14 - 0.26 | 50th - 70th | Mildly atypical, not independently concerning |
-| 0.26 - 0.45 | 70th - 83rd | Noticeably atypical, worth a secondary look if other signals agree |
-| 0.45 - 0.56 | 83rd - 90th | Strongly atypical, resembles the profile of injected fraud patterns |
-| 0.56 - 1.00 | 90th+ | Highly atypical, closely resembles known fraud patterns in this dataset |
+| 0.00 - 0.14 | below 55th | Statistically unremarkable (clean / normal generation profile) |
+| 0.14 - 0.28 | 55th - 83rd | Mildly atypical, within operational noise; below anomaly threshold |
+| 0.28 - 0.50 | 83rd - 87th | Noticeably anomalous; exceeds calibrated threshold ($T=0.282$) |
+| 0.50 - 0.99 | 87th - 90th | Strongly atypical; high statistical aberration across multiple features |
+| 1.00 | 90th+ | Deterministic violation: physical timestamp collision or duplicate serial clone |
 
-These bands are **descriptive of the current dataset**, not fixed thresholds —
-they will shift if the dataset changes (new certificates, different fraud
-mix). Contamination was set at 0.15 (tuned, see above) — roughly the top 15%
-of scores are what the model itself would flag as anomalous under its own
-decision boundary.
+Contamination is calibrated at 0.17 — the top ~17% of scores reflect the
+positive anomaly flag.
 
 ## What it's good at vs. not, per fraud type
 
-(from Role 1's holdout evaluation — see `per_fraud_type_metrics.csv`)
+(from Role 1's holdout evaluation — see [`ml/results/per_fraud_type_metrics.csv`](file:///c:/Users/hp/Desktop/RECON/RECON-REC-Observation-Network/ml/results/per_fraud_type_metrics.csv))
 
-- **Strong signal for:** `impossible_timing`, `over_capacity`,
-  `duplicate_serial` — these are directly feature-driven (timing
-  plausibility, capacity ratio, serial duplication flag all feed the model
-  explicitly).
-- **Weak signal for:** `circular_trading`, `timestamp_collision` — these are
-  graph-topology and cross-certificate patterns that don't show up cleanly
-  in per-certificate feature space. **This is expected, not a model failure**
-  — it's why `statistical_risk` is one of three independent signals (yours,
-  Role 2's graph check, Role 2's weather check), not the whole answer.
-  If a certificate has low `statistical_risk` but high graph/weather risk,
-  that's the multi-signal design working as intended, not a contradiction
-  to resolve.
+- **Deterministic 100% recall for:**
+  - `duplicate_serial` (10/10 caught in holdout, 100% recall) — caught via serial duplication anchoring.
+  - `timestamp_collision` (8/8 caught in holdout, 100% recall) — caught via plant timestamp collision anchoring.
+  - `impossible_timing` (8/8 caught in holdout, 100% recall) — detected via zero solar generation during night hours.
+- **Statistical signal for:**
+  - `over_capacity` (4/7 caught in holdout, 57.1% recall) — detected via capacity ratio and plant utilization z-scores. The remainder is caught downstream by Role 2's weather and physical cross-checks.
+- **Role 2 Graph Layer responsibility:**
+  - `circular_trading` (0/7 in holdout, 0.0% recall) — this is a pure graph-topology cycle pattern with normal generation values. **This is expected by design, not a model failure**. Role 2's cycle detector (`graph_explain/graph/fraud_ring.py`) catches 100% of these, which fuse into the final score via Noisy-OR.
 
 ## For your explanation prompt specifically
 
-When explaining a score to an end user, frame it as *"this certificate's
-generation and trading pattern is more/less typical than most in the
-dataset,"* not as *"this certificate is X% likely to be fraudulent."* The
-model detects statistical outliers; whether an outlier is actually fraud is
-a judgment call that combines this signal with the graph and weather checks.
+When explaining a score to an end user:
+1. If `statistical_risk == 1.0`: Highlight that this is an unambiguous physical/identity violation (e.g., duplicate certificate serial or two certificates claiming the exact same generation window on the same facility).
+2. If `0.282 <= statistical_risk < 1.0`: Highlight that this certificate exhibits statistically aberrant generation or trading metrics relative to peer facilities.
+3. If `statistical_risk < 0.282`: State that generation and trading behavior fall within normal operational baselines.
