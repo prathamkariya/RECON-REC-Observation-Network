@@ -33,11 +33,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parent / "fresh_run2" / "data"
 FEATURES_PATH = DATA_DIR / "features.csv"
 LABELS_PATH = DATA_DIR / "labels.csv"
 
-CONTAMINATION = 0.17  # same starting point as the Isolation Forest, for a fair comparison
+CONTAMINATION = 0.15  # matches the TUNED Isolation Forest contamination (see train_model.py) — keeps the benchmark comparison fair
 RANDOM_STATE = 42
 TEST_SIZE = 0.20  # same ~80/20 split as train_model.py
 
@@ -124,7 +124,7 @@ def main():
     plt.title("Precision-Recall Curve — Autoencoder (benchmark) holdout")
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    output_dir = Path(__file__).resolve().parent / "results"
+    output_dir = Path(__file__).resolve().parent / "outputs"
     output_dir.mkdir(exist_ok=True)
     plt.savefig(output_dir / "autoencoder_precision_recall_curve.png", dpi=150)
 
