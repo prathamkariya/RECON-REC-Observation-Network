@@ -22,9 +22,8 @@ and this adapter passes force_generate=True so a clean certificate still
 gets a real (Claude or its own local deterministic fallback) explanation
 rather than an artificial None.
 """
-import concurrent.futures
-
 from ..config import settings
+from ._deadline import call_with_deadline
 
 
 def _flatten_for_explain(record: dict) -> dict:
@@ -72,9 +71,9 @@ def explain(record: dict, signals: dict) -> str:
     if not settings.USE_REAL_EXPLAIN or not settings.ANTHROPIC_API_KEY:
         return _mock_explain(record, signals)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-        future = pool.submit(_real_explain_blocking, record, signals)
-        try:
-            return future.result(timeout=settings.EXPLAIN_TIMEOUT_SECONDS)
-        except Exception:
-            return _mock_explain(record, signals)
+    try:
+        return call_with_deadline(
+            _real_explain_blocking, record, signals, timeout=settings.EXPLAIN_TIMEOUT_SECONDS
+        )
+    except Exception:
+        return _mock_explain(record, signals)

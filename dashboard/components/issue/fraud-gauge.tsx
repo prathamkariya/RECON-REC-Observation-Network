@@ -11,22 +11,24 @@ const COLORS = { low: "#4FD1C5", medium: "#E8A33D", high: "#E85D4B" };
 /** A semicircle gauge that fills to a real fraud score once it arrives —
  * never animates before the API has actually returned a value. */
 export function FraudGauge({ score }: { score: number }) {
-  const [display, setDisplay] = useState(0);
+  const [animated, setAnimated] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const level = riskLevel(score);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setDisplay(score);
-      return;
-    }
+    if (prefersReducedMotion) return;
+
     const controls = animate(0, score, {
       duration: 1.3,
       ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => setDisplay(v),
+      onUpdate: (v) => setAnimated(v),
     });
     return () => controls.stop();
   }, [score, prefersReducedMotion]);
+
+  // Derived rather than set from the effect: with reduced motion there is no
+  // animation to run, so the real score is just what renders.
+  const display = prefersReducedMotion ? score : animated;
 
   const offset = ARC_LENGTH * (1 - score / 100);
 

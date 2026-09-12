@@ -52,7 +52,7 @@ export function VerifyResult({ certificate }: { certificate: OnChainCertificate 
         >
           <p className="mb-1 text-xs tracking-wide text-gold">Explained off-chain</p>
           <p className="mb-4 text-xs text-recon-ink-dim">
-            The database's account of this certificate — reasoning, not proof.
+            The database&apos;s account of this certificate — reasoning, not proof.
           </p>
 
           <div className="mb-4 flex items-center gap-2">

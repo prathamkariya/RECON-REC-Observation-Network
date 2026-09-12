@@ -93,8 +93,12 @@ def get_certificate(token_id: int, db: Session = Depends(get_db)):
 def retire_certificate(token_id: int, db: Session = Depends(get_db)):
     try:
         row = onchain_service.retire_certificate(db, token_id)
+    except web3_client.AlreadyRetiredError:
+        raise HTTPException(status_code=409, detail="This certificate has already been retired.")
     except web3_client.NotAuthorizedError as exc:
         raise HTTPException(status_code=403, detail=str(exc))
+    except web3_client.CertificateNotFoundError:
+        raise HTTPException(status_code=404, detail=f"No certificate with tokenId {token_id} on-chain")
     except web3_client.ChainError as exc:
         raise HTTPException(status_code=502, detail=f"On-chain retire failed: {exc}")
 

@@ -118,8 +118,17 @@ def verify(certificate_id: str) -> dict:
             from ledger_cloud.verify import verify_chain  # teammate's module (Role 3)
 
             ledger = _get_real_ledger_singleton()
-            verified = verify_chain(ledger.chain)
-            return {"found": True, "hash": None, "prev_hash": None, "verified": bool(verified)}
+            block = ledger.find(certificate_id)
+            if block is None:
+                return {"found": False, "hash": None, "prev_hash": None, "verified": False}
+            # Verification covers the whole chain, not just this block: an edit
+            # to any earlier block invalidates this one's proof too.
+            return {
+                "found": True,
+                "hash": block.hash,
+                "prev_hash": block.previous_hash,
+                "verified": bool(verify_chain(ledger.chain)),
+            }
         except Exception:
             pass  # fall through to the mock chain
     return _mock_ledger.verify(certificate_id)
