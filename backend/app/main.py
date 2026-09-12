@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .routers import admin, analytics, audit, recs, verify
+from .db import init_db
+from .routers import admin, analytics, audit, certificates, recs, verify
 
 app = FastAPI(
     title="RECON REC Fraud Detection API",
@@ -27,6 +28,12 @@ app.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
 app.include_router(audit.router, prefix="/audit", tags=["Audit Chat"])
 app.include_router(audit.router, prefix="/api/v1/audit", tags=["Audit Chat"], include_in_schema=False)
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
+app.include_router(certificates.router, prefix="/certificates", tags=["On-Chain Certificates"])
+
+
+@app.on_event("startup")
+def _create_tables() -> None:
+    init_db()
 
 
 @app.get("/")
