@@ -32,14 +32,15 @@ import pandas as pd
 from pathlib import Path
 from sklearn.ensemble import IsolationForest
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parent / "fresh_run2" / "data"
 FEATURES_PATH = DATA_DIR / "features.csv"
 
-CONTAMINATION = 0.17
+CONTAMINATION = 0.15
+MAX_SAMPLES = 512
 N_ESTIMATORS = 100
 RANDOM_STATE = 42
 
-OUTPUT_DIR = Path(__file__).resolve().parent / "handoff"
+OUTPUT_DIR = Path(__file__).resolve().parent / "outputs"
 
 
 def main():
@@ -50,6 +51,7 @@ def main():
     # --- Retrain on FULL dataset for final delivered scores (see module docstring) ---
     model = IsolationForest(
         n_estimators=N_ESTIMATORS,
+        max_samples=MAX_SAMPLES,
         contamination=CONTAMINATION,
         random_state=RANDOM_STATE,
     )
