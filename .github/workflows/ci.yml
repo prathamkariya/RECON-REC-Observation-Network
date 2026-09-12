@@ -80,14 +80,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Non-blocking for now: 4 pre-existing errors (3x
-      # react-hooks/set-state-in-effect, 1x react/no-unescaped-entities) in
-      # components owned by the frontend work. They do not affect the
-      # production build, which is gated below. Drop continue-on-error once
-      # they are fixed, so lint starts blocking again.
       - name: Lint
         run: npm run lint
-        continue-on-error: true
 
       - name: Build
         run: npm run build

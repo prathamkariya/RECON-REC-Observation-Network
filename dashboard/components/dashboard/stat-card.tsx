@@ -33,22 +33,23 @@ export function StatCard({
   accent?: Accent;
   decimals?: number;
 }) {
-  const [display, setDisplay] = useState(0);
+  const [animated, setAnimated] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setDisplay(value);
-      return;
-    }
+    if (prefersReducedMotion) return;
 
     const controls = animate(0, value, {
       duration: 1.1,
       ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => setDisplay(v),
+      onUpdate: (v) => setAnimated(v),
     });
     return () => controls.stop();
   }, [value, prefersReducedMotion]);
+
+  // Derived rather than set from the effect: with reduced motion there is no
+  // animation to run, so the final value is just what renders.
+  const display = prefersReducedMotion ? value : animated;
 
   return (
     <div className={cn("glass p-5", ACCENT_GLASS[accent])}>
