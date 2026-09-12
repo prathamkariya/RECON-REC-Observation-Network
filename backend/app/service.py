@@ -24,9 +24,10 @@ def _combine_risk(*scores: float) -> float:
     return round(1.0 - survival, 3)
 
 
-def compose_and_store(payload: CertificateCreate) -> Certificate:
-    record = payload.model_dump()
-
+def assess_risk(record: dict) -> tuple[float, List[str], str]:
+    """ML -> graph flags -> weather flags -> merged risk_score -> explanation.
+    Shared by the off-chain /recs pipeline and the on-chain /certificates
+    pipeline so both score a record identically."""
     ml_result = ml_client.predict(record)
     graph_result = graph_client.analyze(record)
     weather_result = weather_client.check(record)
@@ -54,6 +55,12 @@ def compose_and_store(payload: CertificateCreate) -> Certificate:
             "weather_reason": weather_result["reason"],
         },
     )
+    return risk_score, risk_reasons, explanation
+
+
+def compose_and_store(payload: CertificateCreate) -> Certificate:
+    record = payload.model_dump()
+    risk_score, risk_reasons, explanation = assess_risk(record)
 
     ledger_entry = ledger_client.append(
         payload.certificate_id,
