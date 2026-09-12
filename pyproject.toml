@@ -1,0 +1,11 @@
+[tool.pytest.ini_options]
+# Tests import `backend.app.*` and `graph_explain.*`, both resolved from the
+# repo root. Without this, only `python -m pytest` works (CWD on sys.path) and
+# a bare `pytest` — which is what CI and most contributors run — fails on
+# `ModuleNotFoundError: No module named 'backend'`.
+pythonpath = ["."]
+testpaths = ["backend/tests"]
+addopts = "-q --strict-markers"
+markers = [
+    "chain: exercises the on-chain path against an in-process eth-tester EVM (slower)",
+]

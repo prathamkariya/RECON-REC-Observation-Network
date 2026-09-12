@@ -46,3 +46,12 @@ venv.bak/
 weather_cache.json
 .agents
 .context
+
+# Test artifacts
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# Agent tooling, kept out of the repo like .agents/ and .context/ above.
+.claude/

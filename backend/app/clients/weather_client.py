@@ -21,9 +21,8 @@ silently report "no mismatch" for every certificate regardless of input.
 _flatten_for_weather_check() below builds the shape the function actually
 reads.
 """
-import concurrent.futures
-
 from ..config import settings
+from ._deadline import call_with_deadline
 
 
 def _flatten_for_weather_check(record: dict) -> dict:
@@ -73,11 +72,11 @@ def check(record: dict) -> dict:
     if not settings.USE_REAL_WEATHER:
         return _mock_check(record)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-        future = pool.submit(_real_check_blocking, record)
-        try:
-            return future.result(timeout=settings.WEATHER_TIMEOUT_SECONDS)
-        except Exception:
-            fallback = _mock_check(record)
-            fallback["reason"] = fallback["reason"] or "Weather service unavailable — used fallback heuristic"
-            return fallback
+    try:
+        return call_with_deadline(
+            _real_check_blocking, record, timeout=settings.WEATHER_TIMEOUT_SECONDS
+        )
+    except Exception:
+        fallback = _mock_check(record)
+        fallback["reason"] = fallback["reason"] or "Weather service unavailable — used fallback heuristic"
+        return fallback

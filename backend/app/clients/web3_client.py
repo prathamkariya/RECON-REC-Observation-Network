@@ -14,6 +14,7 @@ from typing import Optional
 
 from web3 import Web3
 from web3.exceptions import ContractLogicError
+from web3.logs import DISCARD
 
 from ..config import settings
 
@@ -30,6 +31,12 @@ class DuplicateRecordError(ChainError):
 class NotAuthorizedError(ChainError):
     """The backend wallet isn't allowed to perform this action (not an authorized
     issuer, or not the current token owner for a retire)."""
+
+
+class AlreadyRetiredError(ChainError):
+    """retireCertificate reverted because this certificate is already retired.
+    A distinct condition from DuplicateRecordError — both revert strings contain
+    "already", so classification order matters (see _classify_revert)."""
 
 
 class CertificateNotFoundError(ChainError):
@@ -95,8 +102,14 @@ def _classify_revert(message: str) -> ChainError:
     Tune these substrings once the real contract's exact messages are known —
     this only needs to be close enough to route 409 vs 403 vs 500 correctly."""
     lowered = message.lower()
+    # "Already retired" must be matched before the generic "already" branch —
+    # otherwise retiring a retired certificate reports as a duplicate record.
+    if "retired" in lowered:
+        return AlreadyRetiredError(message)
     if "already" in lowered or "duplicate" in lowered or "used" in lowered:
         return DuplicateRecordError(message)
+    if "no such" in lowered or "nonexistent" in lowered:
+        return CertificateNotFoundError(message)
     if "authoriz" in lowered or "issuer" in lowered or "owner" in lowered:
         return NotAuthorizedError(message)
     return ChainError(message)
@@ -152,7 +165,10 @@ def _send_and_wait(func_call, account, timeout: int = 120):
 
 
 def _extract_token_id(contract, receipt, to_address: str) -> int:
-    for event in contract.events.Transfer().process_receipt(receipt):
+    # A mint receipt carries both Transfer and CertificateIssued logs. Decoding
+    # it against the Transfer ABI alone makes web3 warn about every log it
+    # can't match, on every mint; DISCARD asks it to skip them silently.
+    for event in contract.events.Transfer().process_receipt(receipt, errors=DISCARD):
         if event["args"]["to"].lower() == to_address.lower():
             return event["args"]["tokenId"]
     raise ChainError("Mint succeeded but no Transfer event was found to extract tokenId")
@@ -208,8 +224,14 @@ def get_certificate(token_id: int) -> dict:
             int(token_id)
         ).call()
         owner = contract.functions.ownerOf(int(token_id)).call()
-    except ContractLogicError as exc:
-        raise CertificateNotFoundError(f"No certificate with tokenId {token_id}") from exc
+    except Exception as exc:
+        # Only web3's HTTPProvider raises ContractLogicError for a revert;
+        # eth-tester and other providers raise their own types. Catching just
+        # ContractLogicError let an unknown tokenId surface as a 502 instead
+        # of a 404.
+        if _is_revert_error(exc):
+            raise CertificateNotFoundError(f"No certificate with tokenId {token_id}") from exc
+        raise
 
     return {
         "token_id": int(token_id),
