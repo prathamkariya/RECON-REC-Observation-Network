@@ -40,7 +40,19 @@ def compose_and_store(payload: CertificateCreate) -> Certificate:
         risk_reasons.append(weather_result["reason"])
 
     explanation = explain_client.explain(
-        record, {"risk_score": risk_score, "risk_reasons": risk_reasons}
+        record,
+        {
+            "risk_score": risk_score,
+            "risk_reasons": risk_reasons,
+            "isolation_forest_score": ml_result["risk_score"],
+            "isolation_forest_flag": bool(ml_result["reasons"]),
+            "graph_flag": graph_result["graph_flag"],
+            "graph_risk": graph_result["graph_risk"],
+            "directly_in_cycle": graph_result["directly_in_cycle"],
+            "weather_mismatch": weather_result["weather_mismatch"],
+            "weather_mismatch_score": weather_result["weather_mismatch_score"],
+            "weather_reason": weather_result["reason"],
+        },
     )
 
     ledger_entry = ledger_client.append(

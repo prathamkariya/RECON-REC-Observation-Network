@@ -101,7 +101,12 @@ def _mock_analyze(record: dict) -> dict:
 
     graph_risk = 0.9 if has_cycle else (0.6 if self_dealing else 0.0)
 
-    return {"graph_flag": has_cycle or self_dealing, "graph_risk": graph_risk, "reasons": reasons}
+    return {
+        "graph_flag": has_cycle or self_dealing,
+        "graph_risk": graph_risk,
+        "directly_in_cycle": has_cycle,
+        "reasons": reasons,
+    }
 
 
 def _reasons_from_signal(sig: dict) -> list:
@@ -127,6 +132,7 @@ def _real_analyze(record: dict) -> dict:
         return {
             "graph_flag": bool(sig.get("graph_flag", False)),
             "graph_risk": float(sig.get("graph_risk", 0.0)),
+            "directly_in_cycle": bool(sig.get("directly_in_cycle", False)),
             "reasons": _reasons_from_signal(sig),
         }
 
@@ -146,6 +152,7 @@ def _real_analyze(record: dict) -> dict:
         return {
             "graph_flag": bool(sig.get("graph_flag", False)),
             "graph_risk": float(sig.get("graph_risk", 0.0)),
+            "directly_in_cycle": bool(sig.get("directly_in_cycle", False)),
             "reasons": _reasons_from_signal(sig),
         }
     except Exception:
