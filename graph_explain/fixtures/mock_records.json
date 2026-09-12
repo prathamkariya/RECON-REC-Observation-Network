@@ -1,0 +1,144 @@
+{
+  "certificates": [
+    {
+      "certificate_id": "REC-CLEAN-001",
+      "generator_id": "P_GEN_01",
+      "plant_lat": 26.9124,
+      "plant_lon": 75.7873,
+      "generation_timestamp": "2026-05-15T07:00:00Z",
+      "energy_source": "solar",
+      "claimed_mwh": 42.5,
+      "capacity_mwh": 50.0,
+      "expected_outcome": "CLEAN"
+    },
+    {
+      "certificate_id": "REC-CLEAN-002",
+      "generator_id": "P_GEN_02",
+      "plant_lat": 8.7139,
+      "plant_lon": 77.7567,
+      "generation_timestamp": "2026-06-20T14:00:00Z",
+      "energy_source": "wind",
+      "claimed_mwh": 28.0,
+      "capacity_mwh": 40.0,
+      "expected_outcome": "CLEAN"
+    },
+    {
+      "certificate_id": "REC-RING-001",
+      "generator_id": "P_GEN_03",
+      "plant_lat": 31.1048,
+      "plant_lon": 77.1734,
+      "generation_timestamp": "2026-05-18T06:30:00Z",
+      "energy_source": "hydro",
+      "claimed_mwh": 35.0,
+      "capacity_mwh": 50.0,
+      "expected_outcome": "GRAPH_FRAUD_RING"
+    },
+    {
+      "certificate_id": "REC-NIGHT-001",
+      "generator_id": "P_GEN_04",
+      "plant_lat": 23.2156,
+      "plant_lon": 72.6369,
+      "generation_timestamp": "2026-07-10T18:30:00Z",
+      "energy_source": "solar",
+      "claimed_mwh": 48.0,
+      "capacity_mwh": 50.0,
+      "expected_outcome": "WEATHER_MISMATCH_NIGHT"
+    },
+    {
+      "certificate_id": "REC-OVERCAP-001",
+      "generator_id": "P_GEN_05",
+      "plant_lat": 26.9124,
+      "plant_lon": 75.7873,
+      "generation_timestamp": "2026-05-15T08:00:00Z",
+      "energy_source": "solar",
+      "claimed_mwh": 35.0,
+      "capacity_mwh": 10.0,
+      "expected_outcome": "PHYSICAL_IMPOSSIBILITY_OVERCAP"
+    },
+    {
+      "certificate_id": "REC-COMPOUND-001",
+      "generator_id": "P_RING_01",
+      "plant_lat": 23.2156,
+      "plant_lon": 72.6369,
+      "generation_timestamp": "2026-07-10T19:00:00Z",
+      "energy_source": "solar",
+      "claimed_mwh": 45.0,
+      "capacity_mwh": 50.0,
+      "expected_outcome": "COMPOUND_FRAUD_RING_AND_WEATHER"
+    }
+  ],
+  "transactions": [
+    {
+      "from_party_id": "P_GEN_01",
+      "to_party_id": "P_TRD_01",
+      "certificate_id": "REC-CLEAN-001",
+      "transfer_timestamp": "2026-05-15T09:00:00Z"
+    },
+    {
+      "from_party_id": "P_TRD_01",
+      "to_party_id": "P_UTL_01",
+      "certificate_id": "REC-CLEAN-001",
+      "transfer_timestamp": "2026-05-15T11:00:00Z"
+    },
+    {
+      "from_party_id": "P_GEN_02",
+      "to_party_id": "P_TRD_02",
+      "certificate_id": "REC-CLEAN-002",
+      "transfer_timestamp": "2026-06-20T16:00:00Z"
+    },
+    {
+      "from_party_id": "P_TRD_02",
+      "to_party_id": "P_UTL_02",
+      "certificate_id": "REC-CLEAN-002",
+      "transfer_timestamp": "2026-06-20T18:00:00Z"
+    },
+    {
+      "from_party_id": "P_GEN_03",
+      "to_party_id": "P_RING_01",
+      "certificate_id": "REC-RING-001",
+      "transfer_timestamp": "2026-05-18T08:00:00Z"
+    },
+    {
+      "from_party_id": "P_RING_01",
+      "to_party_id": "P_RING_02",
+      "certificate_id": "REC-RING-001",
+      "transfer_timestamp": "2026-05-18T09:00:00Z"
+    },
+    {
+      "from_party_id": "P_RING_02",
+      "to_party_id": "P_RING_03",
+      "certificate_id": "REC-RING-001",
+      "transfer_timestamp": "2026-05-18T10:00:00Z"
+    },
+    {
+      "from_party_id": "P_RING_03",
+      "to_party_id": "P_RING_01",
+      "certificate_id": "REC-RING-001",
+      "transfer_timestamp": "2026-05-18T11:00:00Z"
+    },
+    {
+      "from_party_id": "P_GEN_04",
+      "to_party_id": "P_UTL_04",
+      "certificate_id": "REC-NIGHT-001",
+      "transfer_timestamp": "2026-07-11T02:00:00Z"
+    },
+    {
+      "from_party_id": "P_GEN_05",
+      "to_party_id": "P_UTL_05",
+      "certificate_id": "REC-OVERCAP-001",
+      "transfer_timestamp": "2026-05-15T10:00:00Z"
+    },
+    {
+      "from_party_id": "P_RING_01",
+      "to_party_id": "P_RING_02",
+      "certificate_id": "REC-COMPOUND-001",
+      "transfer_timestamp": "2026-07-11T01:00:00Z"
+    },
+    {
+      "from_party_id": "P_RING_02",
+      "to_party_id": "P_RING_01",
+      "certificate_id": "REC-COMPOUND-001",
+      "transfer_timestamp": "2026-07-11T03:00:00Z"
+    }
+  ]
+}
