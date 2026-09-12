@@ -8,8 +8,13 @@ import os
 import sys
 from typing import Dict, Any
 
-# Ensure project root is in sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+# Ensure both graph_explain/ and repo root are in sys.path
+_LLM_DIR = os.path.abspath(os.path.dirname(__file__))
+_GRAPH_EXPLAIN_DIR = os.path.abspath(os.path.join(_LLM_DIR, ".."))
+_REPO_ROOT = os.path.abspath(os.path.join(_GRAPH_EXPLAIN_DIR, ".."))
+for _p in [_REPO_ROOT, _GRAPH_EXPLAIN_DIR]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 def query_audit_assistant(
     certificate_id: str,

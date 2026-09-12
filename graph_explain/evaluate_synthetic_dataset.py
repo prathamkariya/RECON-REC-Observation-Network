@@ -9,10 +9,17 @@ import sys
 import time
 import pandas as pd
 
-# Ensure project root is in sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Support running from graph_explain/ or from repo root
+_HERE = os.path.abspath(os.path.dirname(__file__))
+_REPO_ROOT = os.path.abspath(os.path.join(_HERE, ".."))
+for _p in [_REPO_ROOT, _HERE]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
-from graph_explain.pipeline import analyze_dataset
+try:
+    from graph_explain.pipeline import analyze_dataset
+except ImportError:
+    from pipeline import analyze_dataset
 
 def run_evaluation():
     data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
