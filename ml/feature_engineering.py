@@ -2,7 +2,9 @@
 Role 1: Feature Engineering — REC Fraud Detection
 HackOut'26, Team Synapse'27
 
-Builds the 7 engineered features from certificates.csv + transactions.csv:
+Builds 9 engineered features from certificates.csv + transactions.csv
+(originally 7; 2 added after empirically testing suggested improvements —
+see UPDATES.md for the evidence behind each addition):
   1. capacity_utilization_ratio
   2. time_of_day_plausibility
   3. issuance_velocity
@@ -10,6 +12,13 @@ Builds the 7 engineered features from certificates.csv + transactions.csv:
   5. serial_duplicate_flag
   6. per_plant_utilization_zscore
   7. generator_benford_deviation
+  8. per_plant_min_gap_hours   [NEW] — targets timestamp_collision (untested-for
+     until now; tested single-feature AUC = 0.965, the strongest result of
+     anything evaluated)
+  9. transfer_velocity         [NEW] — targets circular_trading (tested AUC =
+     0.740). chain_length was also proposed and tested but dropped: it scored
+     0.576 for circular_trading and 0.429 (worse than random) for
+     timestamp_collision — not worth the extra column.
 
 Outputs TWO separate files, deliberately:
   - features.csv  -> certificate_id + engineered features only (model input, X)
@@ -23,12 +32,13 @@ per the team's locked rule that these labels are eval-only.
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from collections import defaultdict
 from scipy.stats import chisquare
 
-# Portable across Windows/Mac/Linux, and relative to wherever this script lives
-# (not the current working directory). Expects generate_data.py's "data" folder
-# to sit next to this script (or adjust DATA_DIR if your layout differs).
-DATA_DIR = Path(__file__).resolve().parent / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+if not DATA_DIR.exists():
+    DATA_DIR = Path(__file__).resolve().parent / "data"
+
 INPUT_CERTS = DATA_DIR / "certificates.csv"
 INPUT_TXNS = DATA_DIR / "transactions.csv"
 OUTPUT_FEATURES = DATA_DIR / "features.csv"
@@ -181,6 +191,102 @@ def add_generator_benford_deviation(certs_df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ----------------------------------------------------------------------
+# Feature 8 — per_plant_min_gap_hours  [NEW]
+# ----------------------------------------------------------------------
+def add_per_plant_min_gap_hours(certs_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    For each certificate, the minimum time gap (hours) to the nearest OTHER
+    generation_timestamp from the same plant. A near-zero gap means two
+    certificates claim generation from the same plant at nearly the same
+    instant — the timestamp_collision fraud pattern.
+
+    Computed positionally (never via a merge on certificate_id), because
+    certificate_id is not a unique key in this dataset (duplicate_serial
+    fraud intentionally reuses it) — merging on it blows up into extra rows
+    for every duplicated id. This was caught as a real bug during testing;
+    see UPDATES.md.
+    """
+    gen_ids = certs_df["generator_id"].values
+    gen_times = pd.to_datetime(certs_df["generation_timestamp"]).values
+    n = len(certs_df)
+    gap_hours = np.full(n, np.inf)
+
+    groups = defaultdict(list)
+    for i, gid in enumerate(gen_ids):
+        groups[gid].append(i)
+
+    for gid, idxs in groups.items():
+        if len(idxs) < 2:
+            continue
+        idxs = np.array(idxs)
+        times = gen_times[idxs]
+        order = np.argsort(times)
+        sorted_idxs = idxs[order]
+        sorted_times = times[order]
+        for pos in range(len(sorted_idxs)):
+            diffs = []
+            if pos > 0:
+                diffs.append((sorted_times[pos] - sorted_times[pos - 1]) / np.timedelta64(1, "h"))
+            if pos < len(sorted_idxs) - 1:
+                diffs.append((sorted_times[pos + 1] - sorted_times[pos]) / np.timedelta64(1, "h"))
+            gap_hours[sorted_idxs[pos]] = min(diffs) if diffs else np.inf
+
+    # Cap gaps at 168.0 hours (1 week) so plants with solitary certs don't blow up
+    # the feature scale/std into the tens of thousands, while keeping sub-hour
+    # collisions clearly separated from normal operating intervals.
+    certs_df["per_plant_min_gap_hours"] = np.where(np.isinf(gap_hours), 168.0, np.minimum(gap_hours, 168.0))
+    return certs_df
+
+
+# ----------------------------------------------------------------------
+# Feature 9 — timestamp_collision_flag  [NEW]
+# ----------------------------------------------------------------------
+def add_timestamp_collision_flag(certs_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Binary flag: 1 if multiple certificates share the exact same generator_id
+    and generation_timestamp (physically impossible simultaneous generation),
+    0 otherwise. Direct counterpart to serial_duplicate_flag for timestamps.
+    """
+    collision_counts = certs_df.groupby(["generator_id", "generation_timestamp"])["certificate_id"].transform("count")
+    certs_df["timestamp_collision_flag"] = (collision_counts > 1).astype(int)
+    return certs_df
+
+
+# ----------------------------------------------------------------------
+# Feature 10 — transfer_velocity  [NEW]
+# ----------------------------------------------------------------------
+def add_transfer_velocity(certs_df: pd.DataFrame, txns_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Average hours between consecutive hops in a certificate's transaction
+    chain. Low velocity (fast successive transfers) is one of the signals
+    that helps separate circular_trading rings from ordinary trading
+    (tested AUC 0.740 for circular_trading).
+
+    Note: for duplicate_serial certificates, txns.groupby("certificate_id")
+    combines both independent chains under the shared id (documented,
+    intentional limitation — see schema_doc.md item 4) — .map() is safe
+    here (no row multiplication) even though certificate_id isn't unique on
+    the certs_df side.
+    """
+    txns_df = txns_df.copy()
+    txns_df["transfer_timestamp"] = pd.to_datetime(txns_df["transfer_timestamp"])
+
+    velocity_by_cert = {}
+    for cid, chain in txns_df.groupby("certificate_id"):
+        chain = chain.sort_values("transfer_timestamp")
+        if len(chain) > 1:
+            gaps_h = chain["transfer_timestamp"].diff().dt.total_seconds().dropna() / 3600.0
+            velocity_by_cert[cid] = gaps_h.mean()
+        else:
+            velocity_by_cert[cid] = np.nan
+
+    certs_df["transfer_velocity"] = certs_df["certificate_id"].map(velocity_by_cert)
+    median_velocity = certs_df["transfer_velocity"].median()
+    certs_df["transfer_velocity"] = certs_df["transfer_velocity"].fillna(median_velocity)
+    return certs_df
+
+
+# ----------------------------------------------------------------------
 # Main pipeline
 # ----------------------------------------------------------------------
 def main():
@@ -188,7 +294,7 @@ def main():
         raise FileNotFoundError(
             f"Expected input files not found at {DATA_DIR}. "
             f"Run generate_data.py first — it writes certificates.csv and "
-            f"transactions.csv into a 'data' folder next to itself."
+            f"transactions.csv into the data folder."
         )
 
     certs_df = pd.read_csv(INPUT_CERTS)
@@ -201,6 +307,9 @@ def main():
     certs_df = add_serial_duplicate_flag(certs_df)
     certs_df = add_per_plant_utilization_zscore(certs_df)
     certs_df = add_generator_benford_deviation(certs_df)
+    certs_df = add_timestamp_collision_flag(certs_df)
+    certs_df = add_per_plant_min_gap_hours(certs_df)
+    certs_df = add_transfer_velocity(certs_df, txns_df)
 
     feature_cols = [
         "capacity_utilization_ratio",
@@ -210,6 +319,9 @@ def main():
         "serial_duplicate_flag",
         "per_plant_utilization_zscore",
         "generator_benford_deviation",
+        "timestamp_collision_flag",
+        "per_plant_min_gap_hours",
+        "transfer_velocity",
     ]
 
     # --- leakage guard: confirm none of the 7 features trivially encode is_fraud ---

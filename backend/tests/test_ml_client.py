@@ -60,10 +60,12 @@ def test_zero_capacity_plant_does_not_divide_by_zero():
 def test_real_branch_reads_role1_score_for_a_known_certificate(real_sources):
     real_sources("ML")
 
-    result = ml_client.predict(make_record(certificate_id="CERT000025"))
+    result = ml_client.predict(make_record(certificate_id="CERT000130"))
 
-    # Role 1's tuned Isolation Forest scored this certificate 0.5427.
-    assert result["risk_score"] == pytest.approx(0.543, abs=0.001)
+    # Role 1's retrained Isolation Forest (contamination=0.17, see the "model
+    # updates" PR) scored this certificate 0.5597 in the handoff this test reads
+    # — above the "strongly atypical" 0.45 band, so a reason is expected too.
+    assert result["risk_score"] == pytest.approx(0.560, abs=0.001)
     assert any("statistical_risk" in r for r in result["reasons"])
 
 
