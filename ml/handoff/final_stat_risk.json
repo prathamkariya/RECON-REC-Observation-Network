@@ -1,0 +1,4970 @@
+[
+    {
+        "certificate_id": "CERT000001",
+        "statistical_risk": 0.1994
+    },
+    {
+        "certificate_id": "CERT000002",
+        "statistical_risk": 0.1821
+    },
+    {
+        "certificate_id": "CERT000003",
+        "statistical_risk": 0.2481
+    },
+    {
+        "certificate_id": "CERT000004",
+        "statistical_risk": 0.0068
+    },
+    {
+        "certificate_id": "CERT000005",
+        "statistical_risk": 0.1559
+    },
+    {
+        "certificate_id": "CERT000006",
+        "statistical_risk": 0.0831
+    },
+    {
+        "certificate_id": "CERT000007",
+        "statistical_risk": 0.0715
+    },
+    {
+        "certificate_id": "CERT000008",
+        "statistical_risk": 0.1009
+    },
+    {
+        "certificate_id": "CERT000009",
+        "statistical_risk": 0.1388
+    },
+    {
+        "certificate_id": "CERT000010",
+        "statistical_risk": 0.1926
+    },
+    {
+        "certificate_id": "CERT000011",
+        "statistical_risk": 0.0485
+    },
+    {
+        "certificate_id": "CERT000012",
+        "statistical_risk": 0.0424
+    },
+    {
+        "certificate_id": "CERT000013",
+        "statistical_risk": 0.1164
+    },
+    {
+        "certificate_id": "CERT000014",
+        "statistical_risk": 0.0757
+    },
+    {
+        "certificate_id": "CERT000015",
+        "statistical_risk": 0.0172
+    },
+    {
+        "certificate_id": "CERT000016",
+        "statistical_risk": 0.0628
+    },
+    {
+        "certificate_id": "CERT000017",
+        "statistical_risk": 0.1762
+    },
+    {
+        "certificate_id": "CERT000018",
+        "statistical_risk": 0.0629
+    },
+    {
+        "certificate_id": "CERT000019",
+        "statistical_risk": 0.1176
+    },
+    {
+        "certificate_id": "CERT000020",
+        "statistical_risk": 0.0514
+    },
+    {
+        "certificate_id": "CERT000021",
+        "statistical_risk": 0.341
+    },
+    {
+        "certificate_id": "CERT000022",
+        "statistical_risk": 0.0407
+    },
+    {
+        "certificate_id": "CERT000023",
+        "statistical_risk": 0.052
+    },
+    {
+        "certificate_id": "CERT000024",
+        "statistical_risk": 0.3804
+    },
+    {
+        "certificate_id": "CERT000025",
+        "statistical_risk": 0.6245
+    },
+    {
+        "certificate_id": "CERT000026",
+        "statistical_risk": 0.0737
+    },
+    {
+        "certificate_id": "CERT000027",
+        "statistical_risk": 0.0207
+    },
+    {
+        "certificate_id": "CERT000028",
+        "statistical_risk": 0.6537
+    },
+    {
+        "certificate_id": "CERT000029",
+        "statistical_risk": 0.0377
+    },
+    {
+        "certificate_id": "CERT000030",
+        "statistical_risk": 0.1718
+    },
+    {
+        "certificate_id": "CERT000031",
+        "statistical_risk": 0.4289
+    },
+    {
+        "certificate_id": "CERT000032",
+        "statistical_risk": 0.0276
+    },
+    {
+        "certificate_id": "CERT000033",
+        "statistical_risk": 0.2695
+    },
+    {
+        "certificate_id": "CERT000034",
+        "statistical_risk": 0.2388
+    },
+    {
+        "certificate_id": "CERT000035",
+        "statistical_risk": 0.0739
+    },
+    {
+        "certificate_id": "CERT000036",
+        "statistical_risk": 0.0144
+    },
+    {
+        "certificate_id": "CERT000037",
+        "statistical_risk": 0.6971
+    },
+    {
+        "certificate_id": "CERT000038",
+        "statistical_risk": 0.0386
+    },
+    {
+        "certificate_id": "CERT000039",
+        "statistical_risk": 0.0594
+    },
+    {
+        "certificate_id": "CERT000040",
+        "statistical_risk": 0.0408
+    },
+    {
+        "certificate_id": "CERT000041",
+        "statistical_risk": 0.1211
+    },
+    {
+        "certificate_id": "CERT000042",
+        "statistical_risk": 0.1254
+    },
+    {
+        "certificate_id": "CERT000043",
+        "statistical_risk": 0.0132
+    },
+    {
+        "certificate_id": "CERT000044",
+        "statistical_risk": 0.0114
+    },
+    {
+        "certificate_id": "CERT000045",
+        "statistical_risk": 0.0855
+    },
+    {
+        "certificate_id": "CERT000046",
+        "statistical_risk": 0.1933
+    },
+    {
+        "certificate_id": "CERT000047",
+        "statistical_risk": 0.2128
+    },
+    {
+        "certificate_id": "CERT000048",
+        "statistical_risk": 0.4084
+    },
+    {
+        "certificate_id": "CERT000049",
+        "statistical_risk": 0.1442
+    },
+    {
+        "certificate_id": "CERT000050",
+        "statistical_risk": 0.1048
+    },
+    {
+        "certificate_id": "CERT000051",
+        "statistical_risk": 0.2014
+    },
+    {
+        "certificate_id": "CERT000052",
+        "statistical_risk": 0.2596
+    },
+    {
+        "certificate_id": "CERT000053",
+        "statistical_risk": 0.0585
+    },
+    {
+        "certificate_id": "CERT000054",
+        "statistical_risk": 0.2358
+    },
+    {
+        "certificate_id": "CERT000055",
+        "statistical_risk": 0.2609
+    },
+    {
+        "certificate_id": "CERT000056",
+        "statistical_risk": 0.0349
+    },
+    {
+        "certificate_id": "CERT000057",
+        "statistical_risk": 0.0767
+    },
+    {
+        "certificate_id": "CERT000058",
+        "statistical_risk": 0.1506
+    },
+    {
+        "certificate_id": "CERT000059",
+        "statistical_risk": 0.1761
+    },
+    {
+        "certificate_id": "CERT000060",
+        "statistical_risk": 0.1786
+    },
+    {
+        "certificate_id": "CERT000061",
+        "statistical_risk": 0.4762
+    },
+    {
+        "certificate_id": "CERT000062",
+        "statistical_risk": 0.2045
+    },
+    {
+        "certificate_id": "CERT000063",
+        "statistical_risk": 0.1117
+    },
+    {
+        "certificate_id": "CERT000064",
+        "statistical_risk": 0.0164
+    },
+    {
+        "certificate_id": "CERT000065",
+        "statistical_risk": 0.0753
+    },
+    {
+        "certificate_id": "CERT000066",
+        "statistical_risk": 0.1377
+    },
+    {
+        "certificate_id": "CERT000067",
+        "statistical_risk": 0.0629
+    },
+    {
+        "certificate_id": "CERT000068",
+        "statistical_risk": 0.0358
+    },
+    {
+        "certificate_id": "CERT000069",
+        "statistical_risk": 0.0104
+    },
+    {
+        "certificate_id": "CERT000070",
+        "statistical_risk": 0.5885
+    },
+    {
+        "certificate_id": "CERT000071",
+        "statistical_risk": 0.0299
+    },
+    {
+        "certificate_id": "CERT000072",
+        "statistical_risk": 0.0577
+    },
+    {
+        "certificate_id": "CERT000073",
+        "statistical_risk": 0.1749
+    },
+    {
+        "certificate_id": "CERT000074",
+        "statistical_risk": 0.052
+    },
+    {
+        "certificate_id": "CERT000075",
+        "statistical_risk": 0.1208
+    },
+    {
+        "certificate_id": "CERT000076",
+        "statistical_risk": 0.0432
+    },
+    {
+        "certificate_id": "CERT000077",
+        "statistical_risk": 0.1737
+    },
+    {
+        "certificate_id": "CERT000078",
+        "statistical_risk": 0.6067
+    },
+    {
+        "certificate_id": "CERT000079",
+        "statistical_risk": 0.0571
+    },
+    {
+        "certificate_id": "CERT000080",
+        "statistical_risk": 0.0773
+    },
+    {
+        "certificate_id": "CERT000081",
+        "statistical_risk": 0.4376
+    },
+    {
+        "certificate_id": "CERT000082",
+        "statistical_risk": 0.3498
+    },
+    {
+        "certificate_id": "CERT000083",
+        "statistical_risk": 0.2429
+    },
+    {
+        "certificate_id": "CERT000084",
+        "statistical_risk": 0.671
+    },
+    {
+        "certificate_id": "CERT000085",
+        "statistical_risk": 0.0236
+    },
+    {
+        "certificate_id": "CERT000086",
+        "statistical_risk": 0.1778
+    },
+    {
+        "certificate_id": "CERT000087",
+        "statistical_risk": 0.2737
+    },
+    {
+        "certificate_id": "CERT000088",
+        "statistical_risk": 0.4504
+    },
+    {
+        "certificate_id": "CERT000089",
+        "statistical_risk": 0.1756
+    },
+    {
+        "certificate_id": "CERT000090",
+        "statistical_risk": 0.3018
+    },
+    {
+        "certificate_id": "CERT000091",
+        "statistical_risk": 0.0762
+    },
+    {
+        "certificate_id": "CERT000092",
+        "statistical_risk": 0.1571
+    },
+    {
+        "certificate_id": "CERT000093",
+        "statistical_risk": 0.2113
+    },
+    {
+        "certificate_id": "CERT000094",
+        "statistical_risk": 0.2121
+    },
+    {
+        "certificate_id": "CERT000095",
+        "statistical_risk": 0.0361
+    },
+    {
+        "certificate_id": "CERT000096",
+        "statistical_risk": 0.1087
+    },
+    {
+        "certificate_id": "CERT000097",
+        "statistical_risk": 0.1996
+    },
+    {
+        "certificate_id": "CERT000098",
+        "statistical_risk": 0.0207
+    },
+    {
+        "certificate_id": "CERT000099",
+        "statistical_risk": 0.0351
+    },
+    {
+        "certificate_id": "CERT000100",
+        "statistical_risk": 0.1205
+    },
+    {
+        "certificate_id": "CERT000101",
+        "statistical_risk": 0.5859
+    },
+    {
+        "certificate_id": "CERT000102",
+        "statistical_risk": 0.1803
+    },
+    {
+        "certificate_id": "CERT000103",
+        "statistical_risk": 0.0032
+    },
+    {
+        "certificate_id": "CERT000104",
+        "statistical_risk": 0.1567
+    },
+    {
+        "certificate_id": "CERT000105",
+        "statistical_risk": 0.0522
+    },
+    {
+        "certificate_id": "CERT000106",
+        "statistical_risk": 0.2628
+    },
+    {
+        "certificate_id": "CERT000107",
+        "statistical_risk": 0.0556
+    },
+    {
+        "certificate_id": "CERT000108",
+        "statistical_risk": 0.0522
+    },
+    {
+        "certificate_id": "CERT000109",
+        "statistical_risk": 0.2377
+    },
+    {
+        "certificate_id": "CERT000110",
+        "statistical_risk": 0.0416
+    },
+    {
+        "certificate_id": "CERT000111",
+        "statistical_risk": 0.1111
+    },
+    {
+        "certificate_id": "CERT000112",
+        "statistical_risk": 0.6171
+    },
+    {
+        "certificate_id": "CERT000113",
+        "statistical_risk": 0.3357
+    },
+    {
+        "certificate_id": "CERT000114",
+        "statistical_risk": 0.7137
+    },
+    {
+        "certificate_id": "CERT000115",
+        "statistical_risk": 0.1041
+    },
+    {
+        "certificate_id": "CERT000116",
+        "statistical_risk": 0.1206
+    },
+    {
+        "certificate_id": "CERT000117",
+        "statistical_risk": 0.6413
+    },
+    {
+        "certificate_id": "CERT000118",
+        "statistical_risk": 0.0305
+    },
+    {
+        "certificate_id": "CERT000119",
+        "statistical_risk": 0.3505
+    },
+    {
+        "certificate_id": "CERT000120",
+        "statistical_risk": 0.1488
+    },
+    {
+        "certificate_id": "CERT000121",
+        "statistical_risk": 0.1044
+    },
+    {
+        "certificate_id": "CERT000122",
+        "statistical_risk": 0.1417
+    },
+    {
+        "certificate_id": "CERT000123",
+        "statistical_risk": 0.5219
+    },
+    {
+        "certificate_id": "CERT000124",
+        "statistical_risk": 0.0346
+    },
+    {
+        "certificate_id": "CERT000125",
+        "statistical_risk": 0.0657
+    },
+    {
+        "certificate_id": "CERT000126",
+        "statistical_risk": 0.4807
+    },
+    {
+        "certificate_id": "CERT000127",
+        "statistical_risk": 0.0779
+    },
+    {
+        "certificate_id": "CERT000128",
+        "statistical_risk": 0.3161
+    },
+    {
+        "certificate_id": "CERT000129",
+        "statistical_risk": 0.4264
+    },
+    {
+        "certificate_id": "CERT000130",
+        "statistical_risk": 0.9982
+    },
+    {
+        "certificate_id": "CERT000131",
+        "statistical_risk": 0.6566
+    },
+    {
+        "certificate_id": "CERT000132",
+        "statistical_risk": 0.2023
+    },
+    {
+        "certificate_id": "CERT000133",
+        "statistical_risk": 0.1468
+    },
+    {
+        "certificate_id": "CERT000134",
+        "statistical_risk": 0.1142
+    },
+    {
+        "certificate_id": "CERT000135",
+        "statistical_risk": 0.1346
+    },
+    {
+        "certificate_id": "CERT000136",
+        "statistical_risk": 0.5204
+    },
+    {
+        "certificate_id": "CERT000137",
+        "statistical_risk": 0.0307
+    },
+    {
+        "certificate_id": "CERT000138",
+        "statistical_risk": 0.1344
+    },
+    {
+        "certificate_id": "CERT000139",
+        "statistical_risk": 0.2144
+    },
+    {
+        "certificate_id": "CERT000140",
+        "statistical_risk": 0.2192
+    },
+    {
+        "certificate_id": "CERT000141",
+        "statistical_risk": 0.0706
+    },
+    {
+        "certificate_id": "CERT000142",
+        "statistical_risk": 0.5012
+    },
+    {
+        "certificate_id": "CERT000143",
+        "statistical_risk": 0.0618
+    },
+    {
+        "certificate_id": "CERT000144",
+        "statistical_risk": 0.5957
+    },
+    {
+        "certificate_id": "CERT000145",
+        "statistical_risk": 0.0705
+    },
+    {
+        "certificate_id": "CERT000146",
+        "statistical_risk": 0.1927
+    },
+    {
+        "certificate_id": "CERT000147",
+        "statistical_risk": 0.2321
+    },
+    {
+        "certificate_id": "CERT000148",
+        "statistical_risk": 0.2539
+    },
+    {
+        "certificate_id": "CERT000149",
+        "statistical_risk": 0.0782
+    },
+    {
+        "certificate_id": "CERT000150",
+        "statistical_risk": 0.0766
+    },
+    {
+        "certificate_id": "CERT000151",
+        "statistical_risk": 0.6192
+    },
+    {
+        "certificate_id": "CERT000152",
+        "statistical_risk": 0.0422
+    },
+    {
+        "certificate_id": "CERT000153",
+        "statistical_risk": 0.629
+    },
+    {
+        "certificate_id": "CERT000154",
+        "statistical_risk": 0.4727
+    },
+    {
+        "certificate_id": "CERT000155",
+        "statistical_risk": 0.1943
+    },
+    {
+        "certificate_id": "CERT000156",
+        "statistical_risk": 0.0647
+    },
+    {
+        "certificate_id": "CERT000157",
+        "statistical_risk": 0.2871
+    },
+    {
+        "certificate_id": "CERT000158",
+        "statistical_risk": 0.4008
+    },
+    {
+        "certificate_id": "CERT000159",
+        "statistical_risk": 0.6097
+    },
+    {
+        "certificate_id": "CERT000160",
+        "statistical_risk": 0.0877
+    },
+    {
+        "certificate_id": "CERT000161",
+        "statistical_risk": 0.1189
+    },
+    {
+        "certificate_id": "CERT000162",
+        "statistical_risk": 0.0537
+    },
+    {
+        "certificate_id": "CERT000163",
+        "statistical_risk": 0.0271
+    },
+    {
+        "certificate_id": "CERT000164",
+        "statistical_risk": 0.3234
+    },
+    {
+        "certificate_id": "CERT000165",
+        "statistical_risk": 0.1056
+    },
+    {
+        "certificate_id": "CERT000166",
+        "statistical_risk": 0.0713
+    },
+    {
+        "certificate_id": "CERT000167",
+        "statistical_risk": 0.2236
+    },
+    {
+        "certificate_id": "CERT000168",
+        "statistical_risk": 0.0174
+    },
+    {
+        "certificate_id": "CERT000169",
+        "statistical_risk": 0.0484
+    },
+    {
+        "certificate_id": "CERT000170",
+        "statistical_risk": 0.1618
+    },
+    {
+        "certificate_id": "CERT000171",
+        "statistical_risk": 0.2184
+    },
+    {
+        "certificate_id": "CERT000172",
+        "statistical_risk": 0.6697
+    },
+    {
+        "certificate_id": "CERT000173",
+        "statistical_risk": 0.0809
+    },
+    {
+        "certificate_id": "CERT000174",
+        "statistical_risk": 0.3366
+    },
+    {
+        "certificate_id": "CERT000175",
+        "statistical_risk": 0.0135
+    },
+    {
+        "certificate_id": "CERT000176",
+        "statistical_risk": 0.1315
+    },
+    {
+        "certificate_id": "CERT000177",
+        "statistical_risk": 0.7809
+    },
+    {
+        "certificate_id": "CERT000178",
+        "statistical_risk": 0.0774
+    },
+    {
+        "certificate_id": "CERT000179",
+        "statistical_risk": 0.0507
+    },
+    {
+        "certificate_id": "CERT000180",
+        "statistical_risk": 0.3349
+    },
+    {
+        "certificate_id": "CERT000181",
+        "statistical_risk": 0.6543
+    },
+    {
+        "certificate_id": "CERT000182",
+        "statistical_risk": 0.1999
+    },
+    {
+        "certificate_id": "CERT000183",
+        "statistical_risk": 0.0445
+    },
+    {
+        "certificate_id": "CERT000184",
+        "statistical_risk": 0.0084
+    },
+    {
+        "certificate_id": "CERT000185",
+        "statistical_risk": 0.0105
+    },
+    {
+        "certificate_id": "CERT000186",
+        "statistical_risk": 0.6538
+    },
+    {
+        "certificate_id": "CERT000187",
+        "statistical_risk": 0.0211
+    },
+    {
+        "certificate_id": "CERT000188",
+        "statistical_risk": 0.624
+    },
+    {
+        "certificate_id": "CERT000189",
+        "statistical_risk": 0.3049
+    },
+    {
+        "certificate_id": "CERT000190",
+        "statistical_risk": 0.0358
+    },
+    {
+        "certificate_id": "CERT000191",
+        "statistical_risk": 0.0094
+    },
+    {
+        "certificate_id": "CERT000192",
+        "statistical_risk": 0.1602
+    },
+    {
+        "certificate_id": "CERT000193",
+        "statistical_risk": 0.0122
+    },
+    {
+        "certificate_id": "CERT000194",
+        "statistical_risk": 0.2295
+    },
+    {
+        "certificate_id": "CERT000195",
+        "statistical_risk": 0.0009
+    },
+    {
+        "certificate_id": "CERT000196",
+        "statistical_risk": 0.081
+    },
+    {
+        "certificate_id": "CERT000197",
+        "statistical_risk": 0.0405
+    },
+    {
+        "certificate_id": "CERT000198",
+        "statistical_risk": 0.0552
+    },
+    {
+        "certificate_id": "CERT000199",
+        "statistical_risk": 0.5844
+    },
+    {
+        "certificate_id": "CERT000200",
+        "statistical_risk": 0.2484
+    },
+    {
+        "certificate_id": "CERT000201",
+        "statistical_risk": 0.1792
+    },
+    {
+        "certificate_id": "CERT000202",
+        "statistical_risk": 0.0772
+    },
+    {
+        "certificate_id": "CERT000203",
+        "statistical_risk": 0.0826
+    },
+    {
+        "certificate_id": "CERT000204",
+        "statistical_risk": 0.8453
+    },
+    {
+        "certificate_id": "CERT000205",
+        "statistical_risk": 0.1023
+    },
+    {
+        "certificate_id": "CERT000206",
+        "statistical_risk": 0.1917
+    },
+    {
+        "certificate_id": "CERT000207",
+        "statistical_risk": 0.0773
+    },
+    {
+        "certificate_id": "CERT000208",
+        "statistical_risk": 0.0088
+    },
+    {
+        "certificate_id": "CERT000209",
+        "statistical_risk": 0.3234
+    },
+    {
+        "certificate_id": "CERT000210",
+        "statistical_risk": 0.0351
+    },
+    {
+        "certificate_id": "CERT000211",
+        "statistical_risk": 0.0997
+    },
+    {
+        "certificate_id": "CERT000212",
+        "statistical_risk": 0.0064
+    },
+    {
+        "certificate_id": "CERT000213",
+        "statistical_risk": 0.1842
+    },
+    {
+        "certificate_id": "CERT000214",
+        "statistical_risk": 0.1947
+    },
+    {
+        "certificate_id": "CERT000215",
+        "statistical_risk": 0.1095
+    },
+    {
+        "certificate_id": "CERT000216",
+        "statistical_risk": 0.0633
+    },
+    {
+        "certificate_id": "CERT000217",
+        "statistical_risk": 0.2212
+    },
+    {
+        "certificate_id": "CERT000218",
+        "statistical_risk": 0.1883
+    },
+    {
+        "certificate_id": "CERT000219",
+        "statistical_risk": 0.295
+    },
+    {
+        "certificate_id": "CERT000220",
+        "statistical_risk": 0.2242
+    },
+    {
+        "certificate_id": "CERT000221",
+        "statistical_risk": 0.6626
+    },
+    {
+        "certificate_id": "CERT000222",
+        "statistical_risk": 0.3913
+    },
+    {
+        "certificate_id": "CERT000223",
+        "statistical_risk": 0.1396
+    },
+    {
+        "certificate_id": "CERT000224",
+        "statistical_risk": 0.0915
+    },
+    {
+        "certificate_id": "CERT000225",
+        "statistical_risk": 0.1587
+    },
+    {
+        "certificate_id": "CERT000226",
+        "statistical_risk": 0.0076
+    },
+    {
+        "certificate_id": "CERT000227",
+        "statistical_risk": 0.0069
+    },
+    {
+        "certificate_id": "CERT000228",
+        "statistical_risk": 0.1525
+    },
+    {
+        "certificate_id": "CERT000229",
+        "statistical_risk": 0.0591
+    },
+    {
+        "certificate_id": "CERT000230",
+        "statistical_risk": 0.8966
+    },
+    {
+        "certificate_id": "CERT000231",
+        "statistical_risk": 0.0285
+    },
+    {
+        "certificate_id": "CERT000232",
+        "statistical_risk": 0.2329
+    },
+    {
+        "certificate_id": "CERT000233",
+        "statistical_risk": 0.2428
+    },
+    {
+        "certificate_id": "CERT000234",
+        "statistical_risk": 0.0738
+    },
+    {
+        "certificate_id": "CERT000235",
+        "statistical_risk": 0.6119
+    },
+    {
+        "certificate_id": "CERT000236",
+        "statistical_risk": 0.2434
+    },
+    {
+        "certificate_id": "CERT000237",
+        "statistical_risk": 0.2911
+    },
+    {
+        "certificate_id": "CERT000238",
+        "statistical_risk": 0.1034
+    },
+    {
+        "certificate_id": "CERT000239",
+        "statistical_risk": 0.2
+    },
+    {
+        "certificate_id": "CERT000240",
+        "statistical_risk": 0.313
+    },
+    {
+        "certificate_id": "CERT000241",
+        "statistical_risk": 0.0511
+    },
+    {
+        "certificate_id": "CERT000242",
+        "statistical_risk": 0.0507
+    },
+    {
+        "certificate_id": "CERT000243",
+        "statistical_risk": 0.0298
+    },
+    {
+        "certificate_id": "CERT000244",
+        "statistical_risk": 0.0176
+    },
+    {
+        "certificate_id": "CERT000245",
+        "statistical_risk": 0.1938
+    },
+    {
+        "certificate_id": "CERT000246",
+        "statistical_risk": 0.8489
+    },
+    {
+        "certificate_id": "CERT000247",
+        "statistical_risk": 0.1135
+    },
+    {
+        "certificate_id": "CERT000248",
+        "statistical_risk": 0.0179
+    },
+    {
+        "certificate_id": "CERT000249",
+        "statistical_risk": 0.6084
+    },
+    {
+        "certificate_id": "CERT000250",
+        "statistical_risk": 0.06
+    },
+    {
+        "certificate_id": "CERT000251",
+        "statistical_risk": 0.0739
+    },
+    {
+        "certificate_id": "CERT000252",
+        "statistical_risk": 0.0478
+    },
+    {
+        "certificate_id": "CERT000253",
+        "statistical_risk": 0.1669
+    },
+    {
+        "certificate_id": "CERT000254",
+        "statistical_risk": 0.1152
+    },
+    {
+        "certificate_id": "CERT000255",
+        "statistical_risk": 0.3743
+    },
+    {
+        "certificate_id": "CERT000256",
+        "statistical_risk": 0.1214
+    },
+    {
+        "certificate_id": "CERT000257",
+        "statistical_risk": 0.1316
+    },
+    {
+        "certificate_id": "CERT000258",
+        "statistical_risk": 0.018
+    },
+    {
+        "certificate_id": "CERT000259",
+        "statistical_risk": 0.0745
+    },
+    {
+        "certificate_id": "CERT000260",
+        "statistical_risk": 0.1029
+    },
+    {
+        "certificate_id": "CERT000261",
+        "statistical_risk": 0.1437
+    },
+    {
+        "certificate_id": "CERT000262",
+        "statistical_risk": 0.2873
+    },
+    {
+        "certificate_id": "CERT000263",
+        "statistical_risk": 0.0536
+    },
+    {
+        "certificate_id": "CERT000264",
+        "statistical_risk": 0.1317
+    },
+    {
+        "certificate_id": "CERT000265",
+        "statistical_risk": 0.048
+    },
+    {
+        "certificate_id": "CERT000266",
+        "statistical_risk": 0.1019
+    },
+    {
+        "certificate_id": "CERT000267",
+        "statistical_risk": 0.0768
+    },
+    {
+        "certificate_id": "CERT000268",
+        "statistical_risk": 0.1819
+    },
+    {
+        "certificate_id": "CERT000269",
+        "statistical_risk": 0.0099
+    },
+    {
+        "certificate_id": "CERT000270",
+        "statistical_risk": 0.194
+    },
+    {
+        "certificate_id": "CERT000271",
+        "statistical_risk": 0.0445
+    },
+    {
+        "certificate_id": "CERT000272",
+        "statistical_risk": 0.7896
+    },
+    {
+        "certificate_id": "CERT000273",
+        "statistical_risk": 0.0618
+    },
+    {
+        "certificate_id": "CERT000274",
+        "statistical_risk": 0.0571
+    },
+    {
+        "certificate_id": "CERT000275",
+        "statistical_risk": 0.1612
+    },
+    {
+        "certificate_id": "CERT000276",
+        "statistical_risk": 0.1402
+    },
+    {
+        "certificate_id": "CERT000277",
+        "statistical_risk": 0.0609
+    },
+    {
+        "certificate_id": "CERT000278",
+        "statistical_risk": 0.1534
+    },
+    {
+        "certificate_id": "CERT000279",
+        "statistical_risk": 0.0476
+    },
+    {
+        "certificate_id": "CERT000280",
+        "statistical_risk": 0.0484
+    },
+    {
+        "certificate_id": "CERT000281",
+        "statistical_risk": 0.1169
+    },
+    {
+        "certificate_id": "CERT000282",
+        "statistical_risk": 0.7964
+    },
+    {
+        "certificate_id": "CERT000283",
+        "statistical_risk": 0.3024
+    },
+    {
+        "certificate_id": "CERT000284",
+        "statistical_risk": 0.0151
+    },
+    {
+        "certificate_id": "CERT000285",
+        "statistical_risk": 0.2969
+    },
+    {
+        "certificate_id": "CERT000286",
+        "statistical_risk": 0.0319
+    },
+    {
+        "certificate_id": "CERT000287",
+        "statistical_risk": 0.0231
+    },
+    {
+        "certificate_id": "CERT000288",
+        "statistical_risk": 0.0339
+    },
+    {
+        "certificate_id": "CERT000289",
+        "statistical_risk": 0.076
+    },
+    {
+        "certificate_id": "CERT000290",
+        "statistical_risk": 0.8258
+    },
+    {
+        "certificate_id": "CERT000291",
+        "statistical_risk": 0.1023
+    },
+    {
+        "certificate_id": "CERT000292",
+        "statistical_risk": 0.0908
+    },
+    {
+        "certificate_id": "CERT000293",
+        "statistical_risk": 0.1921
+    },
+    {
+        "certificate_id": "CERT000294",
+        "statistical_risk": 0.1853
+    },
+    {
+        "certificate_id": "CERT000295",
+        "statistical_risk": 0.049
+    },
+    {
+        "certificate_id": "CERT000296",
+        "statistical_risk": 0.068
+    },
+    {
+        "certificate_id": "CERT000297",
+        "statistical_risk": 0.1331
+    },
+    {
+        "certificate_id": "CERT000298",
+        "statistical_risk": 0.2533
+    },
+    {
+        "certificate_id": "CERT000299",
+        "statistical_risk": 0.1727
+    },
+    {
+        "certificate_id": "CERT000300",
+        "statistical_risk": 0.2458
+    },
+    {
+        "certificate_id": "CERT000301",
+        "statistical_risk": 0.1975
+    },
+    {
+        "certificate_id": "CERT000302",
+        "statistical_risk": 0.4291
+    },
+    {
+        "certificate_id": "CERT000303",
+        "statistical_risk": 0.0227
+    },
+    {
+        "certificate_id": "CERT000304",
+        "statistical_risk": 0.0913
+    },
+    {
+        "certificate_id": "CERT000305",
+        "statistical_risk": 0.3663
+    },
+    {
+        "certificate_id": "CERT000306",
+        "statistical_risk": 0.0595
+    },
+    {
+        "certificate_id": "CERT000307",
+        "statistical_risk": 0.1427
+    },
+    {
+        "certificate_id": "CERT000308",
+        "statistical_risk": 0.4376
+    },
+    {
+        "certificate_id": "CERT000309",
+        "statistical_risk": 0.3478
+    },
+    {
+        "certificate_id": "CERT000310",
+        "statistical_risk": 0.1738
+    },
+    {
+        "certificate_id": "CERT000311",
+        "statistical_risk": 0.1396
+    },
+    {
+        "certificate_id": "CERT000312",
+        "statistical_risk": 0.0594
+    },
+    {
+        "certificate_id": "CERT000313",
+        "statistical_risk": 0.7419
+    },
+    {
+        "certificate_id": "CERT000314",
+        "statistical_risk": 0.0381
+    },
+    {
+        "certificate_id": "CERT000315",
+        "statistical_risk": 0.1557
+    },
+    {
+        "certificate_id": "CERT000316",
+        "statistical_risk": 0.2572
+    },
+    {
+        "certificate_id": "CERT000317",
+        "statistical_risk": 0.4199
+    },
+    {
+        "certificate_id": "CERT000318",
+        "statistical_risk": 0.0719
+    },
+    {
+        "certificate_id": "CERT000319",
+        "statistical_risk": 0.0974
+    },
+    {
+        "certificate_id": "CERT000320",
+        "statistical_risk": 0.3011
+    },
+    {
+        "certificate_id": "CERT000321",
+        "statistical_risk": 0.0833
+    },
+    {
+        "certificate_id": "CERT000322",
+        "statistical_risk": 0.0675
+    },
+    {
+        "certificate_id": "CERT000323",
+        "statistical_risk": 0.8989
+    },
+    {
+        "certificate_id": "CERT000324",
+        "statistical_risk": 0.2961
+    },
+    {
+        "certificate_id": "CERT000325",
+        "statistical_risk": 0.4219
+    },
+    {
+        "certificate_id": "CERT000326",
+        "statistical_risk": 0.0498
+    },
+    {
+        "certificate_id": "CERT000327",
+        "statistical_risk": 0.35
+    },
+    {
+        "certificate_id": "CERT000328",
+        "statistical_risk": 0.1448
+    },
+    {
+        "certificate_id": "CERT000329",
+        "statistical_risk": 0.067
+    },
+    {
+        "certificate_id": "CERT000330",
+        "statistical_risk": 0.1003
+    },
+    {
+        "certificate_id": "CERT000331",
+        "statistical_risk": 0.1519
+    },
+    {
+        "certificate_id": "CERT000332",
+        "statistical_risk": 0.011
+    },
+    {
+        "certificate_id": "CERT000333",
+        "statistical_risk": 0.8686
+    },
+    {
+        "certificate_id": "CERT000334",
+        "statistical_risk": 0.1285
+    },
+    {
+        "certificate_id": "CERT000335",
+        "statistical_risk": 0.2349
+    },
+    {
+        "certificate_id": "CERT000336",
+        "statistical_risk": 0.0448
+    },
+    {
+        "certificate_id": "CERT000337",
+        "statistical_risk": 0.491
+    },
+    {
+        "certificate_id": "CERT000338",
+        "statistical_risk": 0.4082
+    },
+    {
+        "certificate_id": "CERT000339",
+        "statistical_risk": 0.0777
+    },
+    {
+        "certificate_id": "CERT000340",
+        "statistical_risk": 0.2242
+    },
+    {
+        "certificate_id": "CERT000341",
+        "statistical_risk": 0.138
+    },
+    {
+        "certificate_id": "CERT000342",
+        "statistical_risk": 0.0635
+    },
+    {
+        "certificate_id": "CERT000343",
+        "statistical_risk": 0.0451
+    },
+    {
+        "certificate_id": "CERT000344",
+        "statistical_risk": 0.1096
+    },
+    {
+        "certificate_id": "CERT000345",
+        "statistical_risk": 0.3274
+    },
+    {
+        "certificate_id": "CERT000346",
+        "statistical_risk": 0.7854
+    },
+    {
+        "certificate_id": "CERT000347",
+        "statistical_risk": 0.7859
+    },
+    {
+        "certificate_id": "CERT000348",
+        "statistical_risk": 0.0511
+    },
+    {
+        "certificate_id": "CERT000349",
+        "statistical_risk": 0.1551
+    },
+    {
+        "certificate_id": "CERT000350",
+        "statistical_risk": 0.2368
+    },
+    {
+        "certificate_id": "CERT000351",
+        "statistical_risk": 0.04
+    },
+    {
+        "certificate_id": "CERT000352",
+        "statistical_risk": 0.1927
+    },
+    {
+        "certificate_id": "CERT000353",
+        "statistical_risk": 0.1858
+    },
+    {
+        "certificate_id": "CERT000354",
+        "statistical_risk": 0.262
+    },
+    {
+        "certificate_id": "CERT000355",
+        "statistical_risk": 0.336
+    },
+    {
+        "certificate_id": "CERT000356",
+        "statistical_risk": 0.0211
+    },
+    {
+        "certificate_id": "CERT000357",
+        "statistical_risk": 0.0977
+    },
+    {
+        "certificate_id": "CERT000358",
+        "statistical_risk": 0.0055
+    },
+    {
+        "certificate_id": "CERT000359",
+        "statistical_risk": 0.3438
+    },
+    {
+        "certificate_id": "CERT000360",
+        "statistical_risk": 0.0261
+    },
+    {
+        "certificate_id": "CERT000361",
+        "statistical_risk": 0.0477
+    },
+    {
+        "certificate_id": "CERT000362",
+        "statistical_risk": 0.0958
+    },
+    {
+        "certificate_id": "CERT000363",
+        "statistical_risk": 0.0617
+    },
+    {
+        "certificate_id": "CERT000364",
+        "statistical_risk": 0.1531
+    },
+    {
+        "certificate_id": "CERT000365",
+        "statistical_risk": 0.0111
+    },
+    {
+        "certificate_id": "CERT000366",
+        "statistical_risk": 0.1105
+    },
+    {
+        "certificate_id": "CERT000367",
+        "statistical_risk": 0.0657
+    },
+    {
+        "certificate_id": "CERT000368",
+        "statistical_risk": 0.124
+    },
+    {
+        "certificate_id": "CERT000369",
+        "statistical_risk": 0.5886
+    },
+    {
+        "certificate_id": "CERT000370",
+        "statistical_risk": 0.2374
+    },
+    {
+        "certificate_id": "CERT000371",
+        "statistical_risk": 0.286
+    },
+    {
+        "certificate_id": "CERT000372",
+        "statistical_risk": 0.3122
+    },
+    {
+        "certificate_id": "CERT000373",
+        "statistical_risk": 0.0415
+    },
+    {
+        "certificate_id": "CERT000374",
+        "statistical_risk": 0.2157
+    },
+    {
+        "certificate_id": "CERT000375",
+        "statistical_risk": 0.3741
+    },
+    {
+        "certificate_id": "CERT000376",
+        "statistical_risk": 0.0659
+    },
+    {
+        "certificate_id": "CERT000377",
+        "statistical_risk": 0.0307
+    },
+    {
+        "certificate_id": "CERT000378",
+        "statistical_risk": 0.1168
+    },
+    {
+        "certificate_id": "CERT000379",
+        "statistical_risk": 0.173
+    },
+    {
+        "certificate_id": "CERT000380",
+        "statistical_risk": 0.0497
+    },
+    {
+        "certificate_id": "CERT000381",
+        "statistical_risk": 0.127
+    },
+    {
+        "certificate_id": "CERT000382",
+        "statistical_risk": 0.0201
+    },
+    {
+        "certificate_id": "CERT000383",
+        "statistical_risk": 0.0567
+    },
+    {
+        "certificate_id": "CERT000384",
+        "statistical_risk": 0.0165
+    },
+    {
+        "certificate_id": "CERT000385",
+        "statistical_risk": 0.3271
+    },
+    {
+        "certificate_id": "CERT000386",
+        "statistical_risk": 0.038
+    },
+    {
+        "certificate_id": "CERT000387",
+        "statistical_risk": 0.0252
+    },
+    {
+        "certificate_id": "CERT000388",
+        "statistical_risk": 0.0104
+    },
+    {
+        "certificate_id": "CERT000389",
+        "statistical_risk": 0.138
+    },
+    {
+        "certificate_id": "CERT000390",
+        "statistical_risk": 0.1405
+    },
+    {
+        "certificate_id": "CERT000391",
+        "statistical_risk": 0.0882
+    },
+    {
+        "certificate_id": "CERT000392",
+        "statistical_risk": 0.0801
+    },
+    {
+        "certificate_id": "CERT000393",
+        "statistical_risk": 0.379
+    },
+    {
+        "certificate_id": "CERT000394",
+        "statistical_risk": 0.089
+    },
+    {
+        "certificate_id": "CERT000395",
+        "statistical_risk": 0.1393
+    },
+    {
+        "certificate_id": "CERT000396",
+        "statistical_risk": 0.0395
+    },
+    {
+        "certificate_id": "CERT000397",
+        "statistical_risk": 0.6201
+    },
+    {
+        "certificate_id": "CERT000398",
+        "statistical_risk": 0.0668
+    },
+    {
+        "certificate_id": "CERT000399",
+        "statistical_risk": 0.1236
+    },
+    {
+        "certificate_id": "CERT000400",
+        "statistical_risk": 0.0183
+    },
+    {
+        "certificate_id": "CERT000401",
+        "statistical_risk": 0.0371
+    },
+    {
+        "certificate_id": "CERT000402",
+        "statistical_risk": 0.0729
+    },
+    {
+        "certificate_id": "CERT000403",
+        "statistical_risk": 0.0791
+    },
+    {
+        "certificate_id": "CERT000404",
+        "statistical_risk": 0.3591
+    },
+    {
+        "certificate_id": "CERT000405",
+        "statistical_risk": 0.0381
+    },
+    {
+        "certificate_id": "CERT000406",
+        "statistical_risk": 0.0234
+    },
+    {
+        "certificate_id": "CERT000407",
+        "statistical_risk": 0.1285
+    },
+    {
+        "certificate_id": "CERT000408",
+        "statistical_risk": 0.2323
+    },
+    {
+        "certificate_id": "CERT000409",
+        "statistical_risk": 0.6823
+    },
+    {
+        "certificate_id": "CERT000410",
+        "statistical_risk": 0.118
+    },
+    {
+        "certificate_id": "CERT000411",
+        "statistical_risk": 0.0566
+    },
+    {
+        "certificate_id": "CERT000412",
+        "statistical_risk": 0.2084
+    },
+    {
+        "certificate_id": "CERT000413",
+        "statistical_risk": 0.1022
+    },
+    {
+        "certificate_id": "CERT000414",
+        "statistical_risk": 0.1664
+    },
+    {
+        "certificate_id": "CERT000415",
+        "statistical_risk": 0.0087
+    },
+    {
+        "certificate_id": "CERT000416",
+        "statistical_risk": 0.3213
+    },
+    {
+        "certificate_id": "CERT000417",
+        "statistical_risk": 0.0799
+    },
+    {
+        "certificate_id": "CERT000418",
+        "statistical_risk": 0.1974
+    },
+    {
+        "certificate_id": "CERT000419",
+        "statistical_risk": 0.7712
+    },
+    {
+        "certificate_id": "CERT000420",
+        "statistical_risk": 0.777
+    },
+    {
+        "certificate_id": "CERT000421",
+        "statistical_risk": 0.0885
+    },
+    {
+        "certificate_id": "CERT000422",
+        "statistical_risk": 0.0467
+    },
+    {
+        "certificate_id": "CERT000423",
+        "statistical_risk": 0.0631
+    },
+    {
+        "certificate_id": "CERT000424",
+        "statistical_risk": 0.0647
+    },
+    {
+        "certificate_id": "CERT000425",
+        "statistical_risk": 0.3524
+    },
+    {
+        "certificate_id": "CERT000426",
+        "statistical_risk": 0.1676
+    },
+    {
+        "certificate_id": "CERT000427",
+        "statistical_risk": 0.1285
+    },
+    {
+        "certificate_id": "CERT000428",
+        "statistical_risk": 0.0375
+    },
+    {
+        "certificate_id": "CERT000429",
+        "statistical_risk": 0.1621
+    },
+    {
+        "certificate_id": "CERT000430",
+        "statistical_risk": 0.0098
+    },
+    {
+        "certificate_id": "CERT000431",
+        "statistical_risk": 0.1068
+    },
+    {
+        "certificate_id": "CERT000432",
+        "statistical_risk": 0.1042
+    },
+    {
+        "certificate_id": "CERT000433",
+        "statistical_risk": 0.0153
+    },
+    {
+        "certificate_id": "CERT000434",
+        "statistical_risk": 0.0226
+    },
+    {
+        "certificate_id": "CERT000435",
+        "statistical_risk": 0.1557
+    },
+    {
+        "certificate_id": "CERT000436",
+        "statistical_risk": 0.0611
+    },
+    {
+        "certificate_id": "CERT000437",
+        "statistical_risk": 0.1511
+    },
+    {
+        "certificate_id": "CERT000438",
+        "statistical_risk": 0.0278
+    },
+    {
+        "certificate_id": "CERT000439",
+        "statistical_risk": 0.3066
+    },
+    {
+        "certificate_id": "CERT000440",
+        "statistical_risk": 0.0093
+    },
+    {
+        "certificate_id": "CERT000441",
+        "statistical_risk": 0.0095
+    },
+    {
+        "certificate_id": "CERT000442",
+        "statistical_risk": 0.1545
+    },
+    {
+        "certificate_id": "CERT000443",
+        "statistical_risk": 0.3526
+    },
+    {
+        "certificate_id": "CERT000444",
+        "statistical_risk": 0.0441
+    },
+    {
+        "certificate_id": "CERT000445",
+        "statistical_risk": 0.2812
+    },
+    {
+        "certificate_id": "CERT000446",
+        "statistical_risk": 0.3383
+    },
+    {
+        "certificate_id": "CERT000447",
+        "statistical_risk": 0.0467
+    },
+    {
+        "certificate_id": "CERT000448",
+        "statistical_risk": 0.2209
+    },
+    {
+        "certificate_id": "CERT000449",
+        "statistical_risk": 0.3702
+    },
+    {
+        "certificate_id": "CERT000450",
+        "statistical_risk": 0.2252
+    },
+    {
+        "certificate_id": "CERT000451",
+        "statistical_risk": 0.0834
+    },
+    {
+        "certificate_id": "CERT000452",
+        "statistical_risk": 0.0339
+    },
+    {
+        "certificate_id": "CERT000453",
+        "statistical_risk": 0.1717
+    },
+    {
+        "certificate_id": "CERT000454",
+        "statistical_risk": 0.0207
+    },
+    {
+        "certificate_id": "CERT000455",
+        "statistical_risk": 0.3253
+    },
+    {
+        "certificate_id": "CERT000456",
+        "statistical_risk": 0.0511
+    },
+    {
+        "certificate_id": "CERT000457",
+        "statistical_risk": 0.1794
+    },
+    {
+        "certificate_id": "CERT000458",
+        "statistical_risk": 0.1033
+    },
+    {
+        "certificate_id": "CERT000459",
+        "statistical_risk": 0.2216
+    },
+    {
+        "certificate_id": "CERT000460",
+        "statistical_risk": 0.3344
+    },
+    {
+        "certificate_id": "CERT000461",
+        "statistical_risk": 0.2483
+    },
+    {
+        "certificate_id": "CERT000462",
+        "statistical_risk": 0.1028
+    },
+    {
+        "certificate_id": "CERT000463",
+        "statistical_risk": 0.0509
+    },
+    {
+        "certificate_id": "CERT000464",
+        "statistical_risk": 0.0721
+    },
+    {
+        "certificate_id": "CERT000465",
+        "statistical_risk": 0.2633
+    },
+    {
+        "certificate_id": "CERT000466",
+        "statistical_risk": 0.0806
+    },
+    {
+        "certificate_id": "CERT000467",
+        "statistical_risk": 0.1611
+    },
+    {
+        "certificate_id": "CERT000468",
+        "statistical_risk": 0.4958
+    },
+    {
+        "certificate_id": "CERT000469",
+        "statistical_risk": 0.1894
+    },
+    {
+        "certificate_id": "CERT000470",
+        "statistical_risk": 0.4054
+    },
+    {
+        "certificate_id": "CERT000471",
+        "statistical_risk": 0.0635
+    },
+    {
+        "certificate_id": "CERT000472",
+        "statistical_risk": 0.0845
+    },
+    {
+        "certificate_id": "CERT000473",
+        "statistical_risk": 0.0512
+    },
+    {
+        "certificate_id": "CERT000474",
+        "statistical_risk": 0.0967
+    },
+    {
+        "certificate_id": "CERT000475",
+        "statistical_risk": 0.0304
+    },
+    {
+        "certificate_id": "CERT000476",
+        "statistical_risk": 0.7677
+    },
+    {
+        "certificate_id": "CERT000477",
+        "statistical_risk": 0.1925
+    },
+    {
+        "certificate_id": "CERT000478",
+        "statistical_risk": 0.0475
+    },
+    {
+        "certificate_id": "CERT000479",
+        "statistical_risk": 0.2962
+    },
+    {
+        "certificate_id": "CERT000480",
+        "statistical_risk": 0.0385
+    },
+    {
+        "certificate_id": "CERT000481",
+        "statistical_risk": 0.1111
+    },
+    {
+        "certificate_id": "CERT000482",
+        "statistical_risk": 0.1645
+    },
+    {
+        "certificate_id": "CERT000483",
+        "statistical_risk": 0.1068
+    },
+    {
+        "certificate_id": "CERT000484",
+        "statistical_risk": 0.0598
+    },
+    {
+        "certificate_id": "CERT000485",
+        "statistical_risk": 0.2758
+    },
+    {
+        "certificate_id": "CERT000486",
+        "statistical_risk": 0.0424
+    },
+    {
+        "certificate_id": "CERT000487",
+        "statistical_risk": 0.1539
+    },
+    {
+        "certificate_id": "CERT000488",
+        "statistical_risk": 0.309
+    },
+    {
+        "certificate_id": "CERT000489",
+        "statistical_risk": 0.0608
+    },
+    {
+        "certificate_id": "CERT000490",
+        "statistical_risk": 0.1428
+    },
+    {
+        "certificate_id": "CERT000491",
+        "statistical_risk": 0.1827
+    },
+    {
+        "certificate_id": "CERT000492",
+        "statistical_risk": 0.0636
+    },
+    {
+        "certificate_id": "CERT000493",
+        "statistical_risk": 0.204
+    },
+    {
+        "certificate_id": "CERT000494",
+        "statistical_risk": 0.0454
+    },
+    {
+        "certificate_id": "CERT000495",
+        "statistical_risk": 0.1467
+    },
+    {
+        "certificate_id": "CERT000496",
+        "statistical_risk": 0.1221
+    },
+    {
+        "certificate_id": "CERT000497",
+        "statistical_risk": 0.1363
+    },
+    {
+        "certificate_id": "CERT000498",
+        "statistical_risk": 0.0299
+    },
+    {
+        "certificate_id": "CERT000499",
+        "statistical_risk": 0.0199
+    },
+    {
+        "certificate_id": "CERT000500",
+        "statistical_risk": 0.0756
+    },
+    {
+        "certificate_id": "CERT000501",
+        "statistical_risk": 0.0203
+    },
+    {
+        "certificate_id": "CERT000502",
+        "statistical_risk": 0.1484
+    },
+    {
+        "certificate_id": "CERT000503",
+        "statistical_risk": 0.6412
+    },
+    {
+        "certificate_id": "CERT000504",
+        "statistical_risk": 0.3591
+    },
+    {
+        "certificate_id": "CERT000505",
+        "statistical_risk": 0.2778
+    },
+    {
+        "certificate_id": "CERT000506",
+        "statistical_risk": 0.0202
+    },
+    {
+        "certificate_id": "CERT000507",
+        "statistical_risk": 0.0302
+    },
+    {
+        "certificate_id": "CERT000508",
+        "statistical_risk": 0.9025
+    },
+    {
+        "certificate_id": "CERT000509",
+        "statistical_risk": 0.0273
+    },
+    {
+        "certificate_id": "CERT000510",
+        "statistical_risk": 0.5886
+    },
+    {
+        "certificate_id": "CERT000511",
+        "statistical_risk": 0.0687
+    },
+    {
+        "certificate_id": "CERT000512",
+        "statistical_risk": 0.2012
+    },
+    {
+        "certificate_id": "CERT000513",
+        "statistical_risk": 0.1562
+    },
+    {
+        "certificate_id": "CERT000514",
+        "statistical_risk": 0.1734
+    },
+    {
+        "certificate_id": "CERT000515",
+        "statistical_risk": 0.1073
+    },
+    {
+        "certificate_id": "CERT000516",
+        "statistical_risk": 0.2423
+    },
+    {
+        "certificate_id": "CERT000517",
+        "statistical_risk": 0.2552
+    },
+    {
+        "certificate_id": "CERT000518",
+        "statistical_risk": 0.0885
+    },
+    {
+        "certificate_id": "CERT000519",
+        "statistical_risk": 0.1104
+    },
+    {
+        "certificate_id": "CERT000520",
+        "statistical_risk": 0.152
+    },
+    {
+        "certificate_id": "CERT000521",
+        "statistical_risk": 0.2859
+    },
+    {
+        "certificate_id": "CERT000522",
+        "statistical_risk": 0.1657
+    },
+    {
+        "certificate_id": "CERT000523",
+        "statistical_risk": 0.1125
+    },
+    {
+        "certificate_id": "CERT000524",
+        "statistical_risk": 0.06
+    },
+    {
+        "certificate_id": "CERT000525",
+        "statistical_risk": 0.0516
+    },
+    {
+        "certificate_id": "CERT000526",
+        "statistical_risk": 0.0719
+    },
+    {
+        "certificate_id": "CERT000527",
+        "statistical_risk": 0.0803
+    },
+    {
+        "certificate_id": "CERT000528",
+        "statistical_risk": 0.196
+    },
+    {
+        "certificate_id": "CERT000529",
+        "statistical_risk": 0.2882
+    },
+    {
+        "certificate_id": "CERT000530",
+        "statistical_risk": 0.2438
+    },
+    {
+        "certificate_id": "CERT000531",
+        "statistical_risk": 0.3399
+    },
+    {
+        "certificate_id": "CERT000532",
+        "statistical_risk": 0.4495
+    },
+    {
+        "certificate_id": "CERT000533",
+        "statistical_risk": 0.1495
+    },
+    {
+        "certificate_id": "CERT000534",
+        "statistical_risk": 0.2228
+    },
+    {
+        "certificate_id": "CERT000535",
+        "statistical_risk": 0.3447
+    },
+    {
+        "certificate_id": "CERT000536",
+        "statistical_risk": 0.1079
+    },
+    {
+        "certificate_id": "CERT000537",
+        "statistical_risk": 0.5021
+    },
+    {
+        "certificate_id": "CERT000538",
+        "statistical_risk": 0.2252
+    },
+    {
+        "certificate_id": "CERT000539",
+        "statistical_risk": 0.0552
+    },
+    {
+        "certificate_id": "CERT000540",
+        "statistical_risk": 0.5273
+    },
+    {
+        "certificate_id": "CERT000541",
+        "statistical_risk": 0.193
+    },
+    {
+        "certificate_id": "CERT000542",
+        "statistical_risk": 0.1672
+    },
+    {
+        "certificate_id": "CERT000543",
+        "statistical_risk": 0.1455
+    },
+    {
+        "certificate_id": "CERT000544",
+        "statistical_risk": 0.2373
+    },
+    {
+        "certificate_id": "CERT000545",
+        "statistical_risk": 0.2394
+    },
+    {
+        "certificate_id": "CERT000546",
+        "statistical_risk": 0.0647
+    },
+    {
+        "certificate_id": "CERT000547",
+        "statistical_risk": 0.0113
+    },
+    {
+        "certificate_id": "CERT000548",
+        "statistical_risk": 0.4548
+    },
+    {
+        "certificate_id": "CERT000549",
+        "statistical_risk": 0.6908
+    },
+    {
+        "certificate_id": "CERT000550",
+        "statistical_risk": 0.1151
+    },
+    {
+        "certificate_id": "CERT000551",
+        "statistical_risk": 0.1658
+    },
+    {
+        "certificate_id": "CERT000552",
+        "statistical_risk": 0.3248
+    },
+    {
+        "certificate_id": "CERT000553",
+        "statistical_risk": 0.0524
+    },
+    {
+        "certificate_id": "CERT000554",
+        "statistical_risk": 0.604
+    },
+    {
+        "certificate_id": "CERT000555",
+        "statistical_risk": 0.1179
+    },
+    {
+        "certificate_id": "CERT000556",
+        "statistical_risk": 0.1497
+    },
+    {
+        "certificate_id": "CERT000557",
+        "statistical_risk": 0.1614
+    },
+    {
+        "certificate_id": "CERT000558",
+        "statistical_risk": 0.2508
+    },
+    {
+        "certificate_id": "CERT000559",
+        "statistical_risk": 0.0996
+    },
+    {
+        "certificate_id": "CERT000560",
+        "statistical_risk": 0.8376
+    },
+    {
+        "certificate_id": "CERT000561",
+        "statistical_risk": 0.1254
+    },
+    {
+        "certificate_id": "CERT000562",
+        "statistical_risk": 0.0825
+    },
+    {
+        "certificate_id": "CERT000563",
+        "statistical_risk": 0.0494
+    },
+    {
+        "certificate_id": "CERT000564",
+        "statistical_risk": 0.1197
+    },
+    {
+        "certificate_id": "CERT000565",
+        "statistical_risk": 0.0235
+    },
+    {
+        "certificate_id": "CERT000566",
+        "statistical_risk": 0.0776
+    },
+    {
+        "certificate_id": "CERT000567",
+        "statistical_risk": 0.2075
+    },
+    {
+        "certificate_id": "CERT000568",
+        "statistical_risk": 0.1093
+    },
+    {
+        "certificate_id": "CERT000569",
+        "statistical_risk": 0.2857
+    },
+    {
+        "certificate_id": "CERT000570",
+        "statistical_risk": 0.0733
+    },
+    {
+        "certificate_id": "CERT000571",
+        "statistical_risk": 0.0769
+    },
+    {
+        "certificate_id": "CERT000572",
+        "statistical_risk": 0.0645
+    },
+    {
+        "certificate_id": "CERT000573",
+        "statistical_risk": 0.0898
+    },
+    {
+        "certificate_id": "CERT000574",
+        "statistical_risk": 0.7674
+    },
+    {
+        "certificate_id": "CERT000575",
+        "statistical_risk": 0.0947
+    },
+    {
+        "certificate_id": "CERT000576",
+        "statistical_risk": 0.0529
+    },
+    {
+        "certificate_id": "CERT000577",
+        "statistical_risk": 0.0449
+    },
+    {
+        "certificate_id": "CERT000578",
+        "statistical_risk": 0.1921
+    },
+    {
+        "certificate_id": "CERT000579",
+        "statistical_risk": 0.3197
+    },
+    {
+        "certificate_id": "CERT000580",
+        "statistical_risk": 0.0497
+    },
+    {
+        "certificate_id": "CERT000581",
+        "statistical_risk": 0.0816
+    },
+    {
+        "certificate_id": "CERT000582",
+        "statistical_risk": 0.0674
+    },
+    {
+        "certificate_id": "CERT000583",
+        "statistical_risk": 0.6581
+    },
+    {
+        "certificate_id": "CERT000584",
+        "statistical_risk": 0.8115
+    },
+    {
+        "certificate_id": "CERT000585",
+        "statistical_risk": 0.0482
+    },
+    {
+        "certificate_id": "CERT000586",
+        "statistical_risk": 0.0633
+    },
+    {
+        "certificate_id": "CERT000587",
+        "statistical_risk": 0.015
+    },
+    {
+        "certificate_id": "CERT000588",
+        "statistical_risk": 0.0279
+    },
+    {
+        "certificate_id": "CERT000589",
+        "statistical_risk": 0.743
+    },
+    {
+        "certificate_id": "CERT000590",
+        "statistical_risk": 0.1306
+    },
+    {
+        "certificate_id": "CERT000591",
+        "statistical_risk": 0.1881
+    },
+    {
+        "certificate_id": "CERT000592",
+        "statistical_risk": 0.0431
+    },
+    {
+        "certificate_id": "CERT000593",
+        "statistical_risk": 0.1188
+    },
+    {
+        "certificate_id": "CERT000594",
+        "statistical_risk": 0.146
+    },
+    {
+        "certificate_id": "CERT000595",
+        "statistical_risk": 0.0373
+    },
+    {
+        "certificate_id": "CERT000596",
+        "statistical_risk": 0.073
+    },
+    {
+        "certificate_id": "CERT000597",
+        "statistical_risk": 0.4564
+    },
+    {
+        "certificate_id": "CERT000598",
+        "statistical_risk": 0.0347
+    },
+    {
+        "certificate_id": "CERT000599",
+        "statistical_risk": 0.0542
+    },
+    {
+        "certificate_id": "CERT000600",
+        "statistical_risk": 0.0724
+    },
+    {
+        "certificate_id": "CERT000601",
+        "statistical_risk": 0.0842
+    },
+    {
+        "certificate_id": "CERT000602",
+        "statistical_risk": 0.5305
+    },
+    {
+        "certificate_id": "CERT000603",
+        "statistical_risk": 0.1417
+    },
+    {
+        "certificate_id": "CERT000604",
+        "statistical_risk": 0.1515
+    },
+    {
+        "certificate_id": "CERT000605",
+        "statistical_risk": 0.0391
+    },
+    {
+        "certificate_id": "CERT000606",
+        "statistical_risk": 0.3299
+    },
+    {
+        "certificate_id": "CERT000607",
+        "statistical_risk": 0.0577
+    },
+    {
+        "certificate_id": "CERT000608",
+        "statistical_risk": 0.1319
+    },
+    {
+        "certificate_id": "CERT000609",
+        "statistical_risk": 0.4514
+    },
+    {
+        "certificate_id": "CERT000610",
+        "statistical_risk": 0.1988
+    },
+    {
+        "certificate_id": "CERT000611",
+        "statistical_risk": 0.0987
+    },
+    {
+        "certificate_id": "CERT000612",
+        "statistical_risk": 0.0448
+    },
+    {
+        "certificate_id": "CERT000613",
+        "statistical_risk": 0.3302
+    },
+    {
+        "certificate_id": "CERT000614",
+        "statistical_risk": 0.1217
+    },
+    {
+        "certificate_id": "CERT000615",
+        "statistical_risk": 0.6303
+    },
+    {
+        "certificate_id": "CERT000616",
+        "statistical_risk": 0.0073
+    },
+    {
+        "certificate_id": "CERT000617",
+        "statistical_risk": 0.7757
+    },
+    {
+        "certificate_id": "CERT000618",
+        "statistical_risk": 0.09
+    },
+    {
+        "certificate_id": "CERT000619",
+        "statistical_risk": 0.8328
+    },
+    {
+        "certificate_id": "CERT000620",
+        "statistical_risk": 0.0979
+    },
+    {
+        "certificate_id": "CERT000621",
+        "statistical_risk": 0.2683
+    },
+    {
+        "certificate_id": "CERT000622",
+        "statistical_risk": 0.005
+    },
+    {
+        "certificate_id": "CERT000623",
+        "statistical_risk": 0.0499
+    },
+    {
+        "certificate_id": "CERT000624",
+        "statistical_risk": 0.1371
+    },
+    {
+        "certificate_id": "CERT000625",
+        "statistical_risk": 0.0257
+    },
+    {
+        "certificate_id": "CERT000626",
+        "statistical_risk": 0.0613
+    },
+    {
+        "certificate_id": "CERT000627",
+        "statistical_risk": 0.8076
+    },
+    {
+        "certificate_id": "CERT000628",
+        "statistical_risk": 0.6305
+    },
+    {
+        "certificate_id": "CERT000629",
+        "statistical_risk": 0.1709
+    },
+    {
+        "certificate_id": "CERT000630",
+        "statistical_risk": 0.1483
+    },
+    {
+        "certificate_id": "CERT000631",
+        "statistical_risk": 0.1721
+    },
+    {
+        "certificate_id": "CERT000632",
+        "statistical_risk": 0.6216
+    },
+    {
+        "certificate_id": "CERT000633",
+        "statistical_risk": 0.3077
+    },
+    {
+        "certificate_id": "CERT000634",
+        "statistical_risk": 0.0298
+    },
+    {
+        "certificate_id": "CERT000635",
+        "statistical_risk": 0.0509
+    },
+    {
+        "certificate_id": "CERT000636",
+        "statistical_risk": 0.2278
+    },
+    {
+        "certificate_id": "CERT000637",
+        "statistical_risk": 0.1027
+    },
+    {
+        "certificate_id": "CERT000638",
+        "statistical_risk": 0.2595
+    },
+    {
+        "certificate_id": "CERT000639",
+        "statistical_risk": 0.1361
+    },
+    {
+        "certificate_id": "CERT000640",
+        "statistical_risk": 0.1182
+    },
+    {
+        "certificate_id": "CERT000641",
+        "statistical_risk": 0.1989
+    },
+    {
+        "certificate_id": "CERT000642",
+        "statistical_risk": 0.2261
+    },
+    {
+        "certificate_id": "CERT000643",
+        "statistical_risk": 0.2847
+    },
+    {
+        "certificate_id": "CERT000644",
+        "statistical_risk": 0.1359
+    },
+    {
+        "certificate_id": "CERT000645",
+        "statistical_risk": 0.1444
+    },
+    {
+        "certificate_id": "CERT000646",
+        "statistical_risk": 0.0084
+    },
+    {
+        "certificate_id": "CERT000647",
+        "statistical_risk": 0.1342
+    },
+    {
+        "certificate_id": "CERT000648",
+        "statistical_risk": 0.1026
+    },
+    {
+        "certificate_id": "CERT000649",
+        "statistical_risk": 0.0492
+    },
+    {
+        "certificate_id": "CERT000650",
+        "statistical_risk": 0.0963
+    },
+    {
+        "certificate_id": "CERT000651",
+        "statistical_risk": 0.2626
+    },
+    {
+        "certificate_id": "CERT000652",
+        "statistical_risk": 0.6867
+    },
+    {
+        "certificate_id": "CERT000653",
+        "statistical_risk": 0.022
+    },
+    {
+        "certificate_id": "CERT000654",
+        "statistical_risk": 0.0907
+    },
+    {
+        "certificate_id": "CERT000655",
+        "statistical_risk": 0.519
+    },
+    {
+        "certificate_id": "CERT000656",
+        "statistical_risk": 0.0597
+    },
+    {
+        "certificate_id": "CERT000657",
+        "statistical_risk": 0.154
+    },
+    {
+        "certificate_id": "CERT000658",
+        "statistical_risk": 0.3629
+    },
+    {
+        "certificate_id": "CERT000659",
+        "statistical_risk": 0.1148
+    },
+    {
+        "certificate_id": "CERT000660",
+        "statistical_risk": 0.1148
+    },
+    {
+        "certificate_id": "CERT000661",
+        "statistical_risk": 0.1619
+    },
+    {
+        "certificate_id": "CERT000662",
+        "statistical_risk": 0.047
+    },
+    {
+        "certificate_id": "CERT000663",
+        "statistical_risk": 0.04
+    },
+    {
+        "certificate_id": "CERT000664",
+        "statistical_risk": 0.1656
+    },
+    {
+        "certificate_id": "CERT000665",
+        "statistical_risk": 0.1474
+    },
+    {
+        "certificate_id": "CERT000666",
+        "statistical_risk": 0.1315
+    },
+    {
+        "certificate_id": "CERT000667",
+        "statistical_risk": 0.4154
+    },
+    {
+        "certificate_id": "CERT000668",
+        "statistical_risk": 0.0372
+    },
+    {
+        "certificate_id": "CERT000669",
+        "statistical_risk": 0.6109
+    },
+    {
+        "certificate_id": "CERT000670",
+        "statistical_risk": 0.3013
+    },
+    {
+        "certificate_id": "CERT000671",
+        "statistical_risk": 0.3318
+    },
+    {
+        "certificate_id": "CERT000672",
+        "statistical_risk": 0.4881
+    },
+    {
+        "certificate_id": "CERT000673",
+        "statistical_risk": 0.1969
+    },
+    {
+        "certificate_id": "CERT000674",
+        "statistical_risk": 0.056
+    },
+    {
+        "certificate_id": "CERT000675",
+        "statistical_risk": 0.029
+    },
+    {
+        "certificate_id": "CERT000676",
+        "statistical_risk": 0.1695
+    },
+    {
+        "certificate_id": "CERT000677",
+        "statistical_risk": 0.348
+    },
+    {
+        "certificate_id": "CERT000678",
+        "statistical_risk": 0.6728
+    },
+    {
+        "certificate_id": "CERT000679",
+        "statistical_risk": 0.071
+    },
+    {
+        "certificate_id": "CERT000680",
+        "statistical_risk": 0.3658
+    },
+    {
+        "certificate_id": "CERT000681",
+        "statistical_risk": 0.5488
+    },
+    {
+        "certificate_id": "CERT000682",
+        "statistical_risk": 0.0293
+    },
+    {
+        "certificate_id": "CERT000683",
+        "statistical_risk": 0.0969
+    },
+    {
+        "certificate_id": "CERT000684",
+        "statistical_risk": 0.0881
+    },
+    {
+        "certificate_id": "CERT000685",
+        "statistical_risk": 0.1871
+    },
+    {
+        "certificate_id": "CERT000686",
+        "statistical_risk": 0.2169
+    },
+    {
+        "certificate_id": "CERT000687",
+        "statistical_risk": 0.1961
+    },
+    {
+        "certificate_id": "CERT000688",
+        "statistical_risk": 0.0212
+    },
+    {
+        "certificate_id": "CERT000689",
+        "statistical_risk": 0.1616
+    },
+    {
+        "certificate_id": "CERT000690",
+        "statistical_risk": 0.1979
+    },
+    {
+        "certificate_id": "CERT000691",
+        "statistical_risk": 0.1268
+    },
+    {
+        "certificate_id": "CERT000692",
+        "statistical_risk": 0.2921
+    },
+    {
+        "certificate_id": "CERT000693",
+        "statistical_risk": 0.2447
+    },
+    {
+        "certificate_id": "CERT000694",
+        "statistical_risk": 0.2709
+    },
+    {
+        "certificate_id": "CERT000695",
+        "statistical_risk": 0.3739
+    },
+    {
+        "certificate_id": "CERT000696",
+        "statistical_risk": 0.1621
+    },
+    {
+        "certificate_id": "CERT000697",
+        "statistical_risk": 0.6366
+    },
+    {
+        "certificate_id": "CERT000698",
+        "statistical_risk": 0.1104
+    },
+    {
+        "certificate_id": "CERT000699",
+        "statistical_risk": 0.1933
+    },
+    {
+        "certificate_id": "CERT000700",
+        "statistical_risk": 0.0195
+    },
+    {
+        "certificate_id": "CERT000701",
+        "statistical_risk": 0.0516
+    },
+    {
+        "certificate_id": "CERT000702",
+        "statistical_risk": 0.0515
+    },
+    {
+        "certificate_id": "CERT000703",
+        "statistical_risk": 0.6604
+    },
+    {
+        "certificate_id": "CERT000704",
+        "statistical_risk": 0.1149
+    },
+    {
+        "certificate_id": "CERT000705",
+        "statistical_risk": 0.0323
+    },
+    {
+        "certificate_id": "CERT000706",
+        "statistical_risk": 0.1266
+    },
+    {
+        "certificate_id": "CERT000707",
+        "statistical_risk": 0.198
+    },
+    {
+        "certificate_id": "CERT000708",
+        "statistical_risk": 0.6364
+    },
+    {
+        "certificate_id": "CERT000709",
+        "statistical_risk": 0.0481
+    },
+    {
+        "certificate_id": "CERT000710",
+        "statistical_risk": 0.3617
+    },
+    {
+        "certificate_id": "CERT000711",
+        "statistical_risk": 0.1115
+    },
+    {
+        "certificate_id": "CERT000712",
+        "statistical_risk": 0.0657
+    },
+    {
+        "certificate_id": "CERT000713",
+        "statistical_risk": 0.2601
+    },
+    {
+        "certificate_id": "CERT000714",
+        "statistical_risk": 0.247
+    },
+    {
+        "certificate_id": "CERT000715",
+        "statistical_risk": 0.051
+    },
+    {
+        "certificate_id": "CERT000716",
+        "statistical_risk": 0.094
+    },
+    {
+        "certificate_id": "CERT000717",
+        "statistical_risk": 0.4633
+    },
+    {
+        "certificate_id": "CERT000718",
+        "statistical_risk": 0.3963
+    },
+    {
+        "certificate_id": "CERT000719",
+        "statistical_risk": 0.1478
+    },
+    {
+        "certificate_id": "CERT000720",
+        "statistical_risk": 0.0273
+    },
+    {
+        "certificate_id": "CERT000721",
+        "statistical_risk": 0.4982
+    },
+    {
+        "certificate_id": "CERT000722",
+        "statistical_risk": 0.3803
+    },
+    {
+        "certificate_id": "CERT000723",
+        "statistical_risk": 0.053
+    },
+    {
+        "certificate_id": "CERT000724",
+        "statistical_risk": 0.1249
+    },
+    {
+        "certificate_id": "CERT000725",
+        "statistical_risk": 0.0432
+    },
+    {
+        "certificate_id": "CERT000726",
+        "statistical_risk": 0.0531
+    },
+    {
+        "certificate_id": "CERT000727",
+        "statistical_risk": 0.1028
+    },
+    {
+        "certificate_id": "CERT000728",
+        "statistical_risk": 0.2315
+    },
+    {
+        "certificate_id": "CERT000729",
+        "statistical_risk": 0.6334
+    },
+    {
+        "certificate_id": "CERT000730",
+        "statistical_risk": 0.1498
+    },
+    {
+        "certificate_id": "CERT000731",
+        "statistical_risk": 0.0049
+    },
+    {
+        "certificate_id": "CERT000732",
+        "statistical_risk": 0.0178
+    },
+    {
+        "certificate_id": "CERT000733",
+        "statistical_risk": 0.0617
+    },
+    {
+        "certificate_id": "CERT000734",
+        "statistical_risk": 0.0
+    },
+    {
+        "certificate_id": "CERT000735",
+        "statistical_risk": 0.3121
+    },
+    {
+        "certificate_id": "CERT000736",
+        "statistical_risk": 0.2922
+    },
+    {
+        "certificate_id": "CERT000737",
+        "statistical_risk": 0.5256
+    },
+    {
+        "certificate_id": "CERT000738",
+        "statistical_risk": 0.0171
+    },
+    {
+        "certificate_id": "CERT000739",
+        "statistical_risk": 0.0255
+    },
+    {
+        "certificate_id": "CERT000740",
+        "statistical_risk": 0.2138
+    },
+    {
+        "certificate_id": "CERT000741",
+        "statistical_risk": 0.0262
+    },
+    {
+        "certificate_id": "CERT000742",
+        "statistical_risk": 0.1781
+    },
+    {
+        "certificate_id": "CERT000743",
+        "statistical_risk": 0.0752
+    },
+    {
+        "certificate_id": "CERT000744",
+        "statistical_risk": 0.0172
+    },
+    {
+        "certificate_id": "CERT000745",
+        "statistical_risk": 0.7959
+    },
+    {
+        "certificate_id": "CERT000746",
+        "statistical_risk": 0.0255
+    },
+    {
+        "certificate_id": "CERT000747",
+        "statistical_risk": 0.0696
+    },
+    {
+        "certificate_id": "CERT000748",
+        "statistical_risk": 0.2614
+    },
+    {
+        "certificate_id": "CERT000749",
+        "statistical_risk": 0.3901
+    },
+    {
+        "certificate_id": "CERT000750",
+        "statistical_risk": 0.2144
+    },
+    {
+        "certificate_id": "CERT000751",
+        "statistical_risk": 0.1808
+    },
+    {
+        "certificate_id": "CERT000752",
+        "statistical_risk": 0.234
+    },
+    {
+        "certificate_id": "CERT000753",
+        "statistical_risk": 0.3405
+    },
+    {
+        "certificate_id": "CERT000754",
+        "statistical_risk": 0.4463
+    },
+    {
+        "certificate_id": "CERT000755",
+        "statistical_risk": 0.1621
+    },
+    {
+        "certificate_id": "CERT000756",
+        "statistical_risk": 0.0336
+    },
+    {
+        "certificate_id": "CERT000757",
+        "statistical_risk": 0.7392
+    },
+    {
+        "certificate_id": "CERT000758",
+        "statistical_risk": 0.233
+    },
+    {
+        "certificate_id": "CERT000759",
+        "statistical_risk": 0.0606
+    },
+    {
+        "certificate_id": "CERT000760",
+        "statistical_risk": 0.1658
+    },
+    {
+        "certificate_id": "CERT000761",
+        "statistical_risk": 0.0392
+    },
+    {
+        "certificate_id": "CERT000762",
+        "statistical_risk": 0.0508
+    },
+    {
+        "certificate_id": "CERT000763",
+        "statistical_risk": 0.2262
+    },
+    {
+        "certificate_id": "CERT000764",
+        "statistical_risk": 0.0848
+    },
+    {
+        "certificate_id": "CERT000765",
+        "statistical_risk": 0.0548
+    },
+    {
+        "certificate_id": "CERT000766",
+        "statistical_risk": 0.0463
+    },
+    {
+        "certificate_id": "CERT000767",
+        "statistical_risk": 0.016
+    },
+    {
+        "certificate_id": "CERT000768",
+        "statistical_risk": 0.2637
+    },
+    {
+        "certificate_id": "CERT000769",
+        "statistical_risk": 0.6563
+    },
+    {
+        "certificate_id": "CERT000770",
+        "statistical_risk": 0.2176
+    },
+    {
+        "certificate_id": "CERT000771",
+        "statistical_risk": 0.0043
+    },
+    {
+        "certificate_id": "CERT000772",
+        "statistical_risk": 0.0188
+    },
+    {
+        "certificate_id": "CERT000773",
+        "statistical_risk": 0.0205
+    },
+    {
+        "certificate_id": "CERT000774",
+        "statistical_risk": 0.0685
+    },
+    {
+        "certificate_id": "CERT000775",
+        "statistical_risk": 0.1006
+    },
+    {
+        "certificate_id": "CERT000776",
+        "statistical_risk": 0.1193
+    },
+    {
+        "certificate_id": "CERT000777",
+        "statistical_risk": 0.2931
+    },
+    {
+        "certificate_id": "CERT000778",
+        "statistical_risk": 0.1441
+    },
+    {
+        "certificate_id": "CERT000779",
+        "statistical_risk": 0.0745
+    },
+    {
+        "certificate_id": "CERT000780",
+        "statistical_risk": 0.0554
+    },
+    {
+        "certificate_id": "CERT000781",
+        "statistical_risk": 0.7918
+    },
+    {
+        "certificate_id": "CERT000782",
+        "statistical_risk": 0.0403
+    },
+    {
+        "certificate_id": "CERT000783",
+        "statistical_risk": 0.0852
+    },
+    {
+        "certificate_id": "CERT000784",
+        "statistical_risk": 0.0042
+    },
+    {
+        "certificate_id": "CERT000785",
+        "statistical_risk": 0.166
+    },
+    {
+        "certificate_id": "CERT000786",
+        "statistical_risk": 0.143
+    },
+    {
+        "certificate_id": "CERT000787",
+        "statistical_risk": 0.1216
+    },
+    {
+        "certificate_id": "CERT000788",
+        "statistical_risk": 0.2323
+    },
+    {
+        "certificate_id": "CERT000789",
+        "statistical_risk": 0.0617
+    },
+    {
+        "certificate_id": "CERT000790",
+        "statistical_risk": 0.0317
+    },
+    {
+        "certificate_id": "CERT000791",
+        "statistical_risk": 0.0082
+    },
+    {
+        "certificate_id": "CERT000792",
+        "statistical_risk": 0.3989
+    },
+    {
+        "certificate_id": "CERT000793",
+        "statistical_risk": 0.0597
+    },
+    {
+        "certificate_id": "CERT000794",
+        "statistical_risk": 0.1765
+    },
+    {
+        "certificate_id": "CERT000795",
+        "statistical_risk": 0.1562
+    },
+    {
+        "certificate_id": "CERT000796",
+        "statistical_risk": 0.44
+    },
+    {
+        "certificate_id": "CERT000797",
+        "statistical_risk": 0.6251
+    },
+    {
+        "certificate_id": "CERT000798",
+        "statistical_risk": 0.0972
+    },
+    {
+        "certificate_id": "CERT000799",
+        "statistical_risk": 0.0341
+    },
+    {
+        "certificate_id": "CERT000800",
+        "statistical_risk": 0.0554
+    },
+    {
+        "certificate_id": "CERT000801",
+        "statistical_risk": 0.0145
+    },
+    {
+        "certificate_id": "CERT000802",
+        "statistical_risk": 0.0574
+    },
+    {
+        "certificate_id": "CERT000803",
+        "statistical_risk": 0.6583
+    },
+    {
+        "certificate_id": "CERT000804",
+        "statistical_risk": 0.1394
+    },
+    {
+        "certificate_id": "CERT000805",
+        "statistical_risk": 0.0508
+    },
+    {
+        "certificate_id": "CERT000806",
+        "statistical_risk": 0.0357
+    },
+    {
+        "certificate_id": "CERT000807",
+        "statistical_risk": 0.0666
+    },
+    {
+        "certificate_id": "CERT000808",
+        "statistical_risk": 0.3388
+    },
+    {
+        "certificate_id": "CERT000809",
+        "statistical_risk": 0.4015
+    },
+    {
+        "certificate_id": "CERT000810",
+        "statistical_risk": 0.1916
+    },
+    {
+        "certificate_id": "CERT000811",
+        "statistical_risk": 0.0372
+    },
+    {
+        "certificate_id": "CERT000812",
+        "statistical_risk": 0.043
+    },
+    {
+        "certificate_id": "CERT000813",
+        "statistical_risk": 0.0297
+    },
+    {
+        "certificate_id": "CERT000814",
+        "statistical_risk": 0.1672
+    },
+    {
+        "certificate_id": "CERT000815",
+        "statistical_risk": 0.0686
+    },
+    {
+        "certificate_id": "CERT000816",
+        "statistical_risk": 0.0665
+    },
+    {
+        "certificate_id": "CERT000817",
+        "statistical_risk": 0.2038
+    },
+    {
+        "certificate_id": "CERT000818",
+        "statistical_risk": 0.1014
+    },
+    {
+        "certificate_id": "CERT000819",
+        "statistical_risk": 0.1703
+    },
+    {
+        "certificate_id": "CERT000820",
+        "statistical_risk": 0.8833
+    },
+    {
+        "certificate_id": "CERT000821",
+        "statistical_risk": 0.157
+    },
+    {
+        "certificate_id": "CERT000822",
+        "statistical_risk": 0.06
+    },
+    {
+        "certificate_id": "CERT000823",
+        "statistical_risk": 0.2142
+    },
+    {
+        "certificate_id": "CERT000824",
+        "statistical_risk": 0.0021
+    },
+    {
+        "certificate_id": "CERT000825",
+        "statistical_risk": 0.7232
+    },
+    {
+        "certificate_id": "CERT000826",
+        "statistical_risk": 0.2126
+    },
+    {
+        "certificate_id": "CERT000827",
+        "statistical_risk": 0.2442
+    },
+    {
+        "certificate_id": "CERT000828",
+        "statistical_risk": 0.2509
+    },
+    {
+        "certificate_id": "CERT000829",
+        "statistical_risk": 0.1569
+    },
+    {
+        "certificate_id": "CERT000830",
+        "statistical_risk": 0.0428
+    },
+    {
+        "certificate_id": "CERT000831",
+        "statistical_risk": 0.0557
+    },
+    {
+        "certificate_id": "CERT000832",
+        "statistical_risk": 0.6761
+    },
+    {
+        "certificate_id": "CERT000833",
+        "statistical_risk": 0.0268
+    },
+    {
+        "certificate_id": "CERT000834",
+        "statistical_risk": 0.0165
+    },
+    {
+        "certificate_id": "CERT000835",
+        "statistical_risk": 0.1115
+    },
+    {
+        "certificate_id": "CERT000836",
+        "statistical_risk": 0.1249
+    },
+    {
+        "certificate_id": "CERT000837",
+        "statistical_risk": 0.0236
+    },
+    {
+        "certificate_id": "CERT000838",
+        "statistical_risk": 0.0816
+    },
+    {
+        "certificate_id": "CERT000839",
+        "statistical_risk": 0.1223
+    },
+    {
+        "certificate_id": "CERT000840",
+        "statistical_risk": 0.0519
+    },
+    {
+        "certificate_id": "CERT000841",
+        "statistical_risk": 0.0149
+    },
+    {
+        "certificate_id": "CERT000842",
+        "statistical_risk": 0.4249
+    },
+    {
+        "certificate_id": "CERT000843",
+        "statistical_risk": 0.1939
+    },
+    {
+        "certificate_id": "CERT000844",
+        "statistical_risk": 0.5274
+    },
+    {
+        "certificate_id": "CERT000845",
+        "statistical_risk": 0.4094
+    },
+    {
+        "certificate_id": "CERT000846",
+        "statistical_risk": 0.0168
+    },
+    {
+        "certificate_id": "CERT000847",
+        "statistical_risk": 0.1578
+    },
+    {
+        "certificate_id": "CERT000848",
+        "statistical_risk": 0.4144
+    },
+    {
+        "certificate_id": "CERT000849",
+        "statistical_risk": 0.0437
+    },
+    {
+        "certificate_id": "CERT000850",
+        "statistical_risk": 0.819
+    },
+    {
+        "certificate_id": "CERT000851",
+        "statistical_risk": 0.0378
+    },
+    {
+        "certificate_id": "CERT000852",
+        "statistical_risk": 0.1628
+    },
+    {
+        "certificate_id": "CERT000853",
+        "statistical_risk": 0.2911
+    },
+    {
+        "certificate_id": "CERT000854",
+        "statistical_risk": 0.2441
+    },
+    {
+        "certificate_id": "CERT000855",
+        "statistical_risk": 0.2646
+    },
+    {
+        "certificate_id": "CERT000856",
+        "statistical_risk": 0.1938
+    },
+    {
+        "certificate_id": "CERT000857",
+        "statistical_risk": 0.0653
+    },
+    {
+        "certificate_id": "CERT000858",
+        "statistical_risk": 0.1882
+    },
+    {
+        "certificate_id": "CERT000859",
+        "statistical_risk": 0.0626
+    },
+    {
+        "certificate_id": "CERT000860",
+        "statistical_risk": 0.063
+    },
+    {
+        "certificate_id": "CERT000861",
+        "statistical_risk": 0.1239
+    },
+    {
+        "certificate_id": "CERT000862",
+        "statistical_risk": 0.0735
+    },
+    {
+        "certificate_id": "CERT000863",
+        "statistical_risk": 0.0552
+    },
+    {
+        "certificate_id": "CERT000864",
+        "statistical_risk": 0.0162
+    },
+    {
+        "certificate_id": "CERT000865",
+        "statistical_risk": 0.0816
+    },
+    {
+        "certificate_id": "CERT000866",
+        "statistical_risk": 0.0535
+    },
+    {
+        "certificate_id": "CERT000867",
+        "statistical_risk": 0.1314
+    },
+    {
+        "certificate_id": "CERT000868",
+        "statistical_risk": 0.2587
+    },
+    {
+        "certificate_id": "CERT000869",
+        "statistical_risk": 0.0578
+    },
+    {
+        "certificate_id": "CERT000870",
+        "statistical_risk": 0.3243
+    },
+    {
+        "certificate_id": "CERT000871",
+        "statistical_risk": 0.0239
+    },
+    {
+        "certificate_id": "CERT000872",
+        "statistical_risk": 0.0673
+    },
+    {
+        "certificate_id": "CERT000873",
+        "statistical_risk": 0.1554
+    },
+    {
+        "certificate_id": "CERT000874",
+        "statistical_risk": 0.164
+    },
+    {
+        "certificate_id": "CERT000875",
+        "statistical_risk": 0.205
+    },
+    {
+        "certificate_id": "CERT000876",
+        "statistical_risk": 0.1597
+    },
+    {
+        "certificate_id": "CERT000877",
+        "statistical_risk": 0.0827
+    },
+    {
+        "certificate_id": "CERT000878",
+        "statistical_risk": 0.2204
+    },
+    {
+        "certificate_id": "CERT000879",
+        "statistical_risk": 0.0393
+    },
+    {
+        "certificate_id": "CERT000880",
+        "statistical_risk": 0.1656
+    },
+    {
+        "certificate_id": "CERT000881",
+        "statistical_risk": 0.3731
+    },
+    {
+        "certificate_id": "CERT000882",
+        "statistical_risk": 0.3401
+    },
+    {
+        "certificate_id": "CERT000883",
+        "statistical_risk": 0.78
+    },
+    {
+        "certificate_id": "CERT000884",
+        "statistical_risk": 0.0621
+    },
+    {
+        "certificate_id": "CERT000885",
+        "statistical_risk": 0.1335
+    },
+    {
+        "certificate_id": "CERT000886",
+        "statistical_risk": 0.14
+    },
+    {
+        "certificate_id": "CERT000887",
+        "statistical_risk": 0.1404
+    },
+    {
+        "certificate_id": "CERT000888",
+        "statistical_risk": 0.0535
+    },
+    {
+        "certificate_id": "CERT000889",
+        "statistical_risk": 0.0309
+    },
+    {
+        "certificate_id": "CERT000890",
+        "statistical_risk": 0.0143
+    },
+    {
+        "certificate_id": "CERT000891",
+        "statistical_risk": 0.1519
+    },
+    {
+        "certificate_id": "CERT000892",
+        "statistical_risk": 0.6696
+    },
+    {
+        "certificate_id": "CERT000893",
+        "statistical_risk": 0.2837
+    },
+    {
+        "certificate_id": "CERT000894",
+        "statistical_risk": 0.0083
+    },
+    {
+        "certificate_id": "CERT000895",
+        "statistical_risk": 0.468
+    },
+    {
+        "certificate_id": "CERT000896",
+        "statistical_risk": 0.4099
+    },
+    {
+        "certificate_id": "CERT000897",
+        "statistical_risk": 0.0495
+    },
+    {
+        "certificate_id": "CERT000898",
+        "statistical_risk": 0.3757
+    },
+    {
+        "certificate_id": "CERT000899",
+        "statistical_risk": 0.1861
+    },
+    {
+        "certificate_id": "CERT000900",
+        "statistical_risk": 0.5037
+    },
+    {
+        "certificate_id": "CERT000901",
+        "statistical_risk": 0.021
+    },
+    {
+        "certificate_id": "CERT000902",
+        "statistical_risk": 0.4742
+    },
+    {
+        "certificate_id": "CERT000903",
+        "statistical_risk": 0.1961
+    },
+    {
+        "certificate_id": "CERT000904",
+        "statistical_risk": 0.2586
+    },
+    {
+        "certificate_id": "CERT000905",
+        "statistical_risk": 0.6293
+    },
+    {
+        "certificate_id": "CERT000906",
+        "statistical_risk": 0.0397
+    },
+    {
+        "certificate_id": "CERT000907",
+        "statistical_risk": 1.0
+    },
+    {
+        "certificate_id": "CERT000908",
+        "statistical_risk": 0.7834
+    },
+    {
+        "certificate_id": "CERT000909",
+        "statistical_risk": 0.1353
+    },
+    {
+        "certificate_id": "CERT000910",
+        "statistical_risk": 0.029
+    },
+    {
+        "certificate_id": "CERT000911",
+        "statistical_risk": 0.2222
+    },
+    {
+        "certificate_id": "CERT000912",
+        "statistical_risk": 0.4658
+    },
+    {
+        "certificate_id": "CERT000913",
+        "statistical_risk": 0.3911
+    },
+    {
+        "certificate_id": "CERT000914",
+        "statistical_risk": 0.1102
+    },
+    {
+        "certificate_id": "CERT000915",
+        "statistical_risk": 0.1519
+    },
+    {
+        "certificate_id": "CERT000916",
+        "statistical_risk": 0.0412
+    },
+    {
+        "certificate_id": "CERT000917",
+        "statistical_risk": 0.175
+    },
+    {
+        "certificate_id": "CERT000918",
+        "statistical_risk": 0.1674
+    },
+    {
+        "certificate_id": "CERT000919",
+        "statistical_risk": 0.0364
+    },
+    {
+        "certificate_id": "CERT000920",
+        "statistical_risk": 0.3778
+    },
+    {
+        "certificate_id": "CERT000921",
+        "statistical_risk": 0.2654
+    },
+    {
+        "certificate_id": "CERT000922",
+        "statistical_risk": 0.1136
+    },
+    {
+        "certificate_id": "CERT000923",
+        "statistical_risk": 0.0871
+    },
+    {
+        "certificate_id": "CERT000924",
+        "statistical_risk": 0.255
+    },
+    {
+        "certificate_id": "CERT000925",
+        "statistical_risk": 0.0437
+    },
+    {
+        "certificate_id": "CERT000926",
+        "statistical_risk": 0.1659
+    },
+    {
+        "certificate_id": "CERT000927",
+        "statistical_risk": 0.4454
+    },
+    {
+        "certificate_id": "CERT000928",
+        "statistical_risk": 0.2
+    },
+    {
+        "certificate_id": "CERT000929",
+        "statistical_risk": 0.401
+    },
+    {
+        "certificate_id": "CERT000930",
+        "statistical_risk": 0.1665
+    },
+    {
+        "certificate_id": "CERT000931",
+        "statistical_risk": 0.021
+    },
+    {
+        "certificate_id": "CERT000932",
+        "statistical_risk": 0.0404
+    },
+    {
+        "certificate_id": "CERT000933",
+        "statistical_risk": 0.921
+    },
+    {
+        "certificate_id": "CERT000934",
+        "statistical_risk": 0.6608
+    },
+    {
+        "certificate_id": "CERT000935",
+        "statistical_risk": 0.1291
+    },
+    {
+        "certificate_id": "CERT000936",
+        "statistical_risk": 0.2279
+    },
+    {
+        "certificate_id": "CERT000937",
+        "statistical_risk": 0.2314
+    },
+    {
+        "certificate_id": "CERT000938",
+        "statistical_risk": 0.1561
+    },
+    {
+        "certificate_id": "CERT000939",
+        "statistical_risk": 0.0928
+    },
+    {
+        "certificate_id": "CERT000940",
+        "statistical_risk": 0.8943
+    },
+    {
+        "certificate_id": "CERT000941",
+        "statistical_risk": 0.0743
+    },
+    {
+        "certificate_id": "CERT000942",
+        "statistical_risk": 0.044
+    },
+    {
+        "certificate_id": "CERT000943",
+        "statistical_risk": 0.1898
+    },
+    {
+        "certificate_id": "CERT000944",
+        "statistical_risk": 0.1528
+    },
+    {
+        "certificate_id": "CERT000945",
+        "statistical_risk": 0.0613
+    },
+    {
+        "certificate_id": "CERT000946",
+        "statistical_risk": 0.1406
+    },
+    {
+        "certificate_id": "CERT000947",
+        "statistical_risk": 0.0775
+    },
+    {
+        "certificate_id": "CERT000948",
+        "statistical_risk": 0.5247
+    },
+    {
+        "certificate_id": "CERT000949",
+        "statistical_risk": 0.1019
+    },
+    {
+        "certificate_id": "CERT000950",
+        "statistical_risk": 0.1062
+    },
+    {
+        "certificate_id": "CERT000951",
+        "statistical_risk": 0.1779
+    },
+    {
+        "certificate_id": "CERT000952",
+        "statistical_risk": 0.2554
+    },
+    {
+        "certificate_id": "CERT000953",
+        "statistical_risk": 0.0913
+    },
+    {
+        "certificate_id": "CERT000954",
+        "statistical_risk": 0.1938
+    },
+    {
+        "certificate_id": "CERT000955",
+        "statistical_risk": 0.2586
+    },
+    {
+        "certificate_id": "CERT000956",
+        "statistical_risk": 0.8664
+    },
+    {
+        "certificate_id": "CERT000957",
+        "statistical_risk": 0.6491
+    },
+    {
+        "certificate_id": "CERT000958",
+        "statistical_risk": 0.0478
+    },
+    {
+        "certificate_id": "CERT000959",
+        "statistical_risk": 0.1294
+    },
+    {
+        "certificate_id": "CERT000960",
+        "statistical_risk": 0.8723
+    },
+    {
+        "certificate_id": "CERT000961",
+        "statistical_risk": 0.134
+    },
+    {
+        "certificate_id": "CERT000962",
+        "statistical_risk": 0.1413
+    },
+    {
+        "certificate_id": "CERT000963",
+        "statistical_risk": 0.0048
+    },
+    {
+        "certificate_id": "CERT000964",
+        "statistical_risk": 0.2771
+    },
+    {
+        "certificate_id": "CERT000965",
+        "statistical_risk": 0.2343
+    },
+    {
+        "certificate_id": "CERT000966",
+        "statistical_risk": 0.072
+    },
+    {
+        "certificate_id": "CERT000967",
+        "statistical_risk": 0.107
+    },
+    {
+        "certificate_id": "CERT000968",
+        "statistical_risk": 0.0562
+    },
+    {
+        "certificate_id": "CERT000969",
+        "statistical_risk": 0.3595
+    },
+    {
+        "certificate_id": "CERT000970",
+        "statistical_risk": 0.049
+    },
+    {
+        "certificate_id": "CERT000971",
+        "statistical_risk": 0.1723
+    },
+    {
+        "certificate_id": "CERT000972",
+        "statistical_risk": 0.875
+    },
+    {
+        "certificate_id": "CERT000973",
+        "statistical_risk": 0.0673
+    },
+    {
+        "certificate_id": "CERT000974",
+        "statistical_risk": 0.0463
+    },
+    {
+        "certificate_id": "CERT000975",
+        "statistical_risk": 0.5
+    },
+    {
+        "certificate_id": "CERT000976",
+        "statistical_risk": 0.1133
+    },
+    {
+        "certificate_id": "CERT000977",
+        "statistical_risk": 0.4454
+    },
+    {
+        "certificate_id": "CERT000978",
+        "statistical_risk": 0.304
+    },
+    {
+        "certificate_id": "CERT000979",
+        "statistical_risk": 0.052
+    },
+    {
+        "certificate_id": "CERT000980",
+        "statistical_risk": 0.2243
+    },
+    {
+        "certificate_id": "CERT000981",
+        "statistical_risk": 0.2317
+    },
+    {
+        "certificate_id": "CERT000982",
+        "statistical_risk": 0.8826
+    },
+    {
+        "certificate_id": "CERT000983",
+        "statistical_risk": 0.0303
+    },
+    {
+        "certificate_id": "CERT000984",
+        "statistical_risk": 0.0629
+    },
+    {
+        "certificate_id": "CERT000985",
+        "statistical_risk": 0.1216
+    },
+    {
+        "certificate_id": "CERT000986",
+        "statistical_risk": 0.1024
+    },
+    {
+        "certificate_id": "CERT000987",
+        "statistical_risk": 0.3425
+    },
+    {
+        "certificate_id": "CERT000988",
+        "statistical_risk": 0.1415
+    },
+    {
+        "certificate_id": "CERT000989",
+        "statistical_risk": 0.1839
+    },
+    {
+        "certificate_id": "CERT000990",
+        "statistical_risk": 0.1601
+    },
+    {
+        "certificate_id": "CERT000991",
+        "statistical_risk": 0.606
+    },
+    {
+        "certificate_id": "CERT000992",
+        "statistical_risk": 0.0494
+    },
+    {
+        "certificate_id": "CERT000993",
+        "statistical_risk": 0.6224
+    },
+    {
+        "certificate_id": "CERT000994",
+        "statistical_risk": 0.2293
+    },
+    {
+        "certificate_id": "CERT000995",
+        "statistical_risk": 0.198
+    },
+    {
+        "certificate_id": "CERT000996",
+        "statistical_risk": 0.0494
+    },
+    {
+        "certificate_id": "CERT000997",
+        "statistical_risk": 0.8248
+    },
+    {
+        "certificate_id": "CERT000998",
+        "statistical_risk": 0.0352
+    },
+    {
+        "certificate_id": "CERT000999",
+        "statistical_risk": 0.1829
+    },
+    {
+        "certificate_id": "CERT001000",
+        "statistical_risk": 0.0897
+    },
+    {
+        "certificate_id": "CERT001001",
+        "statistical_risk": 0.3472
+    },
+    {
+        "certificate_id": "CERT001002",
+        "statistical_risk": 0.0187
+    },
+    {
+        "certificate_id": "CERT001003",
+        "statistical_risk": 0.1947
+    },
+    {
+        "certificate_id": "CERT001004",
+        "statistical_risk": 0.2004
+    },
+    {
+        "certificate_id": "CERT001005",
+        "statistical_risk": 0.6329
+    },
+    {
+        "certificate_id": "CERT001006",
+        "statistical_risk": 0.045
+    },
+    {
+        "certificate_id": "CERT001007",
+        "statistical_risk": 0.4567
+    },
+    {
+        "certificate_id": "CERT001008",
+        "statistical_risk": 0.2139
+    },
+    {
+        "certificate_id": "CERT001009",
+        "statistical_risk": 0.3372
+    },
+    {
+        "certificate_id": "CERT001010",
+        "statistical_risk": 0.4403
+    },
+    {
+        "certificate_id": "CERT001011",
+        "statistical_risk": 0.1745
+    },
+    {
+        "certificate_id": "CERT001012",
+        "statistical_risk": 0.2595
+    },
+    {
+        "certificate_id": "CERT001013",
+        "statistical_risk": 0.1851
+    },
+    {
+        "certificate_id": "CERT001014",
+        "statistical_risk": 0.1145
+    },
+    {
+        "certificate_id": "CERT001015",
+        "statistical_risk": 0.0527
+    },
+    {
+        "certificate_id": "CERT001016",
+        "statistical_risk": 0.0494
+    },
+    {
+        "certificate_id": "CERT001017",
+        "statistical_risk": 0.4034
+    },
+    {
+        "certificate_id": "CERT001018",
+        "statistical_risk": 0.0173
+    },
+    {
+        "certificate_id": "CERT001019",
+        "statistical_risk": 0.0432
+    },
+    {
+        "certificate_id": "CERT001020",
+        "statistical_risk": 0.4151
+    },
+    {
+        "certificate_id": "CERT001021",
+        "statistical_risk": 0.1386
+    },
+    {
+        "certificate_id": "CERT001022",
+        "statistical_risk": 0.2703
+    },
+    {
+        "certificate_id": "CERT001023",
+        "statistical_risk": 0.1562
+    },
+    {
+        "certificate_id": "CERT001024",
+        "statistical_risk": 0.2171
+    },
+    {
+        "certificate_id": "CERT001025",
+        "statistical_risk": 0.1262
+    },
+    {
+        "certificate_id": "CERT001026",
+        "statistical_risk": 0.082
+    },
+    {
+        "certificate_id": "CERT001027",
+        "statistical_risk": 0.0645
+    },
+    {
+        "certificate_id": "CERT001028",
+        "statistical_risk": 0.0281
+    },
+    {
+        "certificate_id": "CERT001029",
+        "statistical_risk": 0.0557
+    },
+    {
+        "certificate_id": "CERT001030",
+        "statistical_risk": 0.0112
+    },
+    {
+        "certificate_id": "CERT001031",
+        "statistical_risk": 0.0442
+    },
+    {
+        "certificate_id": "CERT001032",
+        "statistical_risk": 0.0617
+    },
+    {
+        "certificate_id": "CERT001033",
+        "statistical_risk": 0.2095
+    },
+    {
+        "certificate_id": "CERT001034",
+        "statistical_risk": 0.0184
+    },
+    {
+        "certificate_id": "CERT001035",
+        "statistical_risk": 0.7837
+    },
+    {
+        "certificate_id": "CERT001036",
+        "statistical_risk": 0.2009
+    },
+    {
+        "certificate_id": "CERT001037",
+        "statistical_risk": 0.2523
+    },
+    {
+        "certificate_id": "CERT001038",
+        "statistical_risk": 0.0346
+    },
+    {
+        "certificate_id": "CERT001039",
+        "statistical_risk": 0.1813
+    },
+    {
+        "certificate_id": "CERT001040",
+        "statistical_risk": 0.095
+    },
+    {
+        "certificate_id": "CERT001041",
+        "statistical_risk": 0.0045
+    },
+    {
+        "certificate_id": "CERT001042",
+        "statistical_risk": 0.0638
+    },
+    {
+        "certificate_id": "CERT001043",
+        "statistical_risk": 0.1079
+    },
+    {
+        "certificate_id": "CERT001044",
+        "statistical_risk": 0.2088
+    },
+    {
+        "certificate_id": "CERT001045",
+        "statistical_risk": 0.0215
+    },
+    {
+        "certificate_id": "CERT001046",
+        "statistical_risk": 0.089
+    },
+    {
+        "certificate_id": "CERT001047",
+        "statistical_risk": 0.0107
+    },
+    {
+        "certificate_id": "CERT001048",
+        "statistical_risk": 0.0393
+    },
+    {
+        "certificate_id": "CERT001049",
+        "statistical_risk": 0.0213
+    },
+    {
+        "certificate_id": "CERT001050",
+        "statistical_risk": 0.6385
+    },
+    {
+        "certificate_id": "CERT001051",
+        "statistical_risk": 0.0987
+    },
+    {
+        "certificate_id": "CERT001052",
+        "statistical_risk": 0.0439
+    },
+    {
+        "certificate_id": "CERT001053",
+        "statistical_risk": 0.0601
+    },
+    {
+        "certificate_id": "CERT001054",
+        "statistical_risk": 0.3453
+    },
+    {
+        "certificate_id": "CERT001055",
+        "statistical_risk": 0.0355
+    },
+    {
+        "certificate_id": "CERT001056",
+        "statistical_risk": 0.3287
+    },
+    {
+        "certificate_id": "CERT001057",
+        "statistical_risk": 0.2539
+    },
+    {
+        "certificate_id": "CERT001058",
+        "statistical_risk": 0.0488
+    },
+    {
+        "certificate_id": "CERT001059",
+        "statistical_risk": 0.2235
+    },
+    {
+        "certificate_id": "CERT001060",
+        "statistical_risk": 0.4758
+    },
+    {
+        "certificate_id": "CERT001061",
+        "statistical_risk": 0.0792
+    },
+    {
+        "certificate_id": "CERT001062",
+        "statistical_risk": 0.0342
+    },
+    {
+        "certificate_id": "CERT001063",
+        "statistical_risk": 0.7665
+    },
+    {
+        "certificate_id": "CERT001064",
+        "statistical_risk": 0.1615
+    },
+    {
+        "certificate_id": "CERT001065",
+        "statistical_risk": 0.7624
+    },
+    {
+        "certificate_id": "CERT001066",
+        "statistical_risk": 0.3156
+    },
+    {
+        "certificate_id": "CERT001067",
+        "statistical_risk": 0.0059
+    },
+    {
+        "certificate_id": "CERT001068",
+        "statistical_risk": 0.0794
+    },
+    {
+        "certificate_id": "CERT001069",
+        "statistical_risk": 0.1278
+    },
+    {
+        "certificate_id": "CERT001070",
+        "statistical_risk": 0.0477
+    },
+    {
+        "certificate_id": "CERT001071",
+        "statistical_risk": 0.2129
+    },
+    {
+        "certificate_id": "CERT001072",
+        "statistical_risk": 0.3652
+    },
+    {
+        "certificate_id": "CERT001073",
+        "statistical_risk": 0.2781
+    },
+    {
+        "certificate_id": "CERT001074",
+        "statistical_risk": 0.0921
+    },
+    {
+        "certificate_id": "CERT001075",
+        "statistical_risk": 0.2194
+    },
+    {
+        "certificate_id": "CERT001076",
+        "statistical_risk": 0.113
+    },
+    {
+        "certificate_id": "CERT001077",
+        "statistical_risk": 0.2246
+    },
+    {
+        "certificate_id": "CERT001078",
+        "statistical_risk": 0.0953
+    },
+    {
+        "certificate_id": "CERT001079",
+        "statistical_risk": 0.0224
+    },
+    {
+        "certificate_id": "CERT001080",
+        "statistical_risk": 0.2346
+    },
+    {
+        "certificate_id": "CERT001081",
+        "statistical_risk": 0.5104
+    },
+    {
+        "certificate_id": "CERT001082",
+        "statistical_risk": 0.0625
+    },
+    {
+        "certificate_id": "CERT001083",
+        "statistical_risk": 0.0377
+    },
+    {
+        "certificate_id": "CERT001084",
+        "statistical_risk": 0.1465
+    },
+    {
+        "certificate_id": "CERT001085",
+        "statistical_risk": 0.0664
+    },
+    {
+        "certificate_id": "CERT001086",
+        "statistical_risk": 0.2459
+    },
+    {
+        "certificate_id": "CERT001087",
+        "statistical_risk": 0.0147
+    },
+    {
+        "certificate_id": "CERT001088",
+        "statistical_risk": 0.0909
+    },
+    {
+        "certificate_id": "CERT001089",
+        "statistical_risk": 0.0891
+    },
+    {
+        "certificate_id": "CERT001090",
+        "statistical_risk": 0.0233
+    },
+    {
+        "certificate_id": "CERT001091",
+        "statistical_risk": 0.1306
+    },
+    {
+        "certificate_id": "CERT001092",
+        "statistical_risk": 0.9146
+    },
+    {
+        "certificate_id": "CERT001093",
+        "statistical_risk": 0.6388
+    },
+    {
+        "certificate_id": "CERT001094",
+        "statistical_risk": 0.279
+    },
+    {
+        "certificate_id": "CERT001095",
+        "statistical_risk": 0.1377
+    },
+    {
+        "certificate_id": "CERT001096",
+        "statistical_risk": 0.9626
+    },
+    {
+        "certificate_id": "CERT001097",
+        "statistical_risk": 0.1372
+    },
+    {
+        "certificate_id": "CERT001098",
+        "statistical_risk": 0.0128
+    },
+    {
+        "certificate_id": "CERT001099",
+        "statistical_risk": 0.064
+    },
+    {
+        "certificate_id": "CERT001100",
+        "statistical_risk": 0.1118
+    },
+    {
+        "certificate_id": "CERT001101",
+        "statistical_risk": 0.2172
+    },
+    {
+        "certificate_id": "CERT001102",
+        "statistical_risk": 0.2845
+    },
+    {
+        "certificate_id": "CERT001103",
+        "statistical_risk": 0.1198
+    },
+    {
+        "certificate_id": "CERT001104",
+        "statistical_risk": 0.0991
+    },
+    {
+        "certificate_id": "CERT001105",
+        "statistical_risk": 0.1386
+    },
+    {
+        "certificate_id": "CERT001106",
+        "statistical_risk": 0.2494
+    },
+    {
+        "certificate_id": "CERT001107",
+        "statistical_risk": 0.1198
+    },
+    {
+        "certificate_id": "CERT001108",
+        "statistical_risk": 0.0861
+    },
+    {
+        "certificate_id": "CERT001109",
+        "statistical_risk": 0.2106
+    },
+    {
+        "certificate_id": "CERT001110",
+        "statistical_risk": 0.1173
+    },
+    {
+        "certificate_id": "CERT001111",
+        "statistical_risk": 0.1875
+    },
+    {
+        "certificate_id": "CERT001112",
+        "statistical_risk": 0.2783
+    },
+    {
+        "certificate_id": "CERT001113",
+        "statistical_risk": 0.083
+    },
+    {
+        "certificate_id": "CERT001114",
+        "statistical_risk": 0.1452
+    },
+    {
+        "certificate_id": "CERT001115",
+        "statistical_risk": 0.0437
+    },
+    {
+        "certificate_id": "CERT001116",
+        "statistical_risk": 0.2576
+    },
+    {
+        "certificate_id": "CERT001117",
+        "statistical_risk": 0.216
+    },
+    {
+        "certificate_id": "CERT001118",
+        "statistical_risk": 0.4885
+    },
+    {
+        "certificate_id": "CERT001119",
+        "statistical_risk": 0.1031
+    },
+    {
+        "certificate_id": "CERT001120",
+        "statistical_risk": 0.0476
+    },
+    {
+        "certificate_id": "CERT001121",
+        "statistical_risk": 0.0101
+    },
+    {
+        "certificate_id": "CERT001122",
+        "statistical_risk": 0.1785
+    },
+    {
+        "certificate_id": "CERT001123",
+        "statistical_risk": 0.5289
+    },
+    {
+        "certificate_id": "CERT001124",
+        "statistical_risk": 0.0301
+    },
+    {
+        "certificate_id": "CERT001125",
+        "statistical_risk": 0.2433
+    },
+    {
+        "certificate_id": "CERT001126",
+        "statistical_risk": 0.0588
+    },
+    {
+        "certificate_id": "CERT001127",
+        "statistical_risk": 0.2214
+    },
+    {
+        "certificate_id": "CERT001128",
+        "statistical_risk": 0.316
+    },
+    {
+        "certificate_id": "CERT001129",
+        "statistical_risk": 0.0675
+    },
+    {
+        "certificate_id": "CERT001130",
+        "statistical_risk": 0.4461
+    },
+    {
+        "certificate_id": "CERT001131",
+        "statistical_risk": 0.3946
+    },
+    {
+        "certificate_id": "CERT001132",
+        "statistical_risk": 0.0105
+    },
+    {
+        "certificate_id": "CERT001133",
+        "statistical_risk": 0.0109
+    },
+    {
+        "certificate_id": "CERT001134",
+        "statistical_risk": 0.1135
+    },
+    {
+        "certificate_id": "CERT001135",
+        "statistical_risk": 0.14
+    },
+    {
+        "certificate_id": "CERT001136",
+        "statistical_risk": 0.1418
+    },
+    {
+        "certificate_id": "CERT001137",
+        "statistical_risk": 0.0354
+    },
+    {
+        "certificate_id": "CERT001138",
+        "statistical_risk": 0.0811
+    },
+    {
+        "certificate_id": "CERT001139",
+        "statistical_risk": 0.0656
+    },
+    {
+        "certificate_id": "CERT001140",
+        "statistical_risk": 0.2324
+    },
+    {
+        "certificate_id": "CERT001141",
+        "statistical_risk": 0.0129
+    },
+    {
+        "certificate_id": "CERT001142",
+        "statistical_risk": 0.399
+    },
+    {
+        "certificate_id": "CERT001143",
+        "statistical_risk": 0.2879
+    },
+    {
+        "certificate_id": "CERT001144",
+        "statistical_risk": 0.046
+    },
+    {
+        "certificate_id": "CERT001145",
+        "statistical_risk": 0.1175
+    },
+    {
+        "certificate_id": "CERT001146",
+        "statistical_risk": 0.1403
+    },
+    {
+        "certificate_id": "CERT001147",
+        "statistical_risk": 0.0472
+    },
+    {
+        "certificate_id": "CERT001148",
+        "statistical_risk": 0.2958
+    },
+    {
+        "certificate_id": "CERT001149",
+        "statistical_risk": 0.1678
+    },
+    {
+        "certificate_id": "CERT001150",
+        "statistical_risk": 0.4429
+    },
+    {
+        "certificate_id": "CERT001151",
+        "statistical_risk": 0.0412
+    },
+    {
+        "certificate_id": "CERT001152",
+        "statistical_risk": 0.1035
+    },
+    {
+        "certificate_id": "CERT001153",
+        "statistical_risk": 0.1056
+    },
+    {
+        "certificate_id": "CERT001154",
+        "statistical_risk": 0.5588
+    },
+    {
+        "certificate_id": "CERT001155",
+        "statistical_risk": 0.4779
+    },
+    {
+        "certificate_id": "CERT001156",
+        "statistical_risk": 0.0173
+    },
+    {
+        "certificate_id": "CERT001157",
+        "statistical_risk": 0.5932
+    },
+    {
+        "certificate_id": "CERT001158",
+        "statistical_risk": 0.0092
+    },
+    {
+        "certificate_id": "CERT001159",
+        "statistical_risk": 0.4741
+    },
+    {
+        "certificate_id": "CERT001160",
+        "statistical_risk": 0.129
+    },
+    {
+        "certificate_id": "CERT001161",
+        "statistical_risk": 0.1086
+    },
+    {
+        "certificate_id": "CERT001162",
+        "statistical_risk": 0.162
+    },
+    {
+        "certificate_id": "CERT001163",
+        "statistical_risk": 0.0419
+    },
+    {
+        "certificate_id": "CERT001164",
+        "statistical_risk": 0.1121
+    },
+    {
+        "certificate_id": "CERT001165",
+        "statistical_risk": 0.0393
+    },
+    {
+        "certificate_id": "CERT001166",
+        "statistical_risk": 0.6385
+    },
+    {
+        "certificate_id": "CERT001167",
+        "statistical_risk": 0.0993
+    },
+    {
+        "certificate_id": "CERT001168",
+        "statistical_risk": 0.0889
+    },
+    {
+        "certificate_id": "CERT001169",
+        "statistical_risk": 0.213
+    },
+    {
+        "certificate_id": "CERT001170",
+        "statistical_risk": 0.1923
+    },
+    {
+        "certificate_id": "CERT001171",
+        "statistical_risk": 0.0636
+    },
+    {
+        "certificate_id": "CERT001172",
+        "statistical_risk": 0.3936
+    },
+    {
+        "certificate_id": "CERT001173",
+        "statistical_risk": 0.0127
+    },
+    {
+        "certificate_id": "CERT001174",
+        "statistical_risk": 0.0525
+    },
+    {
+        "certificate_id": "CERT001175",
+        "statistical_risk": 0.2741
+    },
+    {
+        "certificate_id": "CERT001176",
+        "statistical_risk": 0.1121
+    },
+    {
+        "certificate_id": "CERT001177",
+        "statistical_risk": 0.0734
+    },
+    {
+        "certificate_id": "CERT001178",
+        "statistical_risk": 0.1203
+    },
+    {
+        "certificate_id": "CERT001179",
+        "statistical_risk": 0.2809
+    },
+    {
+        "certificate_id": "CERT001180",
+        "statistical_risk": 0.126
+    },
+    {
+        "certificate_id": "CERT001181",
+        "statistical_risk": 0.4691
+    },
+    {
+        "certificate_id": "CERT001182",
+        "statistical_risk": 0.1401
+    },
+    {
+        "certificate_id": "CERT001183",
+        "statistical_risk": 0.0531
+    },
+    {
+        "certificate_id": "CERT001184",
+        "statistical_risk": 0.1199
+    },
+    {
+        "certificate_id": "CERT001185",
+        "statistical_risk": 0.441
+    },
+    {
+        "certificate_id": "CERT001186",
+        "statistical_risk": 0.926
+    },
+    {
+        "certificate_id": "CERT001187",
+        "statistical_risk": 0.0892
+    },
+    {
+        "certificate_id": "CERT001188",
+        "statistical_risk": 0.0573
+    },
+    {
+        "certificate_id": "CERT001189",
+        "statistical_risk": 0.2151
+    },
+    {
+        "certificate_id": "CERT001190",
+        "statistical_risk": 0.1584
+    },
+    {
+        "certificate_id": "CERT001191",
+        "statistical_risk": 0.1914
+    },
+    {
+        "certificate_id": "CERT001192",
+        "statistical_risk": 0.0881
+    },
+    {
+        "certificate_id": "CERT001193",
+        "statistical_risk": 0.0215
+    },
+    {
+        "certificate_id": "CERT001194",
+        "statistical_risk": 0.8912
+    },
+    {
+        "certificate_id": "CERT001195",
+        "statistical_risk": 0.0558
+    },
+    {
+        "certificate_id": "CERT001196",
+        "statistical_risk": 0.0072
+    },
+    {
+        "certificate_id": "CERT001197",
+        "statistical_risk": 0.3153
+    },
+    {
+        "certificate_id": "CERT001198",
+        "statistical_risk": 0.6343
+    },
+    {
+        "certificate_id": "CERT001199",
+        "statistical_risk": 0.4407
+    },
+    {
+        "certificate_id": "CERT001200",
+        "statistical_risk": 0.3273
+    },
+    {
+        "certificate_id": "CERT000070",
+        "statistical_risk": 0.5885
+    },
+    {
+        "certificate_id": "CERT000975",
+        "statistical_risk": 0.5
+    },
+    {
+        "certificate_id": "CERT000721",
+        "statistical_risk": 0.4982
+    },
+    {
+        "certificate_id": "CERT000609",
+        "statistical_risk": 0.4514
+    },
+    {
+        "certificate_id": "CERT000703",
+        "statistical_risk": 0.6604
+    },
+    {
+        "certificate_id": "CERT000672",
+        "statistical_risk": 0.4881
+    },
+    {
+        "certificate_id": "CERT000737",
+        "statistical_risk": 0.5256
+    },
+    {
+        "certificate_id": "CERT000602",
+        "statistical_risk": 0.5305
+    },
+    {
+        "certificate_id": "CERT000199",
+        "statistical_risk": 0.5844
+    },
+    {
+        "certificate_id": "CERT000510",
+        "statistical_risk": 0.5886
+    },
+    {
+        "certificate_id": "CERT000081",
+        "statistical_risk": 0.4376
+    },
+    {
+        "certificate_id": "CERT000031",
+        "statistical_risk": 0.4289
+    },
+    {
+        "certificate_id": "CERT000101",
+        "statistical_risk": 0.5859
+    },
+    {
+        "certificate_id": "CERT000991",
+        "statistical_risk": 0.606
+    },
+    {
+        "certificate_id": "CERT000308",
+        "statistical_risk": 0.4376
+    },
+    {
+        "certificate_id": "CERT000532",
+        "statistical_risk": 0.4495
+    },
+    {
+        "certificate_id": "CERT001154",
+        "statistical_risk": 0.5588
+    },
+    {
+        "certificate_id": "CERT000717",
+        "statistical_risk": 0.4633
+    },
+    {
+        "certificate_id": "CERT001185",
+        "statistical_risk": 0.441
+    },
+    {
+        "certificate_id": "CERT000977",
+        "statistical_risk": 0.4454
+    },
+    {
+        "certificate_id": "CERT000842",
+        "statistical_risk": 0.4249
+    },
+    {
+        "certificate_id": "CERT000769",
+        "statistical_risk": 0.6563
+    },
+    {
+        "certificate_id": "CERT000844",
+        "statistical_risk": 0.5274
+    },
+    {
+        "certificate_id": "CERT000186",
+        "statistical_risk": 0.6538
+    },
+    {
+        "certificate_id": "CERT001005",
+        "statistical_risk": 0.6329
+    },
+    {
+        "certificate_id": "CERT000131",
+        "statistical_risk": 0.6566
+    },
+    {
+        "certificate_id": "CERT000061",
+        "statistical_risk": 0.4762
+    },
+    {
+        "certificate_id": "CERT000754",
+        "statistical_risk": 0.4463
+    },
+    {
+        "certificate_id": "CERT000144",
+        "statistical_risk": 0.5957
+    },
+    {
+        "certificate_id": "CERT000796",
+        "statistical_risk": 0.44
+    },
+    {
+        "certificate_id": "CERT000136",
+        "statistical_risk": 0.5204
+    },
+    {
+        "certificate_id": "CERT000554",
+        "statistical_risk": 0.604
+    },
+    {
+        "certificate_id": "CERT000934",
+        "statistical_risk": 0.6608
+    },
+    {
+        "certificate_id": "CERT000900",
+        "statistical_risk": 0.5037
+    },
+    {
+        "certificate_id": "CERT000153",
+        "statistical_risk": 0.629
+    },
+    {
+        "certificate_id": "CERT000337",
+        "statistical_risk": 0.491
+    },
+    {
+        "certificate_id": "CERT000757",
+        "statistical_risk": 0.7392
+    },
+    {
+        "certificate_id": "CERT000628",
+        "statistical_risk": 0.6305
+    },
+    {
+        "certificate_id": "CERT000905",
+        "statistical_risk": 0.6293
+    },
+    {
+        "certificate_id": "CERT000548",
+        "statistical_risk": 0.4548
+    },
+    {
+        "certificate_id": "CERT000540",
+        "statistical_risk": 0.5273
+    },
+    {
+        "certificate_id": "CERT001081",
+        "statistical_risk": 0.5104
+    }
+]
