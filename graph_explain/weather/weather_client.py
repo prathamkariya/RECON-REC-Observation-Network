@@ -11,7 +11,7 @@ Cross-checks claimed renewable energy generation against physical and meteorolog
 import os
 import json
 import math
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Tuple, Optional
 import requests
 
@@ -33,15 +33,17 @@ def _save_cache(cache: Dict[str, Any]) -> None:
     except Exception as e:
         print(f"[WeatherCache] Warning: Could not save cache: {e}")
 
-def get_local_solar_hour(dt_utc: datetime, lon: float) -> float:
+IST = timezone(timedelta(hours=5, minutes=30))
+
+def get_local_solar_hour_ist(dt_ist: datetime, lon: float) -> float:
     """
-    Computes true solar local time hour (0.0 to 24.0) from UTC timestamp and longitude.
-    Formula: 1 degree longitude = 4 minutes time difference.
-    Ensures timezone correctness without external dependency failures.
+    Computes true solar local time hour (0.0 to 24.0) from IST timestamp and longitude.
+    India Standard Meridian is 82.5° East.
+    Formula: 1 degree longitude = 4 minutes (1/15 hour) time difference from 82.5°E.
     """
-    utc_hours = dt_utc.hour + (dt_utc.minute / 60.0) + (dt_utc.second / 3600.0)
-    solar_offset_hours = (lon * 4.0) / 60.0
-    solar_hour = (utc_hours + solar_offset_hours) % 24.0
+    ist_hours = dt_ist.hour + (dt_ist.minute / 60.0) + (dt_ist.second / 3600.0)
+    solar_offset_hours = (lon - 82.5) / 15.0
+    solar_hour = (ist_hours + solar_offset_hours) % 24.0
     return solar_hour
 
 def fetch_weather_data(lat: float, lon: float, date_str: str) -> Optional[Dict[str, Any]]:
@@ -73,83 +75,92 @@ def fetch_weather_data(lat: float, lon: float, date_str: str) -> Optional[Dict[s
             cache[cache_key] = data
             _save_cache(cache)
             return data
-    except Exception as e:
-        # Fallback gracefully if network/offline
+    except Exception:
         pass
 
     return None
 
 def compute_weather_mismatch(cert: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Cross-checks the physical plausibility of the generation claims.
-    
-    Output contract requirement:
-        weather_mismatch: bool
-        weather_mismatch_score: float (0.0 to 1.0)
-        reason: plain-text description for explainer
+    Cross-checks the physical plausibility of generation claims.
+    Supports both 'plant_rated_capacity_mwh' (Role 1 schema) and 'capacity_mwh'.
+    Correctly accounts for IST (UTC+5:30) timestamps.
     """
     claimed_mwh = float(cert.get("claimed_mwh", 0.0))
-    capacity_mwh = float(cert.get("capacity_mwh", 1.0))
+    capacity_mwh = float(cert.get("plant_rated_capacity_mwh", cert.get("capacity_mwh", 1.0)))
     energy_source = str(cert.get("energy_source", "")).lower()
     lat = float(cert.get("plant_lat", 0.0))
     lon = float(cert.get("plant_lon", 0.0))
-    ts_str = cert.get("generation_timestamp")
+    ts = cert.get("generation_timestamp")
 
-    # 1. Capacity Factor Impossibility Check (Universal for all sources)
-    if claimed_mwh > capacity_mwh * 1.02:
+    # 1. Capacity Factor Impossibility Check (Universal)
+    if capacity_mwh > 0 and claimed_mwh > capacity_mwh * 1.02:
         over_ratio = (claimed_mwh / capacity_mwh)
-        score = min(1.0, round(0.7 + 0.3 * (over_ratio - 1.0), 3))
+        score = min(1.0, round(0.7 + 0.3 * min(1.0, over_ratio - 1.0), 3))
         return {
             "certificate_id": cert.get("certificate_id"),
             "weather_mismatch": True,
             "weather_mismatch_score": score,
-            "reason": f"Claimed generation ({claimed_mwh} MWh) exceeds total plant rated capacity ({capacity_mwh} MWh). Physical impossibility."
+            "reason": f"Claimed generation ({claimed_mwh} MWh) exceeds plant rated capacity ({capacity_mwh} MWh). Physical impossibility."
         }
 
-    # Parse ISO timestamp (assumes UTC if not explicitly offset)
-    try:
-        if ts_str.endswith("Z"):
-            dt_utc = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
-        else:
-            dt_utc = datetime.fromisoformat(ts_str)
-            if dt_utc.tzinfo is None:
-                dt_utc = dt_utc.replace(tzinfo=timezone.utc)
-    except Exception:
-        dt_utc = datetime.now(timezone.utc)
+    # 2. Parse generation timestamp (IST locked decision)
+    if isinstance(ts, str):
+        try:
+            if ts.endswith("Z"):
+                dt = datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone(IST)
+            else:
+                dt = datetime.fromisoformat(ts)
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=IST)
+        except Exception:
+            dt = datetime.now(IST)
+    elif isinstance(ts, datetime):
+        dt = ts if ts.tzinfo is not None else ts.replace(tzinfo=IST)
+    else:
+        dt = datetime.now(IST)
 
-    solar_hour = get_local_solar_hour(dt_utc, lon)
+    solar_hour = get_local_solar_hour_ist(dt, lon)
+    dt_utc = dt.astimezone(timezone.utc)
     date_str = dt_utc.strftime("%Y-%m-%d")
 
-    # 2. Solar Generation Plausibility
+    # 3. Solar Generation Plausibility
     if energy_source == "solar":
-        # Check solar day/night window
-        # Sun is strictly below horizon before 05:45 and after 18:30 local solar time
-        is_night = (solar_hour < 5.75) or (solar_hour > 18.5)
+        # Deep night in IST (10 PM to 4:59 AM) or solar hour outside daylight envelope
+        is_night = (dt.hour in [22, 23, 0, 1, 2, 3, 4]) or (solar_hour < 5.0) or (solar_hour > 20.0)
 
         if is_night:
-            # Direct physical impossibility
             return {
                 "certificate_id": cert.get("certificate_id"),
                 "weather_mismatch": True,
                 "weather_mismatch_score": 1.0,
-                "reason": f"Solar generation claimed at local solar time {solar_hour:.1f}:00 hrs (nighttime). Solar irradiance is strictly 0 W/m²."
+                "reason": f"Solar generation claimed at local solar time {solar_hour:.1f}:00 hrs ({dt.strftime('%H:%M')} IST nighttime in India). Irradiance is strictly 0 W/m²."
             }
 
-        # Try historical irradiance API cross-check
+        # For normal daytime capacity factor (<45%), solar generation is fully plausible
+        cap_factor = (claimed_mwh / capacity_mwh) if capacity_mwh > 0 else 0
+        if cap_factor <= 0.45:
+            return {
+                "certificate_id": cert.get("certificate_id"),
+                "weather_mismatch": False,
+                "weather_mismatch_score": 0.0,
+                "reason": f"Solar generation ({claimed_mwh} MWh, capacity factor {cap_factor*100:.1f}%) is within expected daytime limits."
+            }
+
+        # Try historical irradiance API cross-check for high output claims
         weather_data = fetch_weather_data(lat, lon, date_str)
         if weather_data and "hourly" in weather_data:
             hour_idx = min(23, max(0, dt_utc.hour))
             irradiance = weather_data["hourly"].get("direct_normal_irradiance", [None])[hour_idx]
             if irradiance is not None:
-                # If claimed generation is high (>50% capacity) but irradiance is near zero (<20 W/m2 due to heavy storm/darkness)
-                if irradiance < 20.0 and (claimed_mwh / capacity_mwh) > 0.5:
+                if irradiance < 20.0 and cap_factor > 0.5:
                     return {
                         "certificate_id": cert.get("certificate_id"),
                         "weather_mismatch": True,
                         "weather_mismatch_score": 0.85,
                         "reason": f"Severe weather mismatch: Claimed {claimed_mwh} MWh during near-zero solar irradiance ({irradiance} W/m² recorded)."
                     }
-                elif irradiance < 100.0 and (claimed_mwh / capacity_mwh) > 0.8:
+                elif irradiance < 100.0 and cap_factor > 0.8:
                     return {
                         "certificate_id": cert.get("certificate_id"),
                         "weather_mismatch": True,
