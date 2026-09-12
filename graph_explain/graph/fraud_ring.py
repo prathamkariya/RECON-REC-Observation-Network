@@ -175,8 +175,13 @@ def detect_communities(transactions_df: pd.DataFrame) -> dict[str, Any]:
     for community in communities:
         subgraph = G.subgraph(community)
         community_density = nx.density(subgraph)
+        # A fraud ring requires at least 3 members (a 1- or 2-party trade is not a ring per Phase 2 rules)
+        # and internal cycles/excess edges beyond an acyclic tree path (tree density = 2/N).
+        min_tree_density = 2.0 / len(community) if len(community) > 1 else 1.0
         is_flagged = (
-            community_density > graph_density * DENSITY_MULTIPLIER_THRESHOLD
+            len(community) >= 3
+            and community_density > min_tree_density
+            and community_density > graph_density * DENSITY_MULTIPLIER_THRESHOLD
             and len(community) <= MAX_RING_SIZE
         )
         results.append({

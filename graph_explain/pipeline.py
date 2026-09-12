@@ -31,7 +31,8 @@ except ImportError:
 def analyze_dataset(
     transactions: List[Dict[str, Any]],
     certificates: List[Dict[str, Any]],
-    explain_all: bool = False
+    explain_all: bool = False,
+    allow_network: bool = False,
 ) -> List[Dict[str, Any]]:
     """
     Runs the complete Role 2 analysis pipeline.
@@ -59,7 +60,7 @@ def analyze_dataset(
         })
 
         # 2. Compute physical & weather plausibility
-        w_info = compute_weather_mismatch(cert)
+        w_info = compute_weather_mismatch(cert, allow_network=allow_network)
 
         # 3. Fuse combined signals
         combined_signals = {
