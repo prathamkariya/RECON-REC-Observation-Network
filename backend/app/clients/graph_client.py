@@ -55,10 +55,18 @@ def _real_analyze(record: dict) -> dict:
 
         transactions = record.get("transactions", [])
         result = compute_graph_signal(transactions, [record])
-        if not result:
-            raise ValueError("compute_graph_signal returned no result")
-        flag, risk = result
-        return {"graph_flag": bool(flag), "graph_risk": float(risk), "reasons": []}
+        c_id = record.get("certificate_id")
+        sig = result.get(c_id, next(iter(result.values())) if result else {})
+        flag = sig.get("graph_flag", False)
+        risk = sig.get("graph_risk", 0.0)
+        reasons = []
+        if sig.get("directly_in_cycle"):
+            cycle_path = sig.get("cycle_path")
+            path_str = " -> ".join(cycle_path) if cycle_path else "closed transaction loop"
+            reasons.append(f"Circular trading ring detected: {path_str}")
+        elif flag:
+            reasons.append(f"High-density trading community anomaly (risk score: {risk})")
+        return {"graph_flag": bool(flag), "graph_risk": float(risk), "reasons": reasons}
     except Exception:
         return _mock_analyze(record)
 
