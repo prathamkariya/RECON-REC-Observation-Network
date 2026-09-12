@@ -305,6 +305,9 @@ def compute_graph_signal(
         results[c_id] = {
             "graph_flag": cycle_result["has_cycle"] or community_risk > 0.5,
             "graph_risk": round(graph_risk, 4),
+            "directly_in_cycle": cycle_result["has_cycle"],
+            "cycle_path": cycle_result["cycle_path"],
+            "touching_parties": sorted(list(parties_involved)),
         }
 
     return results

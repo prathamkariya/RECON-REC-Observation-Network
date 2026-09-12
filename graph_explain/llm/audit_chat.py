@@ -59,9 +59,19 @@ Be concise, factual, and direct. Explain graph trading rings, solar/weather disc
     if "why" in query_lower or "reason" in query_lower or "flag" in query_lower:
         reasons = []
         if signals.get("weather_mismatch"):
-            reasons.append(f"Physical Generation Mismatch: {signals.get('weather_reason')}")
+            reason = signals.get("weather_reason")
+            if not reason:
+                cap = certificate.get("plant_rated_capacity_mwh", certificate.get("capacity_mwh"))
+                claimed = certificate.get("claimed_mwh")
+                if cap and claimed and float(claimed) > float(cap):
+                    ratio = round(float(claimed) / float(cap), 2)
+                    reason = f"Claimed generation of {claimed} MWh exceeds plant rated capacity ({cap} MWh) by {ratio}x"
+                else:
+                    ts = certificate.get("generation_timestamp", "")
+                    reason = f"Solar generation claimed outside daylight hours ({ts}) when solar irradiance is zero"
+            reasons.append(f"Physical Generation Mismatch: {reason}")
         if signals.get("graph_flag"):
-            reasons.append(f"Graph Ring / Wash Trading: High graph risk ({graph_risk}) involving entities {', '.join(parties)}")
+            reasons.append(f"Graph Ring / Wash Trading: High graph risk ({graph_risk}) involving entities {', '.join(str(p) for p in parties)}")
         if not reasons:
             return f"Certificate {certificate_id} was evaluated as clean with no anomalies detected across graph, physical, or volume checks."
         return f"Certificate {certificate_id} was flagged due to:\n" + "\n".join(f"- {r}" for r in reasons)

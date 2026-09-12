@@ -37,33 +37,48 @@ def _generate_fallback_explanation(certificate: Dict[str, Any], signals: Dict[st
     """
     c_id = certificate.get("certificate_id", "Unknown")
     claimed = certificate.get("claimed_mwh")
-    cap = certificate.get("capacity_mwh")
+    cap = certificate.get(
+        "plant_rated_capacity_mwh",
+        certificate.get("capacity_mwh")
+    )
     source = certificate.get("energy_source", "").capitalize()
     parties = signals.get("touching_parties", [])
+    parties_str = ", ".join(str(p) for p in parties) if parties else "associated market counterparties"
 
     if strongest == "CLEAN":
+        cap_str = f"aligns with plant rated capacity ({cap} MWh)" if cap is not None else "aligns with baseline expectations"
         return (
             f"Certificate {c_id} appears fully legitimate. "
-            f"Trading patterns are linear, claimed generation ({claimed} MWh) aligns with plant capacity ({cap} MWh), "
-            f"and historical meteorological conditions corroborate physical generation."
+            f"Trading patterns are linear, claimed generation ({claimed} MWh) {cap_str}, "
+            f"and meteorological conditions corroborate physical generation."
         )
     elif strongest == "PHYSICAL":
-        reason = signals.get("weather_reason", "meteorological conditions contradict generation claim")
+        # Identify specific physical breach: capacity overshoot vs solar night timing
+        if cap is not None and claimed is not None and float(claimed) > float(cap):
+            ratio = round(float(claimed) / float(cap), 2)
+            reason = f"Claimed generation of {claimed} MWh exceeds plant rated capacity ({cap} MWh) by {ratio}x"
+        else:
+            ts = certificate.get("generation_timestamp", "")
+            time_str = str(ts)
+            if hasattr(ts, "strftime"):
+                time_str = ts.strftime("%H:%M IST on %Y-%m-%d")
+            reason = f"Solar generation claimed during night/darkness ({time_str}) when solar irradiance is zero"
         return (
             f"FLAGGED: Physical generation impossibility detected for {c_id}. "
-            f"{reason}. Secondary check on trading parties ({', '.join(parties) if parties else 'standard'}) indicates "
-            f"issuance occurred despite impossible generation physics."
+            f"{reason}. Secondary audit on trading counterparties ({parties_str}) indicates "
+            f"issuance occurred despite physically impossible generation parameters."
         )
     elif strongest == "GRAPH_CYCLE":
+        risk = signals.get("graph_risk", 1.0)
         return (
             f"FLAGGED: Collusive circular trading ring detected. "
-            f"Certificate {c_id} circulated through a closed loop among entities ({', '.join(parties)}), "
-            f"exhibiting classic artificial volume inflation (wash trading) with high risk score ({signals.get('graph_risk', 1.0)})."
+            f"Certificate {c_id} circulated through a closed loop among entities ({parties_str}), "
+            f"exhibiting classic artificial volume inflation (wash trading) with high risk score ({risk})."
         )
     elif strongest == "GRAPH_CLUSTER":
         return (
             f"FLAGGED: High-density trading cluster anomaly. "
-            f"Certificate {c_id} involves entities ({', '.join(parties)}) operating within an unusually dense, "
+            f"Certificate {c_id} involves entities ({parties_str}) operating within an unusually dense, "
             f"inter-connected trading community exceeding baseline market density thresholds."
         )
     else:
@@ -71,6 +86,7 @@ def _generate_fallback_explanation(certificate: Dict[str, Any], signals: Dict[st
             f"FLAGGED: Statistical volume outlier. "
             f"Claimed output ({claimed} MWh) deviates significantly from peer generation baselines."
         )
+
 
 def generate_explanation(
     certificate: Dict[str, Any],
@@ -97,16 +113,14 @@ def generate_explanation(
 
     strongest = _rank_signals(signals)
 
-    # Check for Anthropic API key
+    # Try Anthropic Claude API if key is available
     api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        return _generate_fallback_explanation(certificate, signals, strongest)
+    if api_key:
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=api_key)
 
-    try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
-
-        prompt = f"""
+            prompt = f"""
 You are a senior forensic energy auditor analyzing renewable energy certificate (REC) integrity.
 Evaluate the following certificate data and fraud signals:
 
@@ -127,13 +141,15 @@ Strict Instructions:
 3. Keep the response to 2-3 punchy, professional sentences citing exact figures and party IDs.
 """
 
-        response = client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=250,
-            temperature=0.2,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return response.content[0].text.strip()
-    except Exception:
-        # Fallback to local deterministic explainer if API call fails
-        return _generate_fallback_explanation(certificate, signals, strongest)
+            response = client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=250,
+                temperature=0.2,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.content[0].text.strip()
+        except Exception:
+            pass
+
+    # Fallback to local deterministic explainer
+    return _generate_fallback_explanation(certificate, signals, strongest)
