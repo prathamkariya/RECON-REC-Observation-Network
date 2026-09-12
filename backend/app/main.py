@@ -1,9 +1,18 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .db import init_db
 from .routers import admin, analytics, audit, certificates, recs, verify
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
 
 app = FastAPI(
     title="RECON REC Fraud Detection API",
@@ -12,12 +21,20 @@ app = FastAPI(
         "Aggregates ML risk scoring, fraud-ring/weather cross-checks, plain-English "
         "explanation, and ledger proofs into one Certificate response per REC."
     ),
+    lifespan=lifespan,
 )
+
+# "*" with allow_credentials=True is not actually a wildcard: Starlette echoes
+# whichever Origin asked, so every site gets a credentialed allow. Credentials
+# are only enabled for an explicitly configured origin list. This API is called
+# with bearer tokens rather than cookies, so the wildcard default costs nothing
+# in local dev — set CORS_ORIGINS in any deployed environment.
+_allow_any_origin = "*" in settings.CORS_ORIGINS
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=not _allow_any_origin,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -29,11 +46,6 @@ app.include_router(audit.router, prefix="/audit", tags=["Audit Chat"])
 app.include_router(audit.router, prefix="/api/v1/audit", tags=["Audit Chat"], include_in_schema=False)
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 app.include_router(certificates.router, prefix="/certificates", tags=["On-Chain Certificates"])
-
-
-@app.on_event("startup")
-def _create_tables() -> None:
-    init_db()
 
 
 @app.get("/")
