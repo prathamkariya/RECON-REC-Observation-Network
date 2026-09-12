@@ -33,7 +33,9 @@ def _mock_check(record: dict) -> dict:
 def _real_check_blocking(record: dict) -> dict:
     from graph_explain.weather.weather_client import compute_weather_mismatch  # teammate's module
 
-    mismatch, score = compute_weather_mismatch(record)
+    res = compute_weather_mismatch(record)
+    mismatch = res.get("weather_mismatch", False)
+    score = res.get("weather_mismatch_score", 0.0)
     return {
         "weather_mismatch": bool(mismatch),
         "weather_mismatch_score": float(score),
