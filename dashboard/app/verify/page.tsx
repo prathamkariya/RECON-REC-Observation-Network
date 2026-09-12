@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { SearchX } from "lucide-react";
@@ -11,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
 import { ApiError } from "@/lib/api-error";
 import { VerifyResult } from "@/components/verify/verify-result";
+import { PublicHeader } from "@/components/landing/public-header";
 
 export default function VerifyPage() {
   const [tokenIdInput, setTokenIdInput] = useState("");
@@ -26,14 +26,7 @@ export default function VerifyPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="mx-auto flex max-w-4xl items-center justify-between px-6 py-6">
-        <Link href="/" className="font-display text-lg font-semibold tracking-tight">
-          Recon
-        </Link>
-        <Link href="/signin" className="text-sm text-recon-ink-dim hover:text-gold">
-          Sign in
-        </Link>
-      </header>
+      <PublicHeader current="verify" />
 
       <main className="mx-auto max-w-4xl space-y-8 px-6 pb-24">
         <div className="space-y-2 text-center">

@@ -13,8 +13,8 @@ export function RecentCertificates({ certificates }: { certificates: Certificate
     <div className="glass glass-thin p-5">
       <div className="mb-3 flex items-center justify-between">
         <p className="text-xs tracking-wide text-recon-ink-dim">Recent certificates</p>
-        <Link href="/issue" className="text-xs text-gold hover:underline">
-          Issue new
+        <Link href="/certificates" className="text-xs text-gold hover:underline">
+          View all
         </Link>
       </div>
 
