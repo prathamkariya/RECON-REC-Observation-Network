@@ -113,7 +113,7 @@ export function Step2Analysis({
           Back
         </Button>
         <Button onClick={() => onComplete(result)}>
-          {level === "high" ? "Continue anyway — mint on Sepolia" : "Continue to mint"}
+          {level === "high" ? "Mint anyway" : "Continue to mint"}
         </Button>
       </div>
     </div>

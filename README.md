@@ -48,6 +48,28 @@ make run-dashboard   # dashboard on :3000
 
 ---
 
+## Dashboard pages
+
+| Route | Page | What it shows |
+| --- | --- | --- |
+| `/` | Landing | Hero, live registry, signal pipeline, chain-split explainer |
+| `/how-it-works` | Explainer | Scroll-through of the detection pipeline |
+| `/verify` | Public verification | Look up a certificate and verify it against the chain in the browser |
+| `/signin` `/signup` `/forgot-password` | Auth | Firebase email auth |
+| `/dashboard` | **Control Room** | Stat cards, flow topology, anomaly matrix, trend charts, surveillance feed, site anchors |
+| `/certificates` | Certificate Archive | Search, filter and sort every on-chain certificate |
+| `/certificates/[id]` | Investigation Dossier | Evidence pillars, signal triangle, telemetry log, regulatory brief, lifecycle timeline, on-chain proof, transfer / retire |
+| `/fraud` | Investigations | Risk distribution, score histogram, high-risk list |
+| `/network` | Network Intelligence | Ownership graph of plants, issuers and wallets; flagged clusters |
+| `/physical` | Physical Validation | Claimed generation vs. physical capacity envelope per plant |
+| `/issue` | Issuance | Three steps: generation form → live AI analysis → mint |
+| `/audit` | Audit Trail | Activity log of issuance, transfers and retirements |
+
+The console pages derive their analytics client-side (`lib/analytics.ts`) from
+the same certificate list the backend serves, so they need no extra endpoints.
+
+---
+
 ## Architecture
 
 ```

@@ -1,53 +1,68 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { ArrowUpRight, FileBadge2 } from "lucide-react";
 import type { CertificateListItem } from "@/lib/types";
 import { RiskBadge } from "@/components/certificate/risk-badge";
-import { formatMwh, formatRelative, truncateAddress } from "@/lib/format";
+import { Panel, PanelHeader } from "@/components/glass/panel";
+import { SignalBadge } from "@/components/glass/signal-badge";
+import { formatMwh, truncateAddress } from "@/lib/format";
 
+/** Forensic data table of the latest certificates (Stitch evidence table). */
 export function RecentCertificates({ certificates }: { certificates: CertificateListItem[] }) {
-  const recent = certificates.slice(0, 6);
+  const recent = [...certificates].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)).slice(0, 6);
 
   return (
-    <div className="glass glass-thin p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <p className="text-xs tracking-wide text-recon-ink-dim">Recent certificates</p>
-        <Link href="/certificates" className="text-xs text-gold hover:underline">
-          View all
-        </Link>
-      </div>
+    <Panel>
+      <PanelHeader
+        icon={FileBadge2}
+        eyebrow="Registry ledger"
+        title="Latest certificates"
+        actions={
+          <Link href="/certificates" className="flex items-center gap-1 text-xs font-semibold text-recon-ink hover:text-gold">
+            View archive <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
+        }
+      />
 
       {recent.length === 0 ? (
-        <p className="text-sm text-recon-ink-dim">No certificates yet.</p>
+        <p className="rounded-xl border border-dashed border-recon-ink/15 p-6 text-center text-sm text-recon-ink-dim">No certificates yet.</p>
       ) : (
-        <ul className="divide-y divide-border">
-          {recent.map((cert, i) => (
-            <motion.li
-              key={cert.token_id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + i * 0.05, duration: 0.35 }}
-            >
-              <Link
-                href={`/certificates/${cert.token_id}`}
-                className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0 hover:opacity-90"
-              >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-recon-ink">
-                    #{cert.token_id} · {cert.plant_id}
-                  </p>
-                  <p className="text-xs text-recon-ink-dim">
-                    {formatMwh(cert.energy_mwh)} · {truncateAddress(cert.owner_address)} ·{" "}
-                    {formatRelative(cert.created_at)}
-                  </p>
-                </div>
-                <RiskBadge score={cert.fraud_score} className="shrink-0" />
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
+        <div className="-mx-5 overflow-x-auto sm:-mx-6" data-lenis-prevent>
+          <table className="w-full min-w-[720px] text-left">
+            <thead>
+              <tr className="border-y border-recon-ink/[0.07] bg-white/40">
+                {["Serial", "Plant", "Energy", "Holder", "Issued (UTC)", "Status", "Risk"].map((h, i) => (
+                  <th key={h} className={"label-caps px-5 py-2.5 text-recon-steel sm:px-6 " + (i === 2 ? "text-right" : "")}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {recent.map((cert) => (
+                <tr key={cert.token_id} className="group h-11 border-b border-recon-ink/[0.06] transition-colors last:border-0 hover:bg-white/50">
+                  <td className="px-5 sm:px-6">
+                    <Link href={`/certificates/${cert.token_id}`} className="mono-data font-semibold text-recon-ink group-hover:text-gold">
+                      REC-{String(cert.token_id).padStart(5, "0")}
+                    </Link>
+                  </td>
+                  <td className="px-5 text-[13px] text-recon-ink-soft sm:px-6">{cert.plant_id}</td>
+                  <td className="mono-data px-5 text-right text-recon-ink sm:px-6">{formatMwh(cert.energy_mwh)}</td>
+                  <td className="mono-micro px-5 text-recon-steel sm:px-6">{truncateAddress(cert.owner_address)}</td>
+                  <td className="mono-micro px-5 text-recon-steel sm:px-6">{new Date(cert.created_at).toISOString().slice(0, 16).replace("T", " ")}</td>
+                  <td className="px-5 sm:px-6">
+                    <SignalBadge tone={cert.status === "retired" ? "ink" : "neutral"}>{cert.status}</SignalBadge>
+                  </td>
+                  <td className="px-5 sm:px-6">
+                    <RiskBadge score={cert.fraud_score} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-    </div>
+    </Panel>
   );
 }

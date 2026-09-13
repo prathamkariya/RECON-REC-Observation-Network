@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { StepIndicator } from "@/components/issue/step-indicator";
+import { PageHeader } from "@/components/glass/panel";
 import { Step1GenerationForm } from "@/components/issue/step1-generation-form";
 import { Step2Analysis } from "@/components/issue/step2-analysis";
 import { Step3Mint } from "@/components/issue/step3-mint";
@@ -28,13 +29,12 @@ export default function IssuePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold">Issue a certificate</h1>
-        <p className="text-sm text-recon-ink-dim">
-          Submit generation data, review the AI&apos;s fraud analysis, then mint on Sepolia.
-        </p>
-      </div>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <PageHeader
+        crumbs={["REC Market", "Issuance"]}
+        title="Issue a certificate."
+        description="Submit generation data, review the AI's fraud analysis, then mint on Sepolia."
+      />
 
       <StepIndicator current={step} />
 

@@ -58,7 +58,7 @@ export function TransferPanel({ tokenId, onClose }: { tokenId: number; onClose: 
 
   return (
     <div className="glass glass-thin space-y-3 p-4">
-      <label htmlFor="transfer-address" className="block text-xs tracking-wide text-recon-ink-dim">
+      <label htmlFor="transfer-address" className="label-caps block text-recon-steel">
         Recipient wallet address
       </label>
       <input
@@ -68,7 +68,7 @@ export function TransferPanel({ tokenId, onClose }: { tokenId: number; onClose: 
         placeholder="0x…"
         spellCheck={false}
         autoComplete="off"
-        className="w-full rounded-md border border-border bg-transparent px-3 py-2 font-mono text-sm text-recon-ink outline-none focus:border-verified"
+        className="w-full rounded-lg border border-recon-ink/15 bg-white/70 px-3 py-2 font-mono text-sm text-recon-ink outline-none focus:border-gold focus:ring-2 focus:ring-gold/15"
       />
       {address.length > 0 && !isValid && (
         <p className="text-xs text-risk">That isn&apos;t a valid wallet address (0x followed by 40 hex characters).</p>

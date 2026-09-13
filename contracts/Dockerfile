@@ -9,6 +9,9 @@ FROM node:22-slim
 
 WORKDIR /app
 
+# No interactive telemetry prompt: there is no TTY to answer it in a container.
+ENV HARDHAT_DISABLE_TELEMETRY_PROMPT=true
+
 # Install deps first so edits to the contract don't re-run npm install.
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund

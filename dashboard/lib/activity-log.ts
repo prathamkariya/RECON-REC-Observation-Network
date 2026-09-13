@@ -55,8 +55,12 @@ function getSnapshot() {
   return events;
 }
 
+// Must be a stable reference: useSyncExternalStore compares snapshots by
+// identity, and a fresh [] per call reads as "changed" on every render.
+const EMPTY_EVENTS: ActivityEvent[] = [];
+
 function getServerSnapshot(): ActivityEvent[] {
-  return [];
+  return EMPTY_EVENTS;
 }
 
 export function useLocalActivityLog() {

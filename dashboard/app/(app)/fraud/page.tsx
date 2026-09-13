@@ -1,56 +1,77 @@
 "use client";
 
+import { Gauge, ShieldAlert, Siren, Zap } from "lucide-react";
 import { useCertificates } from "@/lib/hooks/use-certificates";
 import { StatCard } from "@/components/dashboard/stat-card";
-import { RiskDistributionChart } from "@/components/fraud/risk-distribution-chart";
+import { FlagRateTrend, RiskDistributionChart, RiskSplitDonut } from "@/components/fraud/risk-distribution-chart";
 import { HighRiskList } from "@/components/fraud/high-risk-list";
-import { Skeleton } from "@/components/ui/skeleton";
+import { MetaChip, PageHeader } from "@/components/glass/panel";
+import { ConsoleSkeleton, ErrorPanel } from "@/components/glass/states";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { FRAUD_FLAG_THRESHOLD } from "@/lib/types";
 
-export default function FraudPage() {
+export default function InvestigationsPage() {
   const { data: certificates, isLoading, isError } = useCertificates();
 
-  if (isLoading) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
-        ))}
-        <Skeleton className="col-span-full h-72 rounded-xl" />
-      </div>
-    );
-  }
-
-  if (isError || !certificates) {
-    return (
-      <div className="glass glass-risk p-6 text-sm text-recon-ink">
-        Couldn&apos;t load fraud data. Check that the backend is running and reachable.
-      </div>
-    );
-  }
+  if (isLoading) return <ConsoleSkeleton kpis={4} />;
+  if (isError || !certificates) return <ErrorPanel title="Couldn't load fraud data" />;
 
   const flagged = certificates.filter((c) => c.fraud_score >= FRAUD_FLAG_THRESHOLD);
-  const avgScore = certificates.length
-    ? Math.round(certificates.reduce((sum, c) => sum + c.fraud_score, 0) / certificates.length)
-    : 0;
+  const critical = certificates.filter((c) => c.fraud_score >= 75);
+  const avgScore = certificates.length ? Math.round(certificates.reduce((sum, c) => sum + c.fraud_score, 0) / certificates.length) : 0;
+  const mwhUnderReview = flagged.reduce((s, c) => s + c.energy_mwh, 0);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Fraud analytics</h1>
-        <p className="text-sm text-recon-ink-dim">Risk distribution across every certificate on this registry.</p>
+      <Reveal y={12}>
+        <PageHeader
+          crumbs={["REC Market", "Investigations"]}
+          title="Risk analytics & the investigation queue."
+          description="How fraud risk is distributed across the registry, and every certificate that needs a human decision."
+          meta={
+            <>
+              <MetaChip live>
+                <span className="mono-micro font-semibold">{flagged.length} OPEN CASES</span>
+              </MetaChip>
+              <MetaChip>
+                <span className="mono-micro text-recon-steel">THRESHOLD:</span> score ≥ {FRAUD_FLAG_THRESHOLD}
+              </MetaChip>
+            </>
+          }
+        />
+      </Reveal>
+
+      <Stagger className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <StaggerItem>
+          <StatCard label="Open cases" value={flagged.length} icon={ShieldAlert} accent={flagged.length ? "risk" : "neutral"} footnote="Of registry" footnoteValue={`${certificates.length ? Math.round((flagged.length / certificates.length) * 100) : 0}%`} />
+        </StaggerItem>
+        <StaggerItem>
+          <StatCard label="Critical" value={critical.length} icon={Siren} accent={critical.length ? "risk" : "neutral"} footnote="Score" footnoteValue="≥ 75" />
+        </StaggerItem>
+        <StaggerItem>
+          <StatCard label="Average score" value={avgScore} suffix="/100" icon={Gauge} accent="warn" footnote="Across" footnoteValue={`${certificates.length} certs`} />
+        </StaggerItem>
+        <StaggerItem>
+          <StatCard label="MWh under review" value={mwhUnderReview} icon={Zap} footnote="Flagged energy" footnoteValue="Held" />
+        </StaggerItem>
+      </Stagger>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Reveal className="lg:col-span-2">
+          <RiskDistributionChart certificates={certificates} />
+        </Reveal>
+        <Reveal delay={0.06}>
+          <RiskSplitDonut certificates={certificates} />
+        </Reveal>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Total certificates" value={certificates.length} />
-        <StatCard label="Flagged high-risk" value={flagged.length} accent={flagged.length > 0 ? "risk" : "neutral"} />
-        <StatCard label="Average fraud score" value={avgScore} suffix="/ 100" accent="gold" />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <RiskDistributionChart certificates={certificates} />
+      <Reveal>
         <HighRiskList certificates={certificates} />
-      </div>
+      </Reveal>
+
+      <Reveal>
+        <FlagRateTrend certificates={certificates} />
+      </Reveal>
     </div>
   );
 }

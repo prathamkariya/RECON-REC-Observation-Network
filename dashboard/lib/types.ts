@@ -92,6 +92,18 @@ export type CertificateRetireResponse = {
   status: "issued" | "retired";
 };
 
+/** GET / on the backend — which analysis sources are live and whether minting can work. */
+export type SystemStatus = {
+  service: string;
+  sources: Record<string, "real" | "mock">;
+  chain: {
+    connected: boolean;
+    contract_address: string | null;
+    issuer_wallet: string | null;
+    ready: boolean;
+  };
+};
+
 export type ApiErrorBody = {
   detail: string;
 };

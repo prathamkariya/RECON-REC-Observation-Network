@@ -18,10 +18,10 @@ export function LifecycleTimeline({ certificate }: { certificate: OnChainCertifi
   ];
 
   return (
-    <div className="glass glass-thin p-6">
-      <p className="mb-6 text-xs tracking-wide text-recon-ink-dim">Lifecycle</p>
-      <ol className="relative space-y-6 pl-8">
-        <div className="absolute top-1 bottom-1 left-[11px] w-px bg-border" />
+    <div className="glass glass-medium h-full p-6">
+      <p className="label-caps mb-6 text-recon-steel">Lifecycle</p>
+      {/* The rail is a pseudo-element: a <div> isn't a valid child of <ol>. */}
+      <ol className="relative space-y-6 pl-8 before:absolute before:top-1 before:bottom-1 before:left-[11px] before:w-px before:bg-recon-ink/10">
         {steps.map((step, i) => (
           <motion.li
             key={step.label}
@@ -34,7 +34,7 @@ export function LifecycleTimeline({ certificate }: { certificate: OnChainCertifi
             <span
               className={
                 "absolute -left-8 flex h-6 w-6 items-center justify-center rounded-full border text-[11px] font-medium " +
-                (step.done ? "border-gold bg-gold text-recon-gold-ink" : "border-border text-recon-ink-dim")
+                (step.done ? "border-gold bg-gold text-recon-gold-ink shadow-[0_4px_10px_-4px_rgba(60,100,80,0.6)]" : "border-recon-ink/15 bg-white/70 text-recon-ink-dim")
               }
             >
               {i + 1}

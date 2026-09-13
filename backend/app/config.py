@@ -27,6 +27,8 @@ def _list_env(name: str, default: list) -> list:
     if value is None or not value.strip():
         return default
     return [item.strip() for item in value.split(",") if item.strip()]
+
+
 def _str_env(name: str, default: Optional[str] = None) -> Optional[str]:
     """os.getenv(name, default) returns "" for a var that's present but blank,
     which silently overrides the default. .env templates ship exactly that

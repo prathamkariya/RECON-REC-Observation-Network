@@ -33,7 +33,7 @@ export function Step1GenerationForm({
   const source = watch("source");
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="glass glass-thin space-y-5 p-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="glass glass-medium space-y-5 rounded-2xl p-6 sm:p-8">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="plantId">Plant ID</Label>

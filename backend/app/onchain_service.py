@@ -5,16 +5,21 @@ score, then persist the off-chain half (raw record, reasoning, token_id) in
 the database. Mirrors service.py's composition pattern but targets the
 on-chain registry instead of the hash-chain ledger.
 """
+import logging
+import time
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from web3.exceptions import TransactionNotFound
 
 from . import service
 from .clients import web3_client
 from .db_models import OnChainCertificate
 from .schemas import CertificateIssueRequest
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -62,7 +67,49 @@ def assess(payload: CertificateIssueRequest) -> RiskAssessment:
     )
 
 
+_RECONCILE_INTERVAL_SECONDS = 30.0
+_last_reconciled_at = 0.0
+
+
+def reconcile_with_chain(db: Session, force: bool = False) -> int:
+    """Drop off-chain rows whose chain no longer exists.
+
+    A local Hardhat node keeps no state across restarts, while the database
+    does — so after a chain restart every stored token_id points at nothing,
+    and the next mint (which starts again at token 0) would collide with a
+    stale primary key. If the newest row's mint transaction is unknown to the
+    connected chain, the whole table belongs to a chain that is gone.
+
+    Only a definite "transaction not found" clears anything; an unreachable
+    RPC leaves the data alone. Returns the number of rows removed.
+    """
+    global _last_reconciled_at
+    now = time.monotonic()
+    if not force and now - _last_reconciled_at < _RECONCILE_INTERVAL_SECONDS:
+        return 0
+
+    latest = db.scalars(select(OnChainCertificate).order_by(OnChainCertificate.token_id.desc()).limit(1)).first()
+    if latest is None:
+        _last_reconciled_at = now
+        return 0
+
+    try:
+        web3_client.get_w3().eth.get_transaction_receipt(latest.mint_tx_hash)
+    except TransactionNotFound:
+        removed = db.query(OnChainCertificate).delete()
+        db.commit()
+        logger.warning("Chain was reset: removed %d stale off-chain certificate rows", removed)
+        _last_reconciled_at = now
+        return removed
+    except Exception:
+        return 0  # chain unreachable — retry on the next call, never wipe on doubt
+
+    _last_reconciled_at = now
+    return 0
+
+
 def issue_certificate(db: Session, payload: CertificateIssueRequest) -> OnChainCertificate:
+    reconcile_with_chain(db, force=True)
     to_address = payload.to_address or web3_client.get_backend_address()
 
     # Pre-flight the duplicate check as a free view call, before running the
@@ -147,6 +194,7 @@ def get_certificate(db: Session, token_id: int) -> Optional[dict]:
 def list_certificates(db: Session, limit: int = 100) -> List[OnChainCertificate]:
     """Off-chain rows only (no per-item chain read) — fast enough for a
     dashboard/explorer list. Use get_certificate() for the live-verified detail."""
+    reconcile_with_chain(db)
     stmt = select(OnChainCertificate).order_by(OnChainCertificate.created_at.desc()).limit(limit)
     return list(db.scalars(stmt))
 

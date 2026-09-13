@@ -55,12 +55,15 @@ services:
       - "${CHAIN_PORT:-8545}:8545"
     volumes:
       - chain_artifacts:/chain-artifacts
+    # Passes only once this start's deployment is recorded (the entrypoint
+    # writes .ready after deploying), not merely when the RPC answers — so the
+    # backend never starts against a previous run's artifact.
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8545',{method:'POST',headers:{'content-type':'application/json'},body:'{\"jsonrpc\":\"2.0\",\"method\":\"eth_chainId\",\"params\":[],\"id\":1}'}).then(r=>r.json()).then(j=>process.exit(j.result?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "test", "-f", "/chain-artifacts/.ready"]
       interval: 3s
       timeout: 5s
-      retries: 30
-      start_period: 10s
+      retries: 60
+      start_period: 15s
 
   backend:
     build:

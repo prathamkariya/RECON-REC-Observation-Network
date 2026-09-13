@@ -7,12 +7,9 @@ export function truncateHash(hash: string, chars = 6): string {
   return truncateAddress(hash, chars);
 }
 
-export function etherscanTxUrl(txHash: string): string {
-  return `https://sepolia.etherscan.io/tx/${txHash}`;
-}
-
-export function etherscanAddressUrl(address: string): string {
-  return `https://sepolia.etherscan.io/address/${address}`;
+/** Display serial for a token id, e.g. 21 -> "REC-00021". */
+export function certificateSerial(tokenId: number): string {
+  return `REC-${String(tokenId).padStart(5, "0")}`;
 }
 
 export function formatMwh(value: number): string {

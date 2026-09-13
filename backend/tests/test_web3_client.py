@@ -279,6 +279,35 @@ def test_issue_certificate_rejects_duplicate_before_minting(chain, recipient, db
     assert calls == [], "risk pipeline ran despite a known-duplicate record"
 
 
+def test_get_certificate_merges_onchain_and_offchain_data(chain, recipient, db_session):
+    payload = CertificateIssueRequest(
+        to_address=recipient,
+        plant=Plant(id="PLANT-B", type="solar", capacity_mw=50, lat=23.0, lon=72.5),
+        generation=Generation(
+            mwh_claimed=250,
+            start=datetime(2026, 6, 1, 10, tzinfo=timezone.utc),
+            end=datetime(2026, 6, 1, 14, tzinfo=timezone.utc),
+        ),
+        issuer_id="ISSUER-A",
+    )
+
+    issued = onchain_service.issue_certificate(db_session, payload)
+    merged = onchain_service.get_certificate(db_session, issued.token_id)
+
+    # On-chain half (from the deployed contract).
+    assert merged["plant_id"] == "PLANT-B"
+    assert merged["energy_mwh"] == 250
+    assert merged["fraud_score"] == issued.fraud_score
+    assert merged["retired_on_chain"] is False
+    assert merged["owner_address"] == recipient
+
+    # Off-chain half (from the database row).
+    assert merged["raw_record"]["issuer_id"] == "ISSUER-A"
+    assert isinstance(merged["risk_reasons"], list)
+    assert merged["explanation"]
+    assert merged["status"] == "issued"
+
+
 def test_transfer_certificate_updates_offchain_row(chain, recipient, db_session):
     issuer_address = chain
     payload = CertificateIssueRequest(

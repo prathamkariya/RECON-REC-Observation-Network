@@ -24,6 +24,7 @@ share/python-wheels/
 # Virtual environments
 venv/
 .venv/
+myenv/
 env/
 ENV/
 env.bak/
@@ -41,6 +42,14 @@ venv.bak/
 .vscode/
 *.swp
 *.swo
+
+# Node / Next.js
+node_modules/
+.next/
+*.tsbuildinfo
+
+# OS
+.DS_Store
 
 # Project specific caches
 weather_cache.json

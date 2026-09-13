@@ -6,6 +6,7 @@ import type {
   CertificateRetireResponse,
   CertificateTransferResponse,
   OnChainCertificate,
+  SystemStatus,
 } from "@/lib/types";
 import { ApiError } from "@/lib/api-error";
 
@@ -71,45 +72,135 @@ function getStore(): Store {
   return g.__reconMockStore;
 }
 
-function seed(store: Store) {
-  const seeds: Array<[string, number, string, string, number]> = [
-    ["SUNFIELD-04", 118, "solar", "2026-08-20T09:00:00Z", 8],
-    ["WINDRIDGE-11", 340, "wind", "2026-08-21T14:00:00Z", 14],
-    ["SUNFIELD-04", 96, "solar", "2026-08-22T09:00:00Z", 6],
-    ["HYDRO-CASCADE-2", 610, "hydro", "2026-08-23T02:00:00Z", 71],
-    ["WINDRIDGE-11", 500, "wind", "2026-08-24T05:00:00Z", 62],
-  ];
+// Demo registry: real plant archetypes at real Indian grid coordinates, so
+// the physics views (solar elevation, clear-sky envelopes) compute meaningful
+// results. Claims are sized against each plant's actual physical ceiling for
+// its window — clean ones sit inside it, flagged ones break it in the way
+// their reasons describe.
+const PLANTS = {
+  "SOLAR-PLANT-17": { type: "solar", capacity_mw: 5, lat: 23.0225, lon: 72.5714, issuer: "ISS-102 · Helios Renewables" },
+  "SUNFIELD-04": { type: "solar", capacity_mw: 50, lat: 26.9124, lon: 70.9001, issuer: "ISS-117 · TerraVolt Syndicate" },
+  "SOLAR-ARRAY-08": { type: "solar", capacity_mw: 30, lat: 14.1006, lon: 77.2789, issuer: "ISS-117 · TerraVolt Syndicate" },
+  "WINDRIDGE-11": { type: "wind", capacity_mw: 120, lat: 23.7337, lon: 69.8597, issuer: "ISS-205 · Kite Renew" },
+  "WIND-FARM-BETA-4": { type: "wind", capacity_mw: 60, lat: 8.9546, lon: 77.7022, issuer: "ISS-205 · Kite Renew" },
+  "HYDRO-CASCADE-2": { type: "hydro", capacity_mw: 80, lat: 31.1048, lon: 77.1734, issuer: "ISS-311 · Himadri Hydro" },
+  "BIOMASS-UNIT-3": { type: "biomass", capacity_mw: 15, lat: 30.901, lon: 75.8573, issuer: "ISS-311 · Himadri Hydro" },
+} as const;
 
-  seeds.forEach(([plantId, mwh, , timestamp, score], i) => {
-    const generationTimestamp = Math.floor(new Date(timestamp).getTime() / 1000);
+type PlantKey = keyof typeof PLANTS;
+
+const WALLETS = {
+  backend: MOCK_BACKEND_ADDRESS,
+  apexCarbon: "0xA5c0B91e44F2d7c3A0e9b1F6d2E8c4B7a3D19f42",
+  vanguard: "0x3F8e21Cd7b9A4e6F0d1C2b3A4e5F6d7C8b9A0e31",
+  kiteTrading: "0x9B2d4F6a8C0e1D3b5A7c9E1f3B5d7F9a1C3e5B77",
+} as const;
+
+const REASONS = {
+  night: [
+    "Generation claimed while the sun was below the horizon at the plant's coordinates (solar elevation < 0°)",
+    "Claimed output exceeds modelled clear-sky irradiance for the reporting window (0 W/m² available)",
+  ],
+  overCapacity: [
+    "Claimed generation exceeds the plant's theoretical max output for the reporting window",
+    "Capacity factor above 100% of nameplate rating",
+  ],
+  tradingLoop: [
+    "Certificates recirculated through a closed trading loop back to an affiliate of the issuer",
+    "Transfer velocity well above the regional market median",
+  ],
+  stepCliff: [
+    "Stepped generation profile inconsistent with photovoltaic ramp physics (+6.4σ from regional peers)",
+    "Claimed generation exceeds the plant's theoretical max output for the reporting window",
+  ],
+  nearCap: ["Claimed generation is close to the plant's capacity limit for the reporting window."],
+  benford: ["Leading-digit distribution of this issuer's recent claims drifts from Benford's law (p < 0.05)"],
+};
+
+type Seed = {
+  plant: PlantKey;
+  start: string;
+  end: string;
+  mwh: number;
+  score: number;
+  reasons: string[];
+  owner?: keyof typeof WALLETS;
+  retired?: boolean;
+  mintedAfterHours?: number;
+};
+
+const SEEDS: Seed[] = [
+  { plant: "SUNFIELD-04", start: "2026-08-29T03:30:00Z", end: "2026-08-29T07:30:00Z", mwh: 118, score: 8, reasons: [] },
+  { plant: "WINDRIDGE-11", start: "2026-08-29T12:00:00Z", end: "2026-08-29T18:00:00Z", mwh: 340, score: 11, reasons: [] },
+  { plant: "HYDRO-CASCADE-2", start: "2026-08-30T00:00:00Z", end: "2026-08-30T08:00:00Z", mwh: 520, score: 6, reasons: [], retired: true },
+  { plant: "SOLAR-ARRAY-08", start: "2026-08-30T04:00:00Z", end: "2026-08-30T08:00:00Z", mwh: 74, score: 9, reasons: [] },
+  { plant: "SUNFIELD-04", start: "2026-08-31T03:30:00Z", end: "2026-08-31T07:30:00Z", mwh: 96, score: 6, reasons: [], owner: "vanguard" },
+  { plant: "WIND-FARM-BETA-4", start: "2026-08-31T09:00:00Z", end: "2026-08-31T15:00:00Z", mwh: 255, score: 14, reasons: [] },
+  { plant: "BIOMASS-UNIT-3", start: "2026-09-01T00:00:00Z", end: "2026-09-01T12:00:00Z", mwh: 158, score: 31, reasons: REASONS.nearCap },
+  { plant: "WINDRIDGE-11", start: "2026-09-01T14:00:00Z", end: "2026-09-01T20:00:00Z", mwh: 690, score: 38, reasons: REASONS.nearCap, owner: "kiteTrading" },
+  { plant: "SOLAR-ARRAY-08", start: "2026-09-02T04:00:00Z", end: "2026-09-02T08:00:00Z", mwh: 81, score: 12, reasons: [], retired: true },
+  { plant: "HYDRO-CASCADE-2", start: "2026-09-02T08:00:00Z", end: "2026-09-02T16:00:00Z", mwh: 505, score: 7, reasons: [] },
+  { plant: "SUNFIELD-04", start: "2026-09-03T03:30:00Z", end: "2026-09-03T07:30:00Z", mwh: 212, score: 71, reasons: REASONS.stepCliff, owner: "apexCarbon" },
+  { plant: "WIND-FARM-BETA-4", start: "2026-09-03T10:00:00Z", end: "2026-09-03T16:00:00Z", mwh: 300, score: 44, reasons: REASONS.benford },
+  { plant: "BIOMASS-UNIT-3", start: "2026-09-04T00:00:00Z", end: "2026-09-04T12:00:00Z", mwh: 120, score: 10, reasons: [], retired: true },
+  { plant: "WINDRIDGE-11", start: "2026-09-04T12:00:00Z", end: "2026-09-04T18:00:00Z", mwh: 910, score: 81, reasons: REASONS.overCapacity, owner: "kiteTrading" },
+  { plant: "SOLAR-ARRAY-08", start: "2026-09-05T04:00:00Z", end: "2026-09-05T08:00:00Z", mwh: 69, score: 5, reasons: [] },
+  { plant: "HYDRO-CASCADE-2", start: "2026-09-06T00:00:00Z", end: "2026-09-06T08:00:00Z", mwh: 480, score: 9, reasons: [], owner: "vanguard" },
+  { plant: "SUNFIELD-04", start: "2026-09-06T03:30:00Z", end: "2026-09-06T07:30:00Z", mwh: 131, score: 29, reasons: REASONS.nearCap },
+  { plant: "WIND-FARM-BETA-4", start: "2026-09-07T08:00:00Z", end: "2026-09-07T14:00:00Z", mwh: 240, score: 58, reasons: REASONS.tradingLoop, owner: "apexCarbon" },
+  { plant: "SOLAR-PLANT-17", start: "2026-09-08T04:00:00Z", end: "2026-09-08T08:00:00Z", mwh: 13.5, score: 12, reasons: [] },
+  { plant: "BIOMASS-UNIT-3", start: "2026-09-08T12:00:00Z", end: "2026-09-08T23:00:00Z", mwh: 140, score: 13, reasons: [] },
+  { plant: "WINDRIDGE-11", start: "2026-09-09T12:00:00Z", end: "2026-09-09T18:00:00Z", mwh: 410, score: 16, reasons: [] },
+  { plant: "SOLAR-PLANT-17", start: "2026-09-09T20:30:00Z", end: "2026-09-09T21:30:00Z", mwh: 4.2, score: 92, reasons: REASONS.night, mintedAfterHours: 1 },
+  { plant: "SOLAR-ARRAY-08", start: "2026-09-10T04:00:00Z", end: "2026-09-10T08:00:00Z", mwh: 77, score: 7, reasons: [] },
+  { plant: "HYDRO-CASCADE-2", start: "2026-09-11T00:00:00Z", end: "2026-09-11T08:00:00Z", mwh: 470, score: 22, reasons: [] },
+  { plant: "SUNFIELD-04", start: "2026-09-11T03:30:00Z", end: "2026-09-11T07:30:00Z", mwh: 124, score: 9, reasons: [] },
+  { plant: "WIND-FARM-BETA-4", start: "2026-09-12T09:00:00Z", end: "2026-09-12T15:00:00Z", mwh: 262, score: 67, reasons: REASONS.tradingLoop, owner: "vanguard" },
+];
+
+function seed(store: Store) {
+  SEEDS.forEach((s) => {
+    const plant = PLANTS[s.plant];
     const tokenId = store.nextId++;
-    const reasons = score >= 50 ? REASON_BANK.high : score >= 25 ? REASON_BANK.medium : REASON_BANK.low;
+    const owner = WALLETS[s.owner ?? "backend"];
+    const createdAt = new Date(new Date(s.end).getTime() + (s.mintedAfterHours ?? 3) * 3_600_000).toISOString();
+    const generationTimestamp = Math.floor(new Date(s.end).getTime() / 1000);
+
     store.certs.set(tokenId, {
       token_id: tokenId,
-      owner_address: MOCK_BACKEND_ADDRESS,
-      plant_id: plantId,
-      energy_mwh: mwh,
-      generation_timestamp: timestamp,
-      fraud_score: score,
-      retired_on_chain: i === 3,
-      risk_reasons: score >= 25 ? reasons : [],
-      explanation: explanationFor(score, reasons, plantId),
+      owner_address: owner,
+      plant_id: s.plant,
+      energy_mwh: s.mwh,
+      generation_timestamp: s.end,
+      fraud_score: s.score,
+      retired_on_chain: Boolean(s.retired),
+      risk_reasons: s.reasons,
+      explanation: explanationFor(s.score, s.reasons.length ? s.reasons : REASON_BANK.low, s.plant),
       raw_record: {
-        to_address: MOCK_BACKEND_ADDRESS,
-        plant: { id: plantId, type: "solar", capacity_mw: 50, lat: 23.03, lon: 72.58 },
-        generation: { mwh_claimed: mwh, start: timestamp, end: timestamp },
-        issuer_id: "ISSUER-DEMO",
+        to_address: owner,
+        plant: { id: s.plant, type: plant.type, capacity_mw: plant.capacity_mw, lat: plant.lat, lon: plant.lon },
+        generation: { mwh_claimed: s.mwh, start: s.start, end: s.end },
+        issuer_id: plant.issuer,
       },
-      mint_tx_hash: `0x${(tokenId + 1).toString(16).padStart(64, "a1")}`,
-      status: i === 3 ? "retired" : "issued",
-      retire_tx_hash: i === 3 ? `0x${"b2".repeat(32)}` : null,
-      created_at: timestamp,
+      mint_tx_hash: `0x${tokenId.toString(16).padStart(4, "0")}${"a1f3".repeat(15)}`,
+      status: s.retired ? "retired" : "issued",
+      retire_tx_hash: s.retired ? `0x${tokenId.toString(16).padStart(4, "0")}${"b27c".repeat(15)}` : null,
+      created_at: createdAt,
     });
-    store.usedRecords.add(recordKey(plantId, mwh, generationTimestamp));
+    store.usedRecords.add(recordKey(s.plant, Math.round(s.mwh), generationTimestamp));
   });
 }
 
 export const mockApi = {
+  async getStatus(): Promise<SystemStatus> {
+    await delay(200);
+    return {
+      service: "RECON demo data",
+      sources: { ml: "mock", graph: "mock", weather: "mock", explain: "mock", ledger: "mock" },
+      chain: { connected: true, contract_address: null, issuer_wallet: MOCK_BACKEND_ADDRESS, ready: true },
+    };
+  },
+
   async analyzeCertificate(payload: CertificateIssueRequest): Promise<CertificateAnalyzeResponse> {
     await delay(900);
     const { score, reasons } = scoreRecord(payload.plant, payload.generation);

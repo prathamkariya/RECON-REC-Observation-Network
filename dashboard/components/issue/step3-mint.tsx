@@ -4,12 +4,14 @@ import { useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { AlertOctagon, CheckCircle2, Copy, ExternalLink } from "lucide-react";
+import { AlertOctagon, CheckCircle2, Copy } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { ApiError } from "@/lib/api-error";
 import { logActivity } from "@/lib/activity-log";
-import { etherscanTxUrl, formatDateTime, formatMwh, truncateHash } from "@/lib/format";
+import { formatDateTime, formatMwh } from "@/lib/format";
+import { chainName } from "@/lib/chain";
+import { ExplorerLink } from "@/components/certificate/explorer-link";
 import type { CertificateIssueRequest } from "@/lib/types";
 import { MintProgress } from "@/components/issue/mint-progress";
 
@@ -60,7 +62,7 @@ export function Step3Mint({
       <div className="glass glass-gold flex flex-col items-center gap-6 p-12 text-center">
         <MintProgress />
         <div>
-          <p className="font-medium text-recon-ink">Submitting to Sepolia…</p>
+          <p className="font-medium text-recon-ink">Minting on {chainName}…</p>
           <p className="text-sm text-recon-ink-dim">
             Signing the mint transaction and waiting for it to confirm. This usually takes a few seconds.
           </p>
@@ -164,15 +166,7 @@ export function Step3Mint({
       <div className="mx-auto mt-6 max-w-sm space-y-2 text-left text-sm">
         <div className="flex items-center justify-between">
           <span className="text-recon-ink-dim">Transaction</span>
-          <a
-            href={etherscanTxUrl(result.tx_hash)}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1 text-verified hover:underline"
-          >
-            {truncateHash(result.tx_hash)}
-            <ExternalLink className="h-3 w-3" />
-          </a>
+          <ExplorerLink kind="tx" value={result.tx_hash} className="text-verified" />
         </div>
         <button
           type="button"
