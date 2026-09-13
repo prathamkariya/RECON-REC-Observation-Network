@@ -5,5 +5,8 @@ python-dotenv>=1.0.0
 requests>=2.31.0
 pandas>=2.0.0
 sqlalchemy>=2.0.0
-web3>=6.0.0
-pytest>=8.0.0
+# Held to 7.x — the version the app is developed and tested against. web3 8
+# is a major release and hasn't been verified with web3_client.py.
+web3>=7.0.0,<8.0.0
+# Test-only dependencies (pytest, eth-tester, py-solc-x) live in
+# requirements-dev.txt, so the Docker image installs runtime deps only.

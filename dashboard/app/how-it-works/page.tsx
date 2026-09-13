@@ -1,34 +1,30 @@
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { LiquidBackground } from "@/components/brand/liquid-background";
 import { PublicHeader } from "@/components/landing/public-header";
 import { PipelineScroll } from "@/components/landing/pipeline-scroll";
+import { ChainSplitExplainer } from "@/components/landing/chain-split-explainer";
+import { CtaBand, SiteFooter } from "@/components/landing/cta-band";
+import { Reveal } from "@/components/motion/reveal";
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen overflow-x-clip">
+      <LiquidBackground variant="hero" />
       <PublicHeader current="how-it-works" />
 
-      <div className="mx-auto max-w-2xl px-6 pt-8 pb-4 text-center">
-        <p className="text-xs tracking-wide text-recon-ink-dim">How it works</p>
-        <h1 className="font-display mt-2 text-3xl font-semibold sm:text-4xl">
-          From a plant&apos;s meter to a certificate no one can duplicate
+      <Reveal className="mx-auto max-w-3xl px-4 pt-36 pb-6 text-center sm:px-6 sm:pt-44">
+        <p className="label-caps text-gold">How it works</p>
+        <h1 className="font-display mt-4 text-[40px] leading-[1.04] font-bold tracking-[-0.035em] text-recon-ink sm:text-6xl">
+          From a plant&apos;s meter to a certificate no one can duplicate.
         </h1>
-        <p className="mt-3 text-sm text-recon-ink-dim">Scroll to walk through the full lifecycle, end to end.</p>
-      </div>
+        <p className="mx-auto mt-5 max-w-xl text-[16px] leading-7 text-recon-ink-dim">
+          Scroll to walk the full lifecycle, one stage at a time — the page advances with you and never autoplays.
+        </p>
+      </Reveal>
 
       <PipelineScroll expanded />
-
-      <footer className="border-t border-border px-6 py-10 text-center">
-        <p className="mb-4 text-sm text-recon-ink-dim">Ready to see it live?</p>
-        <div className="flex items-center justify-center gap-3">
-          <Link href="/signin" className={buttonVariants({})}>
-            Sign in
-          </Link>
-          <Link href="/verify" className={buttonVariants({ variant: "outline" })}>
-            Verify a certificate
-          </Link>
-        </div>
-      </footer>
+      <ChainSplitExplainer />
+      <CtaBand />
+      <SiteFooter />
     </div>
   );
 }

@@ -1,0 +1,86 @@
+name: On-chain registry
+
+# The contract and the backend adapter are tested together on purpose: the
+# whole point of the setup is that the backend runs against the real compiled
+# contract, so a change to either that breaks the other should fail here.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "contracts/**"
+      - "backend/**"
+      - ".github/workflows/onchain.yml"
+
+jobs:
+  contracts:
+    name: Solidity tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: contracts
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+      - run: npm ci
+      - run: npx hardhat compile
+      - run: npx hardhat test
+
+  backend:
+    name: Backend against a live chain
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: contracts/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Build contracts
+        working-directory: contracts
+        run: |
+          npm ci
+          npx hardhat compile
+
+      # Started in the background because the backend suite needs a real HTTP
+      # provider: web3's eth-tester provider destroys custom-error selectors, so
+      # revert classification can only be tested against a real node. Without
+      # this step those tests would silently skip rather than fail.
+      - name: Start a Hardhat node
+        working-directory: contracts
+        run: |
+          npx hardhat node --hostname 127.0.0.1 --port 8545 &
+          for i in $(seq 1 60); do
+            if curl -sf -X POST -H 'Content-Type: application/json' \
+                 --data '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+                 http://127.0.0.1:8545 | grep -q result; then
+              echo "node ready"; exit 0
+            fi
+            sleep 1
+          done
+          echo "node failed to start" >&2; exit 1
+
+      - name: Install Python deps
+        run: pip install -r backend/requirements-dev.txt
+
+      - name: Run backend tests
+        run: pytest backend/tests -q
+
+      # A skip here means the live-node path silently degraded to eth-tester,
+      # which would let a classification regression through unnoticed.
+      - name: Fail if any test skipped
+        run: |
+          pytest backend/tests -q --no-header -rs 2>&1 | tee result.txt
+          if grep -q "skipped" result.txt; then
+            echo "::error::Tests skipped — the Hardhat node was not reachable." >&2
+            exit 1
+          fi

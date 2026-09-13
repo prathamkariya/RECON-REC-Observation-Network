@@ -1,0 +1,14 @@
+# Test-only dependencies. Install alongside requirements.txt:
+#   pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+-r requirements.txt
+
+pytest>=8.0.0
+# On-chain test deps. The suite deploys the real RECRegistry to a chain: a live
+# Hardhat node over HTTP when one is running (the only way to exercise
+# custom-error revert classification — see backend/tests/conftest.py), and an
+# in-process eth-tester chain otherwise. py-solc-x is the fallback compiler for
+# when contracts/artifacts hasn't been built by Hardhat.
+# eth-tester 0.12+ is only published as pre-releases, hence --pre semantics via
+# the explicit beta pin floor.
+eth-tester[py-evm]>=0.12.0b1
+py-solc-x>=2.0.0

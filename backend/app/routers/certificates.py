@@ -13,6 +13,8 @@ from ..schemas import (
     CertificateIssueResponse,
     CertificateListItem,
     CertificateRetireResponse,
+    CertificateTransferRequest,
+    CertificateTransferResponse,
     OnChainCertificateResponse,
 )
 
@@ -56,6 +58,8 @@ def issue_certificate(payload: CertificateIssueRequest, db: Session = Depends(ge
         raise HTTPException(status_code=409, detail="This generation record has already been certified.")
     except web3_client.NotAuthorizedError as exc:
         raise HTTPException(status_code=403, detail=str(exc))
+    except web3_client.InvalidArgumentError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
     except web3_client.ChainError as exc:
         raise HTTPException(status_code=502, detail=f"On-chain mint failed: {exc}")
 
@@ -95,6 +99,10 @@ def retire_certificate(token_id: int, db: Session = Depends(get_db)):
         row = onchain_service.retire_certificate(db, token_id)
     except web3_client.NotAuthorizedError as exc:
         raise HTTPException(status_code=403, detail=str(exc))
+    except web3_client.AlreadyRetiredError:
+        raise HTTPException(status_code=409, detail=f"Certificate {token_id} is already retired.")
+    except web3_client.CertificateNotFoundError:
+        raise HTTPException(status_code=404, detail=f"No certificate with tokenId {token_id} on-chain")
     except web3_client.ChainError as exc:
         raise HTTPException(status_code=502, detail=f"On-chain retire failed: {exc}")
 
@@ -102,3 +110,38 @@ def retire_certificate(token_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Certificate {token_id} not found")
 
     return CertificateRetireResponse(token_id=row.token_id, tx_hash=row.retire_tx_hash, status=row.status)
+
+
+@router.post("/{token_id}/transfer", response_model=CertificateTransferResponse)
+def transfer_certificate(token_id: int, payload: CertificateTransferRequest, db: Session = Depends(get_db)):
+    """Transfers the certificate NFT to another wallet.
+
+    A retired certificate cannot be transferred — the contract rejects it, and
+    that surfaces here as 409 rather than a generic chain error.
+    """
+    try:
+        result = onchain_service.transfer_certificate(db, token_id, payload.to_address)
+    except web3_client.NotAuthorizedError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
+    except web3_client.AlreadyRetiredError:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Certificate {token_id} is retired and can no longer be transferred.",
+        )
+    except web3_client.CertificateNotFoundError:
+        raise HTTPException(status_code=404, detail=f"No certificate with tokenId {token_id} on-chain")
+    except web3_client.InvalidArgumentError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except web3_client.ChainError as exc:
+        raise HTTPException(status_code=502, detail=f"On-chain transfer failed: {exc}")
+
+    if result is None:
+        raise HTTPException(status_code=404, detail=f"Certificate {token_id} not found")
+
+    row, tx_hash = result
+    return CertificateTransferResponse(
+        token_id=row.token_id,
+        tx_hash=tx_hash,
+        owner_address=row.owner_address,
+        status=row.status,
+    )

@@ -63,7 +63,7 @@ export default function SignUpPage() {
   return (
     <div className="space-y-8">
       <div className="space-y-1.5">
-        <h1 className="text-2xl font-semibold">Create your account</h1>
+        <h1 className="font-display text-[28px] leading-9 font-bold tracking-tight text-recon-ink">Create your account</h1>
         <p className="text-sm text-recon-ink-dim">Start issuing verifiable renewable energy certificates.</p>
       </div>
 

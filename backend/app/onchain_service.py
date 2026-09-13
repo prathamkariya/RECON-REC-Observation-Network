@@ -5,16 +5,21 @@ score, then persist the off-chain half (raw record, reasoning, token_id) in
 the database. Mirrors service.py's composition pattern but targets the
 on-chain registry instead of the hash-chain ledger.
 """
+import logging
+import time
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from web3.exceptions import TransactionNotFound
 
 from . import service
 from .clients import web3_client
 from .db_models import OnChainCertificate
 from .schemas import CertificateIssueRequest
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -62,8 +67,64 @@ def assess(payload: CertificateIssueRequest) -> RiskAssessment:
     )
 
 
+_RECONCILE_INTERVAL_SECONDS = 30.0
+_last_reconciled_at = 0.0
+
+
+def reconcile_with_chain(db: Session, force: bool = False) -> int:
+    """Drop off-chain rows whose chain no longer exists.
+
+    A local Hardhat node keeps no state across restarts, while the database
+    does — so after a chain restart every stored token_id points at nothing,
+    and the next mint (which starts again at token 0) would collide with a
+    stale primary key. If the newest row's mint transaction is unknown to the
+    connected chain, the whole table belongs to a chain that is gone.
+
+    Only a definite "transaction not found" clears anything; an unreachable
+    RPC leaves the data alone. Returns the number of rows removed.
+    """
+    global _last_reconciled_at
+    now = time.monotonic()
+    if not force and now - _last_reconciled_at < _RECONCILE_INTERVAL_SECONDS:
+        return 0
+
+    latest = db.scalars(select(OnChainCertificate).order_by(OnChainCertificate.token_id.desc()).limit(1)).first()
+    if latest is None:
+        _last_reconciled_at = now
+        return 0
+
+    try:
+        web3_client.get_w3().eth.get_transaction_receipt(latest.mint_tx_hash)
+    except TransactionNotFound:
+        removed = db.query(OnChainCertificate).delete()
+        db.commit()
+        logger.warning("Chain was reset: removed %d stale off-chain certificate rows", removed)
+        _last_reconciled_at = now
+        return removed
+    except Exception:
+        return 0  # chain unreachable — retry on the next call, never wipe on doubt
+
+    _last_reconciled_at = now
+    return 0
+
+
 def issue_certificate(db: Session, payload: CertificateIssueRequest) -> OnChainCertificate:
+    reconcile_with_chain(db, force=True)
     to_address = payload.to_address or web3_client.get_backend_address()
+
+    # Pre-flight the duplicate check as a free view call, before running the
+    # (slow) risk pipeline. isRecordUsed answers the same question the mint
+    # would revert on, so this turns a wasted pipeline run + reverted gas
+    # estimate into an immediate, unambiguous 409.
+    plant_id = payload.plant.id
+    energy_mwh = round(payload.generation.mwh_claimed)
+    generation_timestamp = int(payload.generation.end.timestamp())
+    if web3_client.is_record_used(plant_id, energy_mwh, generation_timestamp):
+        raise web3_client.DuplicateRecordError(
+            f"Generation record ({plant_id}, {energy_mwh} MWh, {generation_timestamp}) "
+            f"has already been certified on-chain."
+        )
+
     result = assess(payload)
     plant_id, energy_mwh, generation_timestamp, fraud_score, risk_reasons, explanation = (
         result.plant_id,
@@ -133,6 +194,7 @@ def get_certificate(db: Session, token_id: int) -> Optional[dict]:
 def list_certificates(db: Session, limit: int = 100) -> List[OnChainCertificate]:
     """Off-chain rows only (no per-item chain read) — fast enough for a
     dashboard/explorer list. Use get_certificate() for the live-verified detail."""
+    reconcile_with_chain(db)
     stmt = select(OnChainCertificate).order_by(OnChainCertificate.created_at.desc()).limit(limit)
     return list(db.scalars(stmt))
 
@@ -148,3 +210,29 @@ def retire_certificate(db: Session, token_id: int) -> Optional[OnChainCertificat
     db.commit()
     db.refresh(row)
     return row
+
+
+def transfer_certificate(
+    db: Session, token_id: int, to_address: str
+) -> Optional[Tuple[OnChainCertificate, str]]:
+    """Transfers a certificate to a new owner and re-syncs the off-chain row.
+
+    Returns (row, transfer_tx_hash) — the hash isn't persisted on the row (the
+    table tracks mint and retire hashes, and a certificate can be transferred
+    any number of times), so it's returned alongside for the API response.
+
+    The on-chain contract blocks transfers of retired certificates (a retired
+    REC has been consumed against a claim; letting it move again would let the
+    same MWh be resold), so that rule is enforced by the chain, not here.
+    """
+    row = db.get(OnChainCertificate, token_id)
+    if row is None:
+        return None
+
+    result = web3_client.transfer_certificate(
+        token_id, from_address=row.owner_address, to_address=to_address
+    )
+    row.owner_address = result["owner"]
+    db.commit()
+    db.refresh(row)
+    return row, result["tx_hash"]

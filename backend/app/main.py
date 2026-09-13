@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .clients import web3_client
 from .config import settings
 from .db import init_db
 from .routers import admin, analytics, audit, certificates, recs, verify
@@ -47,6 +48,38 @@ def root():
             "explain": "real" if settings.USE_REAL_EXPLAIN else "mock",
             "ledger": "real" if settings.USE_REAL_LEDGER else "mock",
         },
+        "chain": _chain_status(),
+    }
+
+
+def _chain_status() -> dict:
+    """Whether the on-chain registry is actually usable, rather than just
+    configured. Every /certificates route depends on all three being true, so
+    surfacing it here turns "mint returns 502" into an answerable question."""
+    address = None
+    try:
+        address = web3_client.deployed_address()
+    except Exception:
+        pass
+
+    connected = False
+    try:
+        connected = web3_client.get_w3().is_connected()
+    except Exception:
+        pass
+
+    wallet = None
+    try:
+        wallet = web3_client.get_backend_address()
+    except Exception:
+        pass
+
+    return {
+        "rpc_url": settings.RPC_URL,
+        "connected": connected,
+        "contract_address": address,
+        "issuer_wallet": wallet,  # public address only — the private key is never exposed
+        "ready": bool(connected and address and wallet),
     }
 
 

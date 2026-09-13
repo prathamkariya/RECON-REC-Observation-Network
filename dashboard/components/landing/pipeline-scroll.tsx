@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ComponentType } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useMotionTemplate, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { BrainCircuit, FileBadge, Link2, ShieldCheck, Sun } from "lucide-react";
 import { cn } from "cn";
 import { FraudGauge } from "@/components/issue/fraud-gauge";
@@ -105,22 +105,34 @@ function StageLayer({
   const fadeIn = start + band * 0.2;
   const fadeOut = end - band * 0.2;
 
-  const opacity = useTransform(scrollYProgress, [start, fadeIn, fadeOut, end], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [start, fadeIn], [28, 0]);
+  // First/last stages stay visible at the track's edges instead of fading to nothing.
+  const opacity = useTransform(
+    scrollYProgress,
+    [start, fadeIn, fadeOut, end],
+    [index === 0 ? 1 : 0, 1, 1, index === total - 1 ? 1 : 0],
+  );
+  const y = useTransform(scrollYProgress, [start, fadeIn, fadeOut, end], [index === 0 ? 0 : 40, 0, 0, index === total - 1 ? 0 : -40]);
+  const scale = useTransform(scrollYProgress, [start, fadeIn, fadeOut, end], [index === 0 ? 1 : 0.96, 1, 1, index === total - 1 ? 1 : 0.96]);
+  const blurPx = useTransform(scrollYProgress, [start, fadeIn, fadeOut, end], [index === 0 ? 0 : 8, 0, 0, index === total - 1 ? 0 : 8]);
+  const filter = useMotionTemplate`blur(${blurPx}px)`;
 
   const Icon = stage.icon;
 
   return (
-    <motion.div style={{ opacity, y }} className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+    <motion.div style={{ opacity, y, scale, filter }} className="absolute inset-0 flex items-center justify-center px-4 sm:px-6">
+      <div className="glass glass-medium flex w-full max-w-2xl flex-col items-center rounded-[32px] px-6 py-10 text-center sm:px-12 sm:py-14">
+      <p className="mono-micro mb-5 text-recon-steel">
+        STAGE {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </p>
       <div className={cn("glass mb-6 flex h-20 w-20 items-center justify-center rounded-2xl", TONE_GLASS[stage.tone])}>
         <Icon className="h-9 w-9" />
       </div>
-      <p className="font-display text-3xl font-semibold sm:text-4xl">{stage.title}</p>
-      <p className="mt-2 max-w-md text-recon-ink-dim">{stage.caption}</p>
+      <p className="font-display text-3xl font-bold tracking-tight text-recon-ink sm:text-[44px] sm:leading-[1.05]">{stage.title}</p>
+      <p className="mt-3 max-w-md text-[16px] text-recon-ink-dim">{stage.caption}</p>
 
+      <p className="mt-4 max-w-lg text-[14px] leading-6 text-recon-ink-dim">{stage.detail}</p>
       {expanded && (
         <>
-          <p className="mt-4 max-w-lg text-sm text-recon-ink-dim">{stage.detail}</p>
           {stage.key === "analysis" && (
             <div className="mt-6">
               <FraudGauge score={12} />
@@ -133,6 +145,7 @@ function StageLayer({
           )}
         </>
       )}
+      </div>
     </motion.div>
   );
 }
@@ -166,7 +179,10 @@ function StaticStageList({ expanded }: { expanded: boolean }) {
 export function PipelineScroll({ expanded = false }: { expanded?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const { scrollYProgress: rawProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  // Spring-smoothed so stages glide between positions rather than tracking every wheel tick.
+  const scrollYProgress = useSpring(rawProgress, { stiffness: 110, damping: 28, mass: 0.35 });
+  const barWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   if (prefersReducedMotion) {
     return <StaticStageList expanded={expanded} />;
@@ -177,6 +193,12 @@ export function PipelineScroll({ expanded = false }: { expanded?: boolean }) {
   return (
     <div ref={ref} style={{ height: trackHeight }} className="relative">
       <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="absolute inset-x-0 top-24 z-10 mx-auto flex max-w-2xl flex-col items-center gap-3 px-6 sm:top-28">
+          <p className="label-caps text-gold">From meter to mint</p>
+          <div className="h-1 w-full max-w-sm overflow-hidden rounded-full bg-recon-ink/[0.08]">
+            <motion.div style={{ width: barWidth }} className="h-full rounded-full bg-gradient-to-r from-gold to-verified" />
+          </div>
+        </div>
         <div className="absolute top-1/2 left-6 hidden -translate-y-1/2 flex-col gap-3 sm:flex">
           {STAGES.map((stage, i) => (
             <StageDot key={stage.key} index={i} total={STAGES.length} scrollYProgress={scrollYProgress} />

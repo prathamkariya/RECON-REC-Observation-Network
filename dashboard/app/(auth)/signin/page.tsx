@@ -57,7 +57,7 @@ export default function SignInPage() {
   return (
     <div className="space-y-8">
       <div className="space-y-1.5">
-        <h1 className="text-2xl font-semibold">Welcome back</h1>
+        <h1 className="font-display text-[28px] leading-9 font-bold tracking-tight text-recon-ink">Welcome back</h1>
         <p className="text-sm text-recon-ink-dim">Sign in to issue and verify certificates.</p>
       </div>
 

@@ -8,6 +8,8 @@
 //   POST   /certificates/issue        -> CertificateIssueResponse (409 on duplicate record)
 //   GET    /certificates/{token_id}   -> OnChainCertificate (merges on-chain + DB)
 //   POST   /certificates/{token_id}/retire -> CertificateRetireResponse
+//   POST   /certificates/{token_id}/transfer -> CertificateTransferResponse (409 if retired)
+//   GET    /                          -> SystemStatus (analysis sources + chain readiness)
 //
 // There's no separate GET /certificates/{id}/verify — the public verify page
 // uses the same merged GET /certificates/{token_id}, since that response
@@ -23,10 +25,14 @@ import type {
   CertificateIssueResponse,
   CertificateListItem,
   CertificateRetireResponse,
+  CertificateTransferRequest,
+  CertificateTransferResponse,
   OnChainCertificate,
+  SystemStatus,
 } from "@/lib/types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// `||` rather than `??`: a blank build arg arrives as "", which must fall back too.
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
 const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -56,6 +62,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  getStatus: (): Promise<SystemStatus> => (USE_MOCK ? mockApi.getStatus() : request("/")),
+
   listCertificates: (): Promise<CertificateListItem[]> =>
     USE_MOCK ? mockApi.listCertificates() : request("/certificates"),
 
@@ -77,4 +85,14 @@ export const api = {
 
   retireCertificate: (tokenId: number): Promise<CertificateRetireResponse> =>
     USE_MOCK ? mockApi.retireCertificate(tokenId) : request(`/certificates/${tokenId}/retire`, { method: "POST" }),
+
+  /** Moves the certificate NFT to another wallet. The contract rejects this for
+   *  a retired certificate (a consumed REC must not be resold), surfaced as 409. */
+  transferCertificate: (tokenId: number, toAddress: string): Promise<CertificateTransferResponse> =>
+    USE_MOCK
+      ? mockApi.transferCertificate(tokenId, toAddress)
+      : request(`/certificates/${tokenId}/transfer`, {
+          method: "POST",
+          body: JSON.stringify({ to_address: toAddress } satisfies CertificateTransferRequest),
+        }),
 };

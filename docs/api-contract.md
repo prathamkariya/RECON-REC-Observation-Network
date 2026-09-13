@@ -75,7 +75,102 @@ edited after being written.
 - **GET** `/`
 - **Response**: which of ML / graph / weather / explain / ledger are
   currently backed by mock vs. real data, per `backend/app/config.py`'s
-  `USE_REAL_*` flags.
+  `USE_REAL_*` flags, plus a `chain` object reporting whether the on-chain
+  registry is actually usable:
+```json
+{
+  "chain": {
+    "rpc_url": "http://127.0.0.1:8545",
+    "connected": true,
+    "contract_address": "0x5FbD...",
+    "issuer_wallet": "0xf39F...",
+    "ready": true
+  }
+}
+```
+`ready: false` is why every `/certificates` route will fail — check it before
+debugging a 502. The issuer wallet is a public address; the private key is
+never exposed by any endpoint.
+
+## On-chain certificates (`/certificates`)
+
+A separate pipeline from `/recs`. Where `/recs` scores a certificate and writes
+it to the hash-chain ledger, `/certificates` scores it and **mints an ERC-721**
+on `RECRegistry.sol`, then stores the off-chain half (raw payload, reasoning,
+tx hash) in the database. See `contracts/README.md` for the contract itself.
+
+Deployed on Sepolia at
+[`0x28190548E1e84fcaC6EEcc5fECaDE138e6154B59`](https://sepolia.etherscan.io/address/0x28190548E1e84fcaC6EEcc5fECaDE138e6154B59#code)
+(source verified), with a local Hardhat deployment alongside it. A mint on a
+public network takes roughly 15-20 seconds to confirm, so `/certificates/issue`
+is a slow endpoint by nature — the UI shows analysis as a separate step
+(`/certificates/analyze`) partly for that reason.
+
+These routes need a reachable node, a deployed contract, and a funded issuer
+wallet — see `GET /` above.
+
+### 1. Analyze without minting
+- **POST** `/certificates/analyze`
+- Runs the full risk pipeline and returns `{fraud_score, risk_reasons,
+  explanation}`. Touches neither the chain nor the database, so the UI can show
+  analysis as a distinct step before the user commits to minting. Needs no
+  wallet or RPC configured.
+
+### 2. Issue (mint)
+- **POST** `/certificates/issue` → `201`
+- Body: `{to_address?, plant, generation, issuer_id}`. Omit `to_address` to
+  mint to the backend's own issuer wallet — callers never need a connected
+  wallet.
+- Duplicate generation records are rejected with `409` via a free `isRecordUsed`
+  view call **before** the risk pipeline runs, so a duplicate costs no gas and
+  no pipeline time.
+
+| Status | Meaning |
+| --- | --- |
+| `201` | minted; returns `token_id`, `tx_hash`, score, reasons, explanation |
+| `409` | this `(plantId, energyMWh, generationTimestamp)` is already certified |
+| `403` | the backend wallet isn't an authorized issuer |
+| `422` | the contract rejected an argument (e.g. fraud score > 100) |
+| `502` | the chain call failed for any other reason |
+
+### 3. Get one certificate
+- **GET** `/certificates/{token_id}`
+- Merges the **live** on-chain `getCertificate()` + `ownerOf()` with the
+  off-chain database row. `404` if the token doesn't exist on-chain or we hold
+  no row for it.
+
+### 4. List certificates
+- **GET** `/certificates`
+- Off-chain rows only — no chain read per item, so listing stays fast. Use the
+  detail route for live-verified data.
+
+### 5. Transfer
+- **POST** `/certificates/{token_id}/transfer`
+- Body: `{to_address}`. Returns the new owner and the transfer tx hash.
+
+| Status | Meaning |
+| --- | --- |
+| `200` | transferred |
+| `409` | the certificate is retired and can no longer move |
+| `403` | the backend wallet doesn't own it (see the custodial note below) |
+| `404` | unknown token |
+
+### 6. Retire
+- **POST** `/certificates/{token_id}/retire`
+- Marks the certificate consumed. Irreversible, and blocks all future transfers.
+
+| Status | Meaning |
+| --- | --- |
+| `200` | retired |
+| `409` | already retired |
+| `403` | the backend wallet doesn't own it |
+| `404` | unknown token |
+
+**Custodial constraint.** The backend signs only as its own wallet. Transfer and
+retire therefore work only while the backend custodies the certificate. If one
+is minted directly to an end-user wallet, that user must sign those actions
+from their own wallet client-side — the API returns `403` with an explanation
+rather than sending a transaction that would revert.
 
 ## Data schema reference
 

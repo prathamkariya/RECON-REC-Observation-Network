@@ -75,10 +75,33 @@ export type CertificateListItem = {
   created_at: string;
 };
 
+export type CertificateTransferRequest = {
+  to_address: string;
+};
+
+export type CertificateTransferResponse = {
+  token_id: number;
+  tx_hash: string;
+  owner_address: string;
+  status: "issued" | "retired";
+};
+
 export type CertificateRetireResponse = {
   token_id: number;
   tx_hash: string;
   status: "issued" | "retired";
+};
+
+/** GET / on the backend — which analysis sources are live and whether minting can work. */
+export type SystemStatus = {
+  service: string;
+  sources: Record<string, "real" | "mock">;
+  chain: {
+    connected: boolean;
+    contract_address: string | null;
+    issuer_wallet: string | null;
+    ready: boolean;
+  };
 };
 
 export type ApiErrorBody = {

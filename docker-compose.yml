@@ -1,0 +1,111 @@
+# RECON — full stack
+#
+#   cp .env.docker.example .env      # optional: every value has a default
+#   docker compose up --build
+#
+#   Dashboard: http://localhost:3000
+#   API:       http://localhost:8000   (Swagger UI at /docs)
+#   Chain:     http://localhost:8545   (local Hardhat node, chain id 31337)
+#
+# Out of the box this runs a local chain with RECRegistry deployed, the
+# backend minting against it, and the dashboard reading the live API. The
+# registry starts empty; mint a demo set with:
+#
+#   docker compose exec backend python -m backend.scripts.seed_onchain
+#
+# NEXT_PUBLIC_* values are inlined into the dashboard at BUILD time, so changing
+# one needs `docker compose up --build`, not a restart. NEXT_PUBLIC_API_URL and
+# NEXT_PUBLIC_LOCAL_RPC_URL are fetched by the user's BROWSER, so they must be
+# host-reachable addresses (localhost:…), never compose service names.
+
+services:
+  # Local EVM node. Deploys RECRegistry on every start and publishes the
+  # artifact into the chain_artifacts volume, so the backend always talks to
+  # the contract this container actually deployed. The healthcheck only passes
+  # once that deployment is recorded, not merely when the RPC answers.
+  #
+  # To use Sepolia instead, set RPC_URL / CONTRACT_ADDRESS / BACKEND_PRIVATE_KEY
+  # and the NEXT_PUBLIC_* chain values in .env.
+  chain:
+    build:
+      context: ./contracts
+    ports:
+      - "8545:8545"
+    volumes:
+      - chain_artifacts:/chain-artifacts
+    healthcheck:
+      test: ["CMD", "test", "-f", "/chain-artifacts/.ready"]
+      interval: 3s
+      timeout: 5s
+      retries: 60
+      start_period: 15s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      USE_REAL_ML: ${USE_REAL_ML:-false}
+      USE_REAL_GRAPH: ${USE_REAL_GRAPH:-false}
+      USE_REAL_WEATHER: ${USE_REAL_WEATHER:-false}
+      USE_REAL_EXPLAIN: ${USE_REAL_EXPLAIN:-false}
+      USE_REAL_LEDGER: ${USE_REAL_LEDGER:-false}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # Under the named volume, so certificates survive `docker compose down`.
+      # Rows whose chain no longer exists are dropped automatically (see
+      # onchain_service.reconcile_with_chain).
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data-volume/recon.db}
+      WEATHER_TIMEOUT_SECONDS: ${WEATHER_TIMEOUT_SECONDS:-3.0}
+      EXPLAIN_TIMEOUT_SECONDS: ${EXPLAIN_TIMEOUT_SECONDS:-5.0}
+      RPC_URL: ${RPC_URL:-http://chain:8545}
+      CONTRACT_ADDRESS: ${CONTRACT_ADDRESS:-}
+      # Hardhat's first default account, funded on a local node only. Publicly
+      # known — never use it on a network with real value.
+      BACKEND_PRIVATE_KEY: ${BACKEND_PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+      CONTRACT_ABI_PATH: ${CONTRACT_ABI_PATH:-/chain-artifacts/RECRegistry.json}
+    volumes:
+      - backend_data:/app/data-volume
+      - chain_artifacts:/chain-artifacts:ro
+    depends_on:
+      chain:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./dashboard
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_USE_MOCK_DATA: ${NEXT_PUBLIC_USE_MOCK_DATA:-false}
+        NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY:-}
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:-}
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID:-}
+        NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:-}
+        NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:-}
+        NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID:-}
+        NEXT_PUBLIC_SEPOLIA_RPC_URL: ${NEXT_PUBLIC_SEPOLIA_RPC_URL:-https://rpc.sepolia.org}
+        NEXT_PUBLIC_LOCAL_RPC_URL: ${NEXT_PUBLIC_LOCAL_RPC_URL:-http://127.0.0.1:8545}
+        # A fresh Hardhat node deploys from account #0 at nonce 0, and a CREATE
+        # address depends only on (sender, nonce) — so the local registry is
+        # always at this address.
+        NEXT_PUBLIC_CONTRACT_ADDRESS: ${NEXT_PUBLIC_CONTRACT_ADDRESS:-0x5FbDB2315678afecb367f032d93F642f64180aa3}
+        NEXT_PUBLIC_CHAIN_ID: ${NEXT_PUBLIC_CHAIN_ID:-31337}
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  backend_data:
+  chain_artifacts:

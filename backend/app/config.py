@@ -21,6 +21,16 @@ def _bool_env(name: str, default: bool = False) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _str_env(name: str, default: Optional[str] = None) -> Optional[str]:
+    """os.getenv(name, default) returns "" for a var that's present but blank,
+    which silently overrides the default. .env templates ship exactly that
+    shape (CONTRACT_ABI_PATH= with nothing after it), so treat blank as unset."""
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    return value.strip()
+
+
 class Settings:
     # Source toggles — flip to True (or set the env var) once a teammate ships.
     USE_REAL_ML: bool = _bool_env("USE_REAL_ML", False)
@@ -30,26 +40,26 @@ class Settings:
     USE_REAL_LEDGER: bool = _bool_env("USE_REAL_LEDGER", False)
 
     # Credentials / connection strings for the real branches.
-    ANTHROPIC_API_KEY: Optional[str] = os.getenv("ANTHROPIC_API_KEY")
+    ANTHROPIC_API_KEY: Optional[str] = _str_env("ANTHROPIC_API_KEY")
 
     # Off-chain store for certificate records (raw data, fraud score/explanation,
     # token_id). Defaults to a local SQLite file so the app runs with zero setup;
     # point DATABASE_URL at Postgres for a shared/prod deployment.
-    DATABASE_URL: str = os.getenv("DATABASE_URL") or f"sqlite:///{_BACKEND_DIR / 'recon.db'}"
+    DATABASE_URL: str = _str_env("DATABASE_URL", f"sqlite:///{_BACKEND_DIR / 'recon.db'}")
 
     # Real calls must degrade, never hang — see clients/weather_client.py and
     # clients/explain_client.py.
-    WEATHER_TIMEOUT_SECONDS: float = float(os.getenv("WEATHER_TIMEOUT_SECONDS", "3.0"))
-    EXPLAIN_TIMEOUT_SECONDS: float = float(os.getenv("EXPLAIN_TIMEOUT_SECONDS", "5.0"))
+    WEATHER_TIMEOUT_SECONDS: float = float(_str_env("WEATHER_TIMEOUT_SECONDS", "3.0"))
+    EXPLAIN_TIMEOUT_SECONDS: float = float(_str_env("EXPLAIN_TIMEOUT_SECONDS", "5.0"))
 
     # On-chain REC registry (RECRegistry.sol, ERC-721). RPC_URL defaults to a
     # local Hardhat node so dev/tests work without any chain config; point it
     # at your Alchemy/Infura Sepolia endpoint for the real testnet deployment.
-    RPC_URL: str = os.getenv("RPC_URL", "http://127.0.0.1:8545")
-    CONTRACT_ADDRESS: Optional[str] = os.getenv("CONTRACT_ADDRESS")
+    RPC_URL: str = _str_env("RPC_URL", "http://127.0.0.1:8545")
+    CONTRACT_ADDRESS: Optional[str] = _str_env("CONTRACT_ADDRESS")
     # Never logged, never returned in any API response — see clients/web3_client.py.
-    BACKEND_PRIVATE_KEY: Optional[str] = os.getenv("BACKEND_PRIVATE_KEY")
-    CONTRACT_ABI_PATH: str = os.getenv(
+    BACKEND_PRIVATE_KEY: Optional[str] = _str_env("BACKEND_PRIVATE_KEY")
+    CONTRACT_ABI_PATH: str = _str_env(
         "CONTRACT_ABI_PATH", str(_BACKEND_DIR / "app" / "contracts" / "RECRegistry.json")
     )
 

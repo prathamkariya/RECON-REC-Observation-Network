@@ -1,0 +1,29 @@
+# Backend build context is the repo root (imports are anchored there — see
+# backend/README.md). Keep the context small and never bake secrets, local
+# environments or databases into an image layer.
+
+.git/
+.github/
+docs/
+**/.DS_Store
+
+# Python
+myenv/
+.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+*.egg-info/
+
+# Node — the dashboard and contracts images use their own build contexts.
+**/node_modules/
+dashboard/
+contracts/
+
+# Local data and secrets
+*.db
+**/.env
+**/.env.local
+!**/.env.example
+!**/.env.local.example
