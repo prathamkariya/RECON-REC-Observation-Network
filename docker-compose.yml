@@ -1,91 +1,122 @@
-# RECON — full stack
+# Full RECON stack: Postgres + local EVM chain + backend API + dashboard.
 #
-#   cp .env.docker.example .env      # optional: every value has a default
+#   cp .env.docker.example .env      # optional — every value has a default
 #   docker compose up --build
 #
-#   Dashboard: http://localhost:3000
-#   API:       http://localhost:8000   (Swagger UI at /docs)
-#   Chain:     http://localhost:8545   (local Hardhat node, chain id 31337)
+#   Dashboard  http://localhost:3000
+#   API + docs http://localhost:8000/docs
+#   Chain RPC  http://localhost:8545
 #
-# Out of the box this runs a local chain with RECRegistry deployed, the
-# backend minting against it, and the dashboard reading the live API. The
-# registry starts empty; mint a demo set with:
-#
-#   docker compose exec backend python -m backend.scripts.seed_onchain
-#
-# NEXT_PUBLIC_* values are inlined into the dashboard at BUILD time, so changing
-# one needs `docker compose up --build`, not a restart. NEXT_PUBLIC_API_URL and
-# NEXT_PUBLIC_LOCAL_RPC_URL are fetched by the user's BROWSER, so they must be
-# host-reachable addresses (localhost:…), never compose service names.
+# The stack runs with no configuration at all: every USE_REAL_* source defaults
+# to its mock, so nothing here needs an API key. The `chain` service runs a
+# local Hardhat node with RECRegistry deployed into it, so the /certificates
+# routes work out of the box too. Fill in .env as real services arrive and
+# `docker compose up -d --build` to pick them up.
 
 services:
-  # Local EVM node. Deploys RECRegistry on every start and publishes the
-  # artifact into the chain_artifacts volume, so the backend always talks to
-  # the contract this container actually deployed. The healthcheck only passes
-  # once that deployment is recorded, not merely when the RPC answers.
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-recon}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-recon_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-recon}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Not published to the host by default — only the backend needs to reach
+    # it, and binding a database to 0.0.0.0 with a known dev password is how
+    # test instances end up on the public internet. Uncomment to use psql.
+    # ports:
+    #   - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-recon} -d ${POSTGRES_DB:-recon}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # A local EVM node with RECRegistry deployed into it on startup, so the stack
+  # has a working chain out of the box. It publishes the deployed address into
+  # the chain_artifacts volume, which the backend reads — the address is
+  # therefore always the one this container actually deployed, never a stale
+  # one committed in the repo.
   #
-  # To use Sepolia instead, set RPC_URL / CONTRACT_ADDRESS / BACKEND_PRIVATE_KEY
-  # and the NEXT_PUBLIC_* chain values in .env.
+  # For a public deployment instead, set RPC_URL / CONTRACT_ADDRESS /
+  # BACKEND_PRIVATE_KEY in .env and the backend will use those; this service
+  # can then be left running or removed, it makes no difference.
   chain:
     build:
       context: ./contracts
+      dockerfile: Dockerfile
+    restart: unless-stopped
     ports:
-      - "8545:8545"
+      # Published so the BROWSER can reach it for independent on-chain
+      # verification, not just the backend container.
+      - "${CHAIN_PORT:-8545}:8545"
     volumes:
       - chain_artifacts:/chain-artifacts
+    # Passes only once this start's deployment is recorded (the entrypoint
+    # writes .ready after deploying), not merely when the RPC answers — so the
+    # backend never starts against a previous run's artifact.
     healthcheck:
       test: ["CMD", "test", "-f", "/chain-artifacts/.ready"]
       interval: 3s
       timeout: 5s
       retries: 60
       start_period: 15s
-    restart: unless-stopped
 
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    ports:
-      - "8000:8000"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      chain:
+        condition: service_healthy
     environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-recon}:${POSTGRES_PASSWORD:-recon_dev_password}@db:5432/${POSTGRES_DB:-recon}
+
+      # Every real source is off by default, so the stack boots with no
+      # credentials. Flip one on once its dependency is configured below.
       USE_REAL_ML: ${USE_REAL_ML:-false}
       USE_REAL_GRAPH: ${USE_REAL_GRAPH:-false}
       USE_REAL_WEATHER: ${USE_REAL_WEATHER:-false}
       USE_REAL_EXPLAIN: ${USE_REAL_EXPLAIN:-false}
       USE_REAL_LEDGER: ${USE_REAL_LEDGER:-false}
+
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      # Under the named volume, so certificates survive `docker compose down`.
-      # Rows whose chain no longer exists are dropped automatically (see
-      # onchain_service.reconcile_with_chain).
-      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data-volume/recon.db}
+
       WEATHER_TIMEOUT_SECONDS: ${WEATHER_TIMEOUT_SECONDS:-3.0}
       EXPLAIN_TIMEOUT_SECONDS: ${EXPLAIN_TIMEOUT_SECONDS:-5.0}
+
+      # Browser origins allowed to call the API. The dashboard's own origin is
+      # the host-side one, because the request comes from the user's browser.
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+
+      # On-chain registry. Defaults point at the `chain` service above; override
+      # in .env to use Sepolia (RPC_URL=https://eth-sepolia..., plus a funded key).
       RPC_URL: ${RPC_URL:-http://chain:8545}
+      # Optional — the deployed address is read from CONTRACT_ABI_PATH.
       CONTRACT_ADDRESS: ${CONTRACT_ADDRESS:-}
-      # Hardhat's first default account, funded on a local node only. Publicly
-      # known — never use it on a network with real value.
+      # Hardhat's first default account, funded on a local node. Publicly known
+      # — it must never be used on a network with real value.
       BACKEND_PRIVATE_KEY: ${BACKEND_PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
       CONTRACT_ABI_PATH: ${CONTRACT_ABI_PATH:-/chain-artifacts/RECRegistry.json}
     volumes:
-      - backend_data:/app/data-volume
       - chain_artifacts:/chain-artifacts:ro
-    depends_on:
-      chain:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 20s
-    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
 
-  frontend:
+  dashboard:
     build:
       context: ./dashboard
       args:
+        # Baked into the client bundle at build time — a browser-reachable
+        # address, not the `backend` service name.
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
-        NEXT_PUBLIC_USE_MOCK_DATA: ${NEXT_PUBLIC_USE_MOCK_DATA:-false}
+        NEXT_PUBLIC_USE_MOCK_DATA: ${NEXT_PUBLIC_USE_MOCK_DATA:-true}
         NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY:-}
         NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:-}
         NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID:-}
@@ -94,18 +125,18 @@ services:
         NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID:-}
         NEXT_PUBLIC_SEPOLIA_RPC_URL: ${NEXT_PUBLIC_SEPOLIA_RPC_URL:-https://rpc.sepolia.org}
         NEXT_PUBLIC_LOCAL_RPC_URL: ${NEXT_PUBLIC_LOCAL_RPC_URL:-http://127.0.0.1:8545}
-        # A fresh Hardhat node deploys from account #0 at nonce 0, and a CREATE
-        # address depends only on (sender, nonce) — so the local registry is
-        # always at this address.
+        # A fresh Hardhat node deploys from account #0 at nonce 0, and a
+        # CREATE address is a pure function of (sender, nonce) — so the local
+        # chain's registry is always at this address. Set both to a Sepolia
+        # deployment for a public demo.
         NEXT_PUBLIC_CONTRACT_ADDRESS: ${NEXT_PUBLIC_CONTRACT_ADDRESS:-0x5FbDB2315678afecb367f032d93F642f64180aa3}
         NEXT_PUBLIC_CHAIN_ID: ${NEXT_PUBLIC_CHAIN_ID:-31337}
-    ports:
-      - "3000:3000"
-    depends_on:
-      backend:
-        condition: service_healthy
     restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${DASHBOARD_PORT:-3000}:3000"
 
 volumes:
-  backend_data:
+  postgres_data:
   chain_artifacts:

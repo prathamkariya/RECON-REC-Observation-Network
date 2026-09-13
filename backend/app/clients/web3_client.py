@@ -19,6 +19,7 @@ from typing import Optional
 from eth_utils import function_abi_to_4byte_selector, to_hex
 from web3 import Web3
 from web3.exceptions import ContractLogicError
+from web3.logs import DISCARD
 
 from ..config import settings
 
@@ -347,7 +348,10 @@ def _send_and_wait(func_call, account, timeout: int = 120):
 
 
 def _extract_token_id(contract, receipt, to_address: str) -> int:
-    for event in contract.events.Transfer().process_receipt(receipt):
+    # A mint receipt carries both Transfer and CertificateIssued logs. Decoding
+    # it against the Transfer ABI alone makes web3 warn about every log it
+    # can't match, on every mint; DISCARD asks it to skip them silently.
+    for event in contract.events.Transfer().process_receipt(receipt, errors=DISCARD):
         if event["args"]["to"].lower() == to_address.lower():
             return event["args"]["tokenId"]
     raise ChainError("Mint succeeded but no Transfer event was found to extract tokenId")

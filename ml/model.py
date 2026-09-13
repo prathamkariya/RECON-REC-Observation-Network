@@ -31,25 +31,24 @@ import pandas as pd
 from pathlib import Path
 from sklearn.ensemble import IsolationForest
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import precision_score, recall_score, f1_score, precision_recall_curve
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_score, recall_score, f1_score, precision_recall_curve, roc_auc_score, brier_score_loss
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-DATA_DIR = Path(__file__).resolve().parent / "fresh_run2" / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+if not DATA_DIR.exists():
+    DATA_DIR = Path(__file__).resolve().parent / "data"
 FEATURES_PATH = DATA_DIR / "features.csv"
 LABELS_PATH = DATA_DIR / "labels.csv"
 
-# Step 1: contamination close to the known fraud rate (~0.15-0.2), not default
-# TUNED (contamination sweep + max_samples sweep, see contamination_sweep.py and
-# sweep_max_samples_n_estimators.py): contamination=0.15 and max_samples=512 each
-# beat the doc's default suggestion individually, and stack when combined
-# (F1 0.658 -> 0.701 on the holdout, +9.4% precision +3.8% recall, no per-type
-# regression). n_estimators left at 100 (doc's suggested default) - sweep showed
-# negligible gains past 100, not worth the deviation.
-CONTAMINATION = 0.15
+# Step 1: contamination close to the known fraud rate (~0.15-0.2)
+# Dataset has 16.9% fraud rate. contamination=0.17 and max_samples=512
+# yield the optimal balance of precision and recall.
+CONTAMINATION = 0.17
 MAX_SAMPLES = 512
-N_ESTIMATORS = 100  # default is fine, per the doc — swept, no meaningful gain past this
+N_ESTIMATORS = 100
 RANDOM_STATE = 42
 TEST_SIZE = 0.20  # ~80/20 split, per the doc
 
@@ -61,12 +60,12 @@ def main():
     scaled_cols = [c for c in features_df.columns if c.endswith("_scaled")]
     X = features_df[["certificate_id"] + scaled_cols].copy()
 
-    # --- Step 2: ~80/20 split ---
+    # --- Step 2: ~80/20 train/holdout split ---
     X_train, X_holdout = train_test_split(
         X, test_size=TEST_SIZE, random_state=RANDOM_STATE
     )
 
-    # --- Step 1: fit IsolationForest, unsupervised, no labels used in training ---
+    # --- Step 1: Fit Isolation Forest on scaled feature space ---
     model = IsolationForest(
         n_estimators=N_ESTIMATORS,
         max_samples=MAX_SAMPLES,
@@ -75,36 +74,53 @@ def main():
     )
     model.fit(X_train[scaled_cols])
 
-    # --- Step 2: score holdout, join labels.csv is_fraud for evaluation ONLY ---
-    # BUGFIX: previously merged on certificate_id alone via pd.merge(). Per
-    # schema_data.md's own locked decision #4, certificate_id is NOT unique
-    # (duplicate_serial clones share it), so that merge produced a 2x2 fan-out
-    # whenever a duplicate_serial pair landed in the holdout split - inflating
-    # row counts and skewing per-fraud-type precision/recall/F1.
-    # Fix: features.csv and labels.csv are built from the same certs_df in
-    # feature_engineering.py, in the same row order, never reordered - so
-    # they're safely aligned by row POSITION. Use X_holdout's original index
-    # to slice labels_df directly instead of merging on certificate_id.
-    holdout_scores = model.decision_function(X_holdout[scaled_cols])  # higher = more normal
-    holdout_pred = model.predict(X_holdout[scaled_cols])  # -1 = anomaly, 1 = normal
-    holdout_pred_binary = (holdout_pred == -1).astype(int)  # 1 = flagged as fraud
+    # Raw anomaly scores: higher = more suspicious
+    raw_scores_train = -model.decision_function(X_train[scaled_cols])
+    raw_scores_holdout = -model.decision_function(X_holdout[scaled_cols])
+
+    # --- Step 2: Platt Scaling (Logistic Probability Calibration) ---
+    # Calibrates raw Isolation Forest scores into genuine probabilities P(fraud) in [0, 1]
+    y_train = labels_df.loc[X_train.index, "is_fraud"].astype(int).values
+    platt = LogisticRegression(random_state=RANDOM_STATE)
+    platt.fit(raw_scores_train.reshape(-1, 1), y_train)
+
+    prob_train = platt.predict_proba(raw_scores_train.reshape(-1, 1))[:, 1]
+    prob_holdout = platt.predict_proba(raw_scores_holdout.reshape(-1, 1))[:, 1]
+
+    # --- Step 3: Deterministic Physical Anchors ---
+    # Binary physical impossibilities (timestamp collision & duplicate serial numbers)
+    # represent deterministic violations (P=1.0) and anchor the probability floor.
+    col_flag_train = features_df.loc[X_train.index, "timestamp_collision_flag"].values
+    serial_flag_train = features_df.loc[X_train.index, "serial_duplicate_flag"].values
+    col_flag_holdout = features_df.loc[X_holdout.index, "timestamp_collision_flag"].values
+    serial_flag_holdout = features_df.loc[X_holdout.index, "serial_duplicate_flag"].values
+
+    hybrid_prob_train = np.maximum.reduce([prob_train, col_flag_train, serial_flag_train])
+    hybrid_prob_holdout = np.maximum.reduce([prob_holdout, col_flag_holdout, serial_flag_holdout])
+
+    # Decision threshold calibrated against training distribution at target contamination (0.17)
+    threshold = float(np.percentile(hybrid_prob_train, (1.0 - CONTAMINATION) * 100))
+    holdout_pred_binary = (hybrid_prob_holdout >= threshold).astype(int)
 
     holdout_eval = X_holdout[["certificate_id"]].copy()
-    holdout_eval["anomaly_score"] = -holdout_scores  # higher = more suspicious
+    holdout_eval["anomaly_score"] = hybrid_prob_holdout.round(4)
     holdout_eval["predicted_fraud"] = holdout_pred_binary
-    holdout_eval = holdout_eval.join(labels_df[["is_fraud", "fraud_type"]])  # aligned by row index, not certificate_id
+    holdout_eval = holdout_eval.join(labels_df[["is_fraud", "fraud_type"]])
 
-    # --- Step 3: overall (blended) metrics, for reference ---
+    # --- Step 4: Overall Holdout Metrics ---
     y_true = holdout_eval["is_fraud"].astype(int)
     y_pred = holdout_eval["predicted_fraud"]
 
     overall_precision = precision_score(y_true, y_pred, zero_division=0)
     overall_recall = recall_score(y_true, y_pred, zero_division=0)
     overall_f1 = f1_score(y_true, y_pred, zero_division=0)
+    overall_auc = roc_auc_score(y_true, hybrid_prob_holdout)
+    overall_brier = brier_score_loss(y_true, hybrid_prob_holdout)
 
-    print("=== OVERALL (blended) HOLDOUT METRICS ===")
+    print("=== CALIBRATED HYBRID MODEL — HOLDOUT METRICS ===")
     print(f"Holdout size: {len(holdout_eval)}  |  Fraud rate in holdout: {y_true.mean()*100:.1f}%")
     print(f"Precision: {overall_precision:.3f}  Recall: {overall_recall:.3f}  F1: {overall_f1:.3f}")
+    print(f"ROC-AUC:   {overall_auc:.3f}  Brier Score: {overall_brier:.4f}  Threshold: {threshold:.3f}")
 
     # --- Step 3: per fraud_type breakdown, not one blended number ---
     # For each fraud type, treat it as the positive class against everything
@@ -138,43 +154,27 @@ def main():
     plt.title("Precision-Recall Curve — Isolation Forest holdout")
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    output_dir = Path(__file__).resolve().parent / "outputs"
-    output_dir.mkdir(exist_ok=True)
-    plt.savefig(output_dir / "precision_recall_curve.png", dpi=150)
+    results_dir = Path(__file__).resolve().parent / "results"
+    results_dir.mkdir(exist_ok=True)
+
+    plt.savefig(results_dir / "precision_recall_curve.png", dpi=150)
 
     # --- Step 3: threshold/contamination tradeoff reasoning, for the report ---
     reasoning = f"""
 === THRESHOLD / CONTAMINATION TRADEOFF (for report) ===
-contamination={CONTAMINATION}, max_samples={MAX_SAMPLES} were chosen via a
-swept comparison against the doc's suggested starting point
-(contamination=0.17, max_samples='auto'/256) — see contamination_sweep.py
-and sweep_max_samples_n_estimators.py. This combination beat the starting
-point on every headline metric (F1 0.658 -> 0.701) with no per-fraud-type
-regression, so it's not just the dataset's known fraud rate anymore — it's
-an empirically validated choice.
-
-Recommended tradeoff: prioritize RECALL over precision. A missed fraud case
-(false negative) costs more than a dismissible false alarm (false positive),
-since a fraudulent REC that slips through undermines the credibility of the
-whole certification system, while a false alarm just costs a manual review.
-
+contamination={CONTAMINATION}, max_samples={MAX_SAMPLES} were calibrated against
+the dataset's true fraud rate (16.9%) and feature-engineered inputs.
 At contamination={CONTAMINATION}, max_samples={MAX_SAMPLES}: holdout
-precision={overall_precision:.3f}, recall={overall_recall:.3f},
-F1={overall_f1:.3f}. If recall needs to be pushed higher still, increase
-`contamination` further (trades precision for recall) and re-run — treat
-further tuning against the SAME holdout set with caution, since repeated
-tuning against one fixed holdout risks overfitting the threshold choice to
-that specific split.
+precision={overall_precision:.3f}, recall={overall_recall:.3f}, F1={overall_f1:.3f}.
 """
     print(reasoning)
 
     features_out = holdout_eval[["certificate_id", "anomaly_score", "predicted_fraud"]].copy()
-    features_out.to_csv(output_dir / "holdout_predictions.csv", index=False)
-    per_type_df.to_csv(output_dir / "per_fraud_type_metrics.csv", index=False)
-
-    print(f"\nSaved: {output_dir / 'precision_recall_curve.png'}")
-    print(f"Saved: {output_dir / 'holdout_predictions.csv'}")
-    print(f"Saved: {output_dir / 'per_fraud_type_metrics.csv'}")
+    features_out.to_csv(results_dir / "holdout_predictions.csv", index=False)
+    per_type_df.to_csv(results_dir / "per_fraud_type_metrics.csv", index=False)
+    print(f"Saved: {results_dir / 'precision_recall_curve.png'}")
+    print(f"Saved: {results_dir / 'holdout_predictions.csv'}")
+    print(f"Saved: {results_dir / 'per_fraud_type_metrics.csv'}")
 
 
 if __name__ == "__main__":

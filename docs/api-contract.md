@@ -4,6 +4,22 @@ Backend FastAPI Service (Role 4 `backend/`). Defined once in
 `backend/app/schemas.py`; everyone builds to this shape. It does not change
 when a mock data source is swapped for a real one.
 
+The service exposes **two pipelines over the same risk assessment**:
+
+| | Off-chain (`/recs`) | On-chain (`/certificates`) |
+|---|---|---|
+| Identified by | `certificate_id` (a string you supply) | `token_id` (assigned by the contract) |
+| Proof of record | SHA-256 hash chain (`/verify/{id}`) | ERC-721 mint on RECRegistry.sol |
+| Storage | In-process store + ledger | Postgres/SQLite + the chain |
+| Needs a chain configured | No | Yes (`RPC_URL`, `CONTRACT_ADDRESS`, `BACKEND_PRIVATE_KEY`) |
+
+Both score a record identically — `/certificates` calls the same
+`service.assess_risk()` that `/recs` does. Use `/recs` for bulk analysis of a
+dataset, `/certificates` for issuing a real certificate the dashboard can
+show on-chain provenance for.
+
+Interactive docs for everything below: `GET /docs`.
+
 ## The `Certificate` contract
 
 ```json
@@ -25,7 +41,7 @@ when a mock data source is swapped for a real one.
 - `explanation` — Role 2's Claude-generated plain-English summary.
 - `ledger` — Role 3's tamper-evident hash-chain proof.
 
-## Endpoints
+## Off-chain endpoints (`/recs`)
 
 ### 1. List certificates
 - **GET** `/recs`
@@ -68,8 +84,16 @@ edited after being written.
 - **GET** `/analytics/summary`
 - **Response**:
 ```json
-{ "total_certificates": 5, "flagged": 3, "average_risk_score": 0.41, "top_reasons": ["..."] }
+{
+  "total_certificates": 5,
+  "flagged": 3,
+  "average_risk_score": 0.41,
+  "top_reasons": ["..."],
+  "data_sources": { "ml": "real", "graph": "mock", "weather": "mock", "explain": "mock", "ledger": "mock" }
+}
 ```
+`data_sources` is on the rollup itself so a dashboard reading only this
+endpoint can tell a mocked rollup from a fully validated one.
 
 ### 6. Service status
 - **GET** `/`
@@ -91,6 +115,7 @@ edited after being written.
 `ready: false` is why every `/certificates` route will fail — check it before
 debugging a 502. The issuer wallet is a public address; the private key is
 never exposed by any endpoint.
+- **GET** `/health` → `{"status": "ok"}` (container healthcheck).
 
 ## On-chain certificates (`/certificates`)
 
@@ -106,24 +131,36 @@ public network takes roughly 15-20 seconds to confirm, so `/certificates/issue`
 is a slow endpoint by nature — the UI shows analysis as a separate step
 (`/certificates/analyze`) partly for that reason.
 
-These routes need a reachable node, a deployed contract, and a funded issuer
-wallet — see `GET /` above.
+These routes need `RPC_URL` reachable, a deployed contract, and a funded
+`BACKEND_PRIVATE_KEY` issuer wallet — see `GET /` above — except `/analyze`,
+which is deliberately chain-free.
 
-### 1. Analyze without minting
+### 7. Analyze without minting
 - **POST** `/certificates/analyze`
-- Runs the full risk pipeline and returns `{fraud_score, risk_reasons,
-  explanation}`. Touches neither the chain nor the database, so the UI can show
-  analysis as a distinct step before the user commits to minting. Needs no
-  wallet or RPC configured.
+- **Request body** (`CertificateIssueRequest`):
+```json
+{
+  "to_address": "0x... (optional — defaults to the backend issuer wallet)",
+  "plant": { "id": "PLANT-A", "type": "solar", "capacity_mw": 50, "lat": 23.03, "lon": 72.58 },
+  "generation": { "mwh_claimed": 120, "start": "2026-06-01T10:00:00Z", "end": "2026-06-01T14:00:00Z" },
+  "issuer_id": "ISSUER-A"
+}
+```
+- **Response** `200`: `{ "fraud_score": 0-100, "risk_reasons": ["..."], "explanation": "..." }`
 
-### 2. Issue (mint)
-- **POST** `/certificates/issue` → `201`
-- Body: `{to_address?, plant, generation, issuer_id}`. Omit `to_address` to
-  mint to the backend's own issuer wallet — callers never need a connected
-  wallet.
+Runs the same ML → graph → weather pipeline as `POST /recs`, but touches
+neither the chain nor the database, so the UI can show analysis as a distinct
+step before the user commits to minting. Needs no wallet or RPC configured.
+
+### 8. Issue (mint)
+- **POST** `/certificates/issue` → `201` — same request body as `/analyze`.
+  Omit `to_address` to mint to the backend's own issuer wallet — callers never
+  need a connected wallet.
+- **Response** `201`: `{ token_id, tx_hash, owner_address, plant_id, energy_mwh, generation_timestamp, fraud_score, risk_reasons, explanation, status }`
 - Duplicate generation records are rejected with `409` via a free `isRecordUsed`
   view call **before** the risk pipeline runs, so a duplicate costs no gas and
-  no pipeline time.
+  no pipeline time. The contract itself also rejects a repeat
+  `(plantId, energyMWh, generationTimestamp)` — the double-counting guarantee.
 
 | Status | Meaning |
 | --- | --- |
@@ -133,18 +170,21 @@ wallet — see `GET /` above.
 | `422` | the contract rejected an argument (e.g. fraud score > 100) |
 | `502` | the chain call failed for any other reason |
 
-### 3. Get one certificate
+### 9. Get one certificate (chain + database merged)
 - **GET** `/certificates/{token_id}`
-- Merges the **live** on-chain `getCertificate()` + `ownerOf()` with the
-  off-chain database row. `404` if the token doesn't exist on-chain or we hold
-  no row for it.
+- Merges the **live** on-chain `getCertificate()` + `ownerOf()` (`plant_id`,
+  `energy_mwh`, `fraud_score`, `retired_on_chain`, `owner_address`) with the
+  off-chain database row (`risk_reasons`, `explanation`, `raw_record`,
+  `mint_tx_hash`, `status`).
+- `404` if the token doesn't exist on-chain or we hold no row for it ·
+  `502` chain unreachable.
 
-### 4. List certificates
+### 10. List certificates
 - **GET** `/certificates`
-- Off-chain rows only — no chain read per item, so listing stays fast. Use the
-  detail route for live-verified data.
+- **Response**: `CertificateListItem[]` — off-chain rows only, so listing stays
+  fast with no chain read per item. Use #9 for live-verified detail.
 
-### 5. Transfer
+### 11. Transfer
 - **POST** `/certificates/{token_id}/transfer`
 - Body: `{to_address}`. Returns the new owner and the transfer tx hash.
 
@@ -154,9 +194,12 @@ wallet — see `GET /` above.
 | `409` | the certificate is retired and can no longer move |
 | `403` | the backend wallet doesn't own it (see the custodial note below) |
 | `404` | unknown token |
+| `422` | the contract rejected an argument (e.g. an invalid receiver) |
+| `502` | the chain call failed for any other reason |
 
-### 6. Retire
+### 12. Retire
 - **POST** `/certificates/{token_id}/retire`
+- **Response** `200`: `{ token_id, tx_hash, status: "retired" }`
 - Marks the certificate consumed. Irreversible, and blocks all future transfers.
 
 | Status | Meaning |
@@ -165,6 +208,7 @@ wallet — see `GET /` above.
 | `409` | already retired |
 | `403` | the backend wallet doesn't own it |
 | `404` | unknown token |
+| `502` | chain unreachable |
 
 **Custodial constraint.** The backend signs only as its own wallet. Transfer and
 retire therefore work only while the backend custodies the certificate. If one
@@ -172,7 +216,31 @@ is minted directly to an end-user wallet, that user must sign those actions
 from their own wallet client-side — the API returns `403` with an explanation
 rather than sending a transaction that would revert.
 
+## Auditor chat
+
+### 13. Ask about a certificate
+- **POST** `/audit/chat` (also mounted at `/api/v1/audit/chat`)
+- **Request body**: `{ "certificate_id": "REC-1001", "query": "Why was this flagged?" }`
+- **Response**: `{ "certificate_id": "REC-1001", "reply": "..." }`
+
+Grounded in a certificate already ingested via `/recs` when there is one,
+otherwise in the `data/` CSVs. Answers without `ANTHROPIC_API_KEY` set, using
+Role 2's deterministic offline fallback.
+
+## Admin
+
+### 14. Preload the fraud-ring graph
+- **POST** `/admin/graph-preload`
+- **Request body**: `{ "transactions": [...], "certificates": [{ "certificate_id", "generator_id" }] }`
+- **Response**: `{ "preloaded": <count> }`
+
+Runs Role 2's whole-dataset graph analysis once and caches every
+certificate's result, so a bulk load doesn't recompute Louvain community
+detection per request. Safe to call unconditionally — a no-op returning
+`{"preloaded": 0}` when `USE_REAL_GRAPH` is off. See
+`backend/scripts/load_dataset.py`, which calls it automatically.
+
 ## Data schema reference
 
-See `docs/data-schema.md` for the underlying field-level definitions each
+See `docs/schema_data.md` for the underlying field-level definitions each
 role's raw data conforms to before it's aggregated into the contract above.

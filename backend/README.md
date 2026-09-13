@@ -36,13 +36,44 @@ backend/
 
 ## Run it (fully mocked, zero external dependencies)
 
-From the **repo root** (imports are anchored there so real client branches
-can later reach sibling packages like `ml/`, `graph_explain/`, `ledger_cloud/`):
+With Docker, from the repo root — brings up Postgres, the API and the
+dashboard together:
+
+```bash
+docker compose up --build
+```
+
+Or locally. Run from the **repo root** (imports are anchored there so the real
+client branches can reach sibling packages like `ml/`, `graph_explain/`,
+`ledger_cloud/`):
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r backend/requirements.txt
 uvicorn backend.app.main:app --reload --port 8000
+```
+
+## Tests
+
+```bash
+pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+pytest                     # 179 tests
+pytest -m "not chain"      # skip the in-process EVM tests (faster)
+pytest --cov=backend/app --cov=ledger_cloud --cov-report=term-missing
+```
+
+`requirements.txt` is runtime-only — what the Docker image installs.
+Test-only dependencies (pytest, httpx, eth-tester, py-solc-x) are in
+`requirements-dev.txt`.
+
+The on-chain tests deploy the **real** `contracts/contracts/RECRegistry.sol`
+(from Hardhat's compiled artifact, or compiled with solc as a fallback) to a
+fresh contract per test. With no node running they use an in-process EVM and
+skip the revert-classification tests, because eth-tester destroys custom-error
+selectors. Start a node to run the full suite:
+
+```bash
+cd contracts && npm install && npx hardhat node
 ```
 
 Or run the pre-loaded demo server (5 fixtures: clean, over-capacity, trading

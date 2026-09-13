@@ -1,14 +1,28 @@
+"""
+On-chain client behaviour, exercised against the real RECRegistry from
+contracts/, deployed fresh per test by the `chain` fixture — to a live Hardhat
+node when one is running, otherwise to an in-process eth-tester chain.
+
+Tests that assert on revert *classification* take `requires_custom_errors`:
+eth-tester destroys custom-error selectors, so they skip without a live node
+(cd contracts && npx hardhat node).
+
+These are the tests that decide what HTTP status the API returns for each
+on-chain failure, so they assert on the *specific* error type — a test that
+only asserted `ChainError` would pass while the API returned 502 for something
+that should be a 409.
+"""
+import warnings
 from datetime import datetime, timezone
 
 import pytest
 from eth_account import Account
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 from backend.app import onchain_service
 from backend.app.clients import web3_client
-from backend.app.db import Base
 from backend.app.schemas import CertificateIssueRequest, Generation, Plant
+
+pytestmark = pytest.mark.chain
 
 RECORD = {
     "plant_id": "PLANT-A",
@@ -17,41 +31,82 @@ RECORD = {
 }
 
 
-def _recipient() -> str:
-    return Account.create().address
+# ---------------------------------------------------------------------------
+# Minting
 
 
-def test_mint_certificate_returns_token_id(chain):
-    result = web3_client.mint_certificate(
-        to_address=_recipient(), fraud_score=42, **RECORD
-    )
+def test_mint_certificate_returns_token_id(chain, recipient):
+    result = web3_client.mint_certificate(to_address=recipient, fraud_score=42, **RECORD)
+
     assert isinstance(result["token_id"], int)
     assert result["tx_hash"].startswith("0x")
 
 
-def test_duplicate_mint_raises_duplicate_record_error(chain, requires_custom_errors):
-    web3_client.mint_certificate(to_address=_recipient(), fraud_score=10, **RECORD)
+def test_mint_emits_no_abi_mismatch_warning(chain, recipient):
+    """The receipt carries both Transfer and CertificateIssued logs. Decoding
+    it against the Transfer ABI alone made web3 warn about the log it couldn't
+    match, on every single mint — noise in the service log that reads like a
+    real problem. The client asks web3 to discard non-matching logs instead."""
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        web3_client.mint_certificate(to_address=recipient, fraud_score=42, **RECORD)
+
+    mismatch_warnings = [w for w in caught if "did not match the provided ABI" in str(w.message)]
+    assert mismatch_warnings == []
+
+
+def test_duplicate_mint_raises_duplicate_record_error(chain, recipient, requires_custom_errors):
+    web3_client.mint_certificate(to_address=recipient, fraud_score=10, **RECORD)
 
     with pytest.raises(web3_client.DuplicateRecordError):
-        web3_client.mint_certificate(to_address=_recipient(), fraud_score=20, **RECORD)
+        web3_client.mint_certificate(to_address=Account.create().address, fraud_score=20, **RECORD)
+
+
+def test_mint_from_unauthorized_wallet_raises_not_authorized(chain, recipient, monkeypatch, requires_custom_errors):
+    """The contract's onlyIssuer modifier reverts for any wallet the deployer
+    didn't authorize. That's a 403, not a generic chain failure."""
+    from backend.app.config import settings
+
+    outsider = Account.create()
+    monkeypatch.setattr(settings, "BACKEND_PRIVATE_KEY", outsider.key.hex())
+    web3_client._account = None
+
+    # Fund the outsider so the failure is authorization, not an empty balance.
+    w3 = web3_client.get_w3()
+    w3.eth.send_transaction(
+        {"from": w3.eth.accounts[0], "to": outsider.address, "value": w3.to_wei(1, "ether")}
+    )
+
+    with pytest.raises(web3_client.NotAuthorizedError):
+        web3_client.mint_certificate(to_address=recipient, fraud_score=1, **RECORD)
+
+
+# ---------------------------------------------------------------------------
+# Retirement
 
 
 def test_retire_by_owner_succeeds(chain):
-    issuer_address = chain  # the `chain` fixture's issuer wallet mints to itself here
+    issuer_address = chain  # the chain fixture's issuer wallet mints to itself here
     result = web3_client.mint_certificate(to_address=issuer_address, fraud_score=5, **RECORD)
 
     retire_result = web3_client.retire_certificate(result["token_id"], owner_address=issuer_address)
+
     assert retire_result["tx_hash"].startswith("0x")
-
-    cert = web3_client.get_certificate(result["token_id"])
-    assert cert["retired"] is True
+    assert web3_client.get_certificate(result["token_id"])["retired"] is True
 
 
-def test_retire_twice_raises_already_retired_not_duplicate(chain, requires_custom_errors):
-    """Regression: "already retired" used to fall through the revert-string
-    classifier's generic "already" branch and surface as DuplicateRecordError,
-    which the API maps to 409 "record already certified" — a misleading answer
-    for a retire call. Custom-error selectors now distinguish the two."""
+def test_retire_by_non_owner_raises_not_authorized(chain, recipient):
+    result = web3_client.mint_certificate(to_address=recipient, fraud_score=5, **RECORD)
+
+    with pytest.raises(web3_client.NotAuthorizedError):
+        web3_client.retire_certificate(result["token_id"], owner_address=Account.create().address)
+
+
+def test_retiring_twice_raises_already_retired_not_duplicate_record(chain, requires_custom_errors):
+    """A second retire used to be classified as DuplicateRecordError (both
+    conditions matched the substring "already") and surfaced as a misleading
+    answer. The contract's CertificateAlreadyRetired custom error is now
+    decoded by selector, and the API maps it to 409."""
     issuer_address = chain
     result = web3_client.mint_certificate(to_address=issuer_address, fraud_score=5, **RECORD)
     web3_client.retire_certificate(result["token_id"], owner_address=issuer_address)
@@ -65,58 +120,53 @@ def test_retire_unknown_token_raises_not_found(chain, requires_custom_errors):
         web3_client.retire_certificate(9999, owner_address=chain)
 
 
-def test_get_unknown_certificate_raises_not_found(chain, requires_custom_errors):
-    with pytest.raises(web3_client.CertificateNotFoundError):
-        web3_client.get_certificate(9999)
-
-
-def test_fraud_score_above_100_raises_invalid_argument(chain, requires_custom_errors):
+def test_fraud_score_above_100_raises_invalid_argument(chain, recipient, requires_custom_errors):
     with pytest.raises(web3_client.InvalidArgumentError):
-        web3_client.mint_certificate(to_address=_recipient(), fraud_score=101, **RECORD)
+        web3_client.mint_certificate(to_address=recipient, fraud_score=101, **RECORD)
 
 
-def test_is_record_used_tracks_issuance(chain):
-    assert web3_client.is_record_used(**RECORD) is False
-    web3_client.mint_certificate(to_address=_recipient(), fraud_score=10, **RECORD)
-    assert web3_client.is_record_used(**RECORD) is True
-    # a different generation record from the same plant is still free
-    assert web3_client.is_record_used(**{**RECORD, "generation_timestamp": 1_800_003_600}) is False
+# ---------------------------------------------------------------------------
+# Transfers
 
 
-def test_transfer_moves_ownership(chain):
+def test_transfer_moves_ownership(chain, recipient):
     issuer_address = chain
-    new_owner = _recipient()
     result = web3_client.mint_certificate(to_address=issuer_address, fraud_score=5, **RECORD)
 
     transfer = web3_client.transfer_certificate(
-        result["token_id"], from_address=issuer_address, to_address=new_owner
+        result["token_id"], from_address=issuer_address, to_address=recipient
     )
+
     assert transfer["tx_hash"].startswith("0x")
-    assert transfer["owner"] == new_owner
-    assert web3_client.get_certificate(result["token_id"])["owner"] == new_owner
+    assert transfer["owner"] == recipient
+    assert web3_client.get_certificate(result["token_id"])["owner"] == recipient
 
 
-def test_transfer_of_retired_certificate_is_blocked(chain, requires_custom_errors):
+def test_transfer_of_retired_certificate_is_blocked(chain, recipient, requires_custom_errors):
     issuer_address = chain
     result = web3_client.mint_certificate(to_address=issuer_address, fraud_score=5, **RECORD)
     web3_client.retire_certificate(result["token_id"], owner_address=issuer_address)
 
     with pytest.raises(web3_client.AlreadyRetiredError):
         web3_client.transfer_certificate(
-            result["token_id"], from_address=issuer_address, to_address=_recipient()
+            result["token_id"], from_address=issuer_address, to_address=recipient
         )
 
 
-def test_transfer_by_non_owner_raises_not_authorized(chain):
-    result = web3_client.mint_certificate(to_address=_recipient(), fraud_score=5, **RECORD)
+def test_transfer_by_non_owner_raises_not_authorized(chain, recipient):
+    result = web3_client.mint_certificate(to_address=recipient, fraud_score=5, **RECORD)
 
     with pytest.raises(web3_client.NotAuthorizedError):
         web3_client.transfer_certificate(
-            result["token_id"], from_address=_recipient(), to_address=_recipient()
+            result["token_id"], from_address=recipient, to_address=Account.create().address
         )
 
 
-def test_contract_is_a_real_erc721(chain):
+# ---------------------------------------------------------------------------
+# Reads
+
+
+def test_contract_is_a_real_erc721(chain, recipient):
     """The registry is documented as ERC-721; assert the standard surface
     actually exists rather than trusting the docstring."""
     contract = web3_client.get_contract()
@@ -124,62 +174,90 @@ def test_contract_is_a_real_erc721(chain):
     assert contract.functions.name().call() == "REC Observation Network Certificate"
     assert contract.functions.symbol().call() == "RECON"
 
-    owner = _recipient()
-    web3_client.mint_certificate(to_address=owner, fraud_score=5, **RECORD)
-    assert contract.functions.balanceOf(owner).call() == 1
+    web3_client.mint_certificate(to_address=recipient, fraud_score=5, **RECORD)
+    assert contract.functions.balanceOf(recipient).call() == 1
     assert contract.functions.totalSupply().call() == 1
 
 
-def test_retire_by_non_owner_raises_not_authorized(chain):
-    result = web3_client.mint_certificate(to_address=_recipient(), fraud_score=5, **RECORD)
+def test_get_certificate_returns_onchain_struct(chain, recipient):
+    result = web3_client.mint_certificate(to_address=recipient, fraud_score=42, **RECORD)
 
-    with pytest.raises(web3_client.NotAuthorizedError):
-        web3_client.retire_certificate(result["token_id"], owner_address=_recipient())
+    cert = web3_client.get_certificate(result["token_id"])
 
-
-@pytest.fixture
-def db_session():
-    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
-    Base.metadata.create_all(bind=engine)
-    session = sessionmaker(bind=engine)()
-    yield session
-    session.close()
+    assert cert["plant_id"] == RECORD["plant_id"]
+    assert cert["energy_mwh"] == RECORD["energy_mwh"]
+    assert cert["generation_timestamp"] == RECORD["generation_timestamp"]
+    assert cert["fraud_score"] == 42
+    assert cert["retired"] is False
+    assert cert["owner"] == recipient
 
 
-def test_get_certificate_merges_onchain_and_offchain_data(chain, db_session):
-    payload = CertificateIssueRequest(
-        to_address=_recipient(),
-        plant=Plant(id="PLANT-B", type="solar", capacity_mw=50, lat=23.0, lon=72.5),
-        generation=Generation(
-            mwh_claimed=250,
-            start=datetime(2026, 6, 1, 10, tzinfo=timezone.utc),
-            end=datetime(2026, 6, 1, 14, tzinfo=timezone.utc),
-        ),
-        issuer_id="ISSUER-A",
-    )
-
-    issued = onchain_service.issue_certificate(db_session, payload)
-    merged = onchain_service.get_certificate(db_session, issued.token_id)
-
-    # On-chain half (from the deployed test contract).
-    assert merged["plant_id"] == "PLANT-B"
-    assert merged["energy_mwh"] == 250
-    assert merged["fraud_score"] == issued.fraud_score
-    assert merged["retired_on_chain"] is False
-    assert merged["owner_address"] == payload.to_address
-
-    # Off-chain half (from the database row).
-    assert merged["raw_record"]["issuer_id"] == "ISSUER-A"
-    assert isinstance(merged["risk_reasons"], list)
-    assert merged["explanation"]
-    assert merged["status"] == "issued"
+def test_get_unknown_certificate_raises_certificate_not_found(chain):
+    """getCertificate reverts for an unminted tokenId. The client only caught
+    web3's ContractLogicError, but eth-tester (and other non-HTTP providers)
+    raise their own type for the same revert — so this leaked out as a generic
+    error and the API answered 502 instead of 404."""
+    with pytest.raises(web3_client.CertificateNotFoundError):
+        web3_client.get_certificate(9999)
 
 
-def test_issue_certificate_rejects_duplicate_before_minting(chain, requires_custom_errors, db_session, monkeypatch):
+def test_is_record_used_reflects_minting(chain, recipient):
+    assert web3_client.is_record_used(**RECORD) is False
+
+    web3_client.mint_certificate(to_address=recipient, fraud_score=1, **RECORD)
+
+    assert web3_client.is_record_used(**RECORD) is True
+    # A different generation record from the same plant is still free.
+    assert web3_client.is_record_used(**{**RECORD, "generation_timestamp": 1_800_003_600}) is False
+
+
+def test_get_backend_address_matches_issuer_wallet(chain):
+    assert web3_client.get_backend_address() == chain
+
+
+# ---------------------------------------------------------------------------
+# Configuration failures
+
+
+def test_missing_contract_address_raises_chain_error(monkeypatch):
+    from backend.app.config import settings
+
+    monkeypatch.setattr(settings, "RPC_URL", "eth-tester")
+    monkeypatch.setattr(settings, "CONTRACT_ADDRESS", None)
+    web3_client._w3 = None
+    web3_client._contract = None
+
+    with pytest.raises(web3_client.ChainError, match="CONTRACT_ADDRESS"):
+        web3_client.get_contract()
+
+    web3_client._w3 = None
+    web3_client._contract = None
+
+
+def test_missing_private_key_raises_chain_error(monkeypatch):
+    from backend.app.config import settings
+
+    monkeypatch.setattr(settings, "RPC_URL", "eth-tester")
+    monkeypatch.setattr(settings, "BACKEND_PRIVATE_KEY", None)
+    web3_client._w3 = None
+    web3_client._account = None
+
+    with pytest.raises(web3_client.ChainError, match="BACKEND_PRIVATE_KEY"):
+        web3_client.get_backend_address()
+
+    web3_client._w3 = None
+    web3_client._account = None
+
+
+# ---------------------------------------------------------------------------
+# Service layer (on-chain + database)
+
+
+def test_issue_certificate_rejects_duplicate_before_minting(chain, recipient, db_session, monkeypatch, requires_custom_errors):
     """The duplicate pre-check is a view call that must fire before the risk
     pipeline runs and before any gas is spent."""
     payload = CertificateIssueRequest(
-        to_address=_recipient(),
+        to_address=recipient,
         plant=Plant(id="PLANT-C", type="wind", capacity_mw=80, lat=21.0, lon=73.0),
         generation=Generation(
             mwh_claimed=120,
@@ -201,7 +279,36 @@ def test_issue_certificate_rejects_duplicate_before_minting(chain, requires_cust
     assert calls == [], "risk pipeline ran despite a known-duplicate record"
 
 
-def test_transfer_certificate_updates_offchain_row(chain, db_session):
+def test_get_certificate_merges_onchain_and_offchain_data(chain, recipient, db_session):
+    payload = CertificateIssueRequest(
+        to_address=recipient,
+        plant=Plant(id="PLANT-B", type="solar", capacity_mw=50, lat=23.0, lon=72.5),
+        generation=Generation(
+            mwh_claimed=250,
+            start=datetime(2026, 6, 1, 10, tzinfo=timezone.utc),
+            end=datetime(2026, 6, 1, 14, tzinfo=timezone.utc),
+        ),
+        issuer_id="ISSUER-A",
+    )
+
+    issued = onchain_service.issue_certificate(db_session, payload)
+    merged = onchain_service.get_certificate(db_session, issued.token_id)
+
+    # On-chain half (from the deployed contract).
+    assert merged["plant_id"] == "PLANT-B"
+    assert merged["energy_mwh"] == 250
+    assert merged["fraud_score"] == issued.fraud_score
+    assert merged["retired_on_chain"] is False
+    assert merged["owner_address"] == recipient
+
+    # Off-chain half (from the database row).
+    assert merged["raw_record"]["issuer_id"] == "ISSUER-A"
+    assert isinstance(merged["risk_reasons"], list)
+    assert merged["explanation"]
+    assert merged["status"] == "issued"
+
+
+def test_transfer_certificate_updates_offchain_row(chain, recipient, db_session):
     issuer_address = chain
     payload = CertificateIssueRequest(
         to_address=issuer_address,
@@ -215,10 +322,8 @@ def test_transfer_certificate_updates_offchain_row(chain, db_session):
     )
     issued = onchain_service.issue_certificate(db_session, payload)
 
-    new_owner = _recipient()
-    row, tx_hash = onchain_service.transfer_certificate(db_session, issued.token_id, new_owner)
-    assert tx_hash.startswith("0x")
-    assert row.owner_address == new_owner
+    row, tx_hash = onchain_service.transfer_certificate(db_session, issued.token_id, recipient)
 
-    merged = onchain_service.get_certificate(db_session, issued.token_id)
-    assert merged["owner_address"] == new_owner
+    assert tx_hash.startswith("0x")
+    assert row.owner_address == recipient
+    assert onchain_service.get_certificate(db_session, issued.token_id)["owner_address"] == recipient

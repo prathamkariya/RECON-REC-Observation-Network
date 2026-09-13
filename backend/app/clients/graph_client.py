@@ -51,6 +51,13 @@ def preload_batch(transactions: List[dict], certificates: List[dict]) -> int:
     number of certificates preloaded, or -1 if the real module isn't
     available (caller should treat that as "preload skipped, mock only")."""
     global _batch_results
+    # analyze() only consults the batch cache on the real path, so preloading
+    # while USE_REAL_GRAPH is off would run whole-dataset Louvain detection
+    # (seconds, on 1200+ certificates) to build a result nothing can read.
+    # load_dataset.py calls this unconditionally, so the flag check lives here.
+    if not settings.USE_REAL_GRAPH:
+        _batch_results = None
+        return -1
     try:
         from graph_explain.graph.fraud_ring import compute_graph_signal  # teammate's module (Role 2)
 

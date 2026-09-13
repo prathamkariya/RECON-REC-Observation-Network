@@ -5,7 +5,7 @@ is ready to be flipped on.
 """
 import os
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from dotenv import load_dotenv
 
@@ -19,6 +19,14 @@ def _bool_env(name: str, default: bool = False) -> bool:
     if value is None:
         return default
     return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _list_env(name: str, default: list) -> list:
+    """Comma-separated env var -> list. Blank entries dropped."""
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 def _str_env(name: str, default: Optional[str] = None) -> Optional[str]:
@@ -38,6 +46,12 @@ class Settings:
     USE_REAL_WEATHER: bool = _bool_env("USE_REAL_WEATHER", False)
     USE_REAL_EXPLAIN: bool = _bool_env("USE_REAL_EXPLAIN", False)
     USE_REAL_LEDGER: bool = _bool_env("USE_REAL_LEDGER", False)
+
+    # Browser origins allowed to call this API. Defaults to "*" for local dev;
+    # set an explicit comma-separated list in any deployed environment. Note
+    # that "*" and credentialed requests are mutually exclusive per the CORS
+    # spec — see main.py, which only enables credentials for an explicit list.
+    CORS_ORIGINS: List[str] = _list_env("CORS_ORIGINS", ["*"])
 
     # Credentials / connection strings for the real branches.
     ANTHROPIC_API_KEY: Optional[str] = _str_env("ANTHROPIC_API_KEY")

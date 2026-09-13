@@ -42,8 +42,11 @@ jobs:
           cache-dependency-path: contracts/package-lock.json
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
           cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
 
       - name: Build contracts
         working-directory: contracts
@@ -70,7 +73,7 @@ jobs:
           echo "node failed to start" >&2; exit 1
 
       - name: Install Python deps
-        run: pip install -r backend/requirements-dev.txt
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
 
       - name: Run backend tests
         run: pytest backend/tests -q
