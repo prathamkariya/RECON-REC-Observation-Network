@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { cn } from "cn";
 import { ReconWordmark } from "@/components/brand/recon-mark";
+import { useAuth } from "@/lib/auth-context";
 
 const LINKS = [
   { href: "/#signals", label: "Signals" },
@@ -19,7 +20,10 @@ export function PublicHeader({ current }: { current?: "how-it-works" | "verify" 
   const { scrollY } = useScroll();
   const [condensed, setCondensed] = useState(false);
   const [open, setOpen] = useState(false);
+  const { user, isConfigured } = useAuth();
   useMotionValueEvent(scrollY, "change", (y) => setCondensed(y > 24));
+
+  const isSignedIn = isConfigured && !!user;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4">
@@ -51,9 +55,15 @@ export function PublicHeader({ current }: { current?: "how-it-works" | "verify" 
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/signin" className="hidden rounded-lg px-3 py-2 text-[13px] font-medium text-recon-ink-soft hover:text-recon-ink sm:block">
-            Sign in
-          </Link>
+          {isSignedIn ? (
+            <Link href="/dashboard" className="hidden rounded-lg px-3 py-2 text-[13px] font-medium text-recon-ink-soft hover:text-recon-ink sm:block">
+              {user.displayName ?? user.email ?? "Dashboard"}
+            </Link>
+          ) : (
+            <Link href="/signin" className="hidden rounded-lg px-3 py-2 text-[13px] font-medium text-recon-ink-soft hover:text-recon-ink sm:block">
+              Sign in
+            </Link>
+          )}
           <Link
             href="/dashboard"
             className="sheen group inline-flex h-9 items-center gap-1.5 rounded-xl bg-recon-forest px-3.5 text-[13px] font-semibold whitespace-nowrap text-white shadow-[0_10px_24px_-12px_rgba(15,42,32,0.8),inset_0_1px_0_rgba(255,255,255,0.15)] transition-colors hover:bg-[#1b4332]"
@@ -85,14 +95,24 @@ export function PublicHeader({ current }: { current?: "how-it-works" | "verify" 
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="glass glass-thick pointer-events-auto absolute top-[76px] right-3 left-3 flex flex-col rounded-2xl p-2 md:hidden"
           >
-            {[...LINKS, { href: "/signin", label: "Sign in" }].map((link) => (
+            {LINKS.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-[15px] font-medium text-recon-ink hover:bg-white/60">
                 {link.label}
               </Link>
             ))}
+            {isSignedIn ? (
+              <Link href="/dashboard" onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-[15px] font-medium text-recon-ink hover:bg-white/60">
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/signin" onClick={() => setOpen(false)} className="rounded-xl px-4 py-3 text-[15px] font-medium text-recon-ink hover:bg-white/60">
+                Sign in
+              </Link>
+            )}
           </motion.nav>
         )}
       </AnimatePresence>
     </header>
   );
 }
+

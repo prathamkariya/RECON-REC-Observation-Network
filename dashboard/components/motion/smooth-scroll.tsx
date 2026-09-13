@@ -39,8 +39,16 @@ export function SmoothScroll() {
       lerp: 0.09,
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      anchors: { offset: -24 },
-      prevent: (node) => node.closest("[data-lenis-prevent],[role=dialog],[role=listbox]") !== null,
+      syncTouch: false,
+      touchMultiplier: 1.5,
+      prevent: (node) => {
+        // Skip Lenis for dialogs, listboxes, and anything explicitly opted-out.
+        if (node.closest("[data-lenis-prevent],[role=dialog],[role=listbox],[data-radix-scroll-area-viewport]")) return true;
+        // Skip Lenis inside any independently scrollable container (e.g. sidebar nav, tables)
+        const scrollParent = node.closest("[style*='overflow'], .overflow-y-auto, .overflow-auto, .overflow-y-scroll");
+        if (scrollParent && scrollParent !== document.documentElement && scrollParent !== document.body) return true;
+        return false;
+      },
     });
     instance = lenis;
 
