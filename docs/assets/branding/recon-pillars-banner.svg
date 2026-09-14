@@ -24,8 +24,8 @@
     <circle cx="22" cy="24" r="10" fill="#10b981" fill-opacity="0.2"/>
     <path d="M22 17 L22 31 M15 24 L29 24 M17 19 L27 29 M17 29 L27 19" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
     <text x="38" y="28" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Physical Truth</text>
-    <text x="14" y="48" fill="#94a3b8" font-size="10" class="sans">Satellite irradiance envelope</text>
-    <text x="14" y="62" fill="#64748b" font-size="9.5" class="mono">&amp; solar elevation angles</text>
+    <text x="14" y="48" fill="#94a3b8" font-size="10" class="sans">Historical weather archive</text>
+    <text x="14" y="62" fill="#64748b" font-size="9.5" class="mono">&amp; day/night solar envelope</text>
   </g>
 
   <!-- Pillar 2: Statistical Precision -->

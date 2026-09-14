@@ -87,7 +87,7 @@
     <text x="12" y="44" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Settlement Layer</text>
     <line x1="12" y1="54" x2="156" y2="54" stroke="#059669" stroke-width="0.8"/>
     
-    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Solidity 0.8.24</text>
+    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Solidity ^0.8.20</text>
     <text x="12" y="90" fill="#64748b" font-size="9" class="sans">RECRegistry.sol</text>
 
     <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">OpenZeppelin</text>
@@ -128,7 +128,7 @@
     <line x1="12" y1="54" x2="164" y2="54" stroke="#d97706" stroke-width="0.8"/>
     
     <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Open-Meteo API</text>
-    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">Satellite Solar Models</text>
+    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">Historical Weather Archive</text>
 
     <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">Claude 3.5 Sonnet</text>
     <text x="12" y="128" fill="#64748b" font-size="9" class="sans">Forensic Dossier Writer</text>

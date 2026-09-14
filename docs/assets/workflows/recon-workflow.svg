@@ -96,8 +96,8 @@
   <g transform="translate(225, 265)">
     <rect width="210" height="80" rx="8" fill="url(#nodeGreen)" stroke="#10b981" stroke-width="1.2"/>
     <text x="12" y="24" fill="#34d399" font-size="10" font-weight="700" class="mono">PHYSICAL ENGINE</text>
-    <text x="12" y="44" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Open-Meteo Satellite API</text>
-    <text x="12" y="60" fill="#94a3b8" font-size="9.5" class="sans">Clear-sky ceiling · Solar elevation</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Open-Meteo Weather API</text>
+    <text x="12" y="60" fill="#94a3b8" font-size="9.5" class="sans">Day/night check · Hourly irradiance</text>
     <text x="198" y="72" fill="#a7f3d0" font-size="10" font-weight="700" class="mono" text-anchor="end">r_phys</text>
   </g>
 

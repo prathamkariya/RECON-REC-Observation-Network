@@ -1,9 +1,10 @@
+<a id="recon"></a>
 <div align="center">
 
 <img src="docs/assets/branding/recon-lockup.svg" alt="RECON — REC Observation Network" width="85%" style="max-width: 860px; margin: 6px 0 12px;" />
 
-<a href="#-quick-start">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=17&duration=2600&pause=900&color=10B981&center=true&vCenter=true&width=760&lines=AI-Powered+Renewable+Energy+Certificate+Fraud+Surveillance;Tri-Witness+Cross-Examination%3A+Physics+%C2%B7+Statistics+%C2%B7+Custody;Satellite+Solar+Position+%26+Clear-Sky+Irradiance+Validation;Directed+Multigraph+Trading+Cycles+%26+Wash-Trade+Forensics;Isolation+Forest+%2B+Platt-Calibrated+Anomaly+Scoring;Immutable+ERC-721+Registry+with+On-Chain+Double-Sale+Locks" alt="RECON Telemetry Stream" />
+<a href="#quick-start">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=17&duration=2600&pause=900&color=10B981&center=true&vCenter=true&width=760&lines=AI-Powered+Renewable+Energy+Certificate+Fraud+Surveillance;Tri-Witness+Cross-Examination%3A+Physics+%C2%B7+Statistics+%C2%B7+Custody;Open-Meteo+Historical+Weather+%26+Diurnal+Solar+Plausibility;Directed+Multigraph+Trading+Cycles+%26+Wash-Trade+Forensics;Isolation+Forest+%2B+Platt-Calibrated+Anomaly+Scoring;Immutable+ERC-721+Registry+with+On-Chain+Double-Sale+Locks" alt="RECON Telemetry Stream" />
 </a>
 
 <br/>
@@ -19,10 +20,10 @@
 </p>
 
 <p align="center">
-  <a href="backend/tests/"><img src="https://img.shields.io/badge/Tests-176%2B%20Passing-0A0A0A?style=flat-square&logo=pytest&logoColor=10B981" alt="176+ Tests Passing" /></a>
+  <a href="backend/tests/"><img src="https://img.shields.io/badge/Tests-199%20Passing%20(176%20pytest%20%2B%2023%20Hardhat)-0A0A0A?style=flat-square&logo=pytest&logoColor=10B981" alt="199 Tests Passing" /></a>
   <a href="backend/tests/"><img src="https://img.shields.io/badge/Coverage-High-0A0A0A?style=flat-square&color=10B981&labelColor=0A0A0A" alt="High Coverage" /></a>
-  <a href="contracts/contracts/RECRegistry.sol"><img src="https://img.shields.io/badge/EVM-Sepolia%20%7C%20Hardhat-0A0A0A?style=flat-square&logo=ethereum&logoColor=38BDF8" alt="EVM Compatible" /></a>
-  <a href="https://open-meteo.com/"><img src="https://img.shields.io/badge/Weather-Open--Meteo%20Satellite-0A0A0A?style=flat-square&logo=googleearth&logoColor=F59E0B" alt="Open-Meteo Satellite" /></a>
+  <a href="contracts/contracts/RECRegistry.sol"><img src="https://img.shields.io/badge/EVM-Local%20(31337)%20%7C%20Sepolia-0A0A0A?style=flat-square&logo=ethereum&logoColor=38BDF8" alt="EVM Compatible" /></a>
+  <a href="https://open-meteo.com/"><img src="https://img.shields.io/badge/Weather-Open--Meteo%20Historical%20API-0A0A0A?style=flat-square&logo=googleearth&logoColor=F59E0B" alt="Open-Meteo Historical API" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-0A0A0A?style=flat-square&logo=opensourceinitiative&logoColor=D4A63A" alt="MIT License" /></a>
   <a href="https://github.com/prathamkariya/RECON-REC-Observation-Network/commits/main"><img src="https://img.shields.io/github/last-commit/prathamkariya/RECON-REC-Observation-Network?style=flat-square&color=38BDF8&labelColor=0A0A0A" alt="Last Commit" /></a>
 </p>
@@ -30,20 +31,21 @@
 <img src="docs/assets/branding/recon-pillars-banner.svg" alt="Physical Truth • Statistical Precision • Network Topology • Cryptographic Trust" width="88%" style="max-width: 860px; margin: 8px 0 16px;" />
 
 <p align="center">
-  <a href="#-overview"><b>Overview</b></a> •
-  <a href="#-the-trust-problem"><b>The Trust Problem</b></a> •
-  <a href="#-observation-workflow"><b>Observation Workflow</b></a> •
-  <a href="#-three-intelligence-witnesses"><b>Three Witnesses</b></a> •
-  <a href="#-investigation-dossier"><b>Investigation</b></a> •
-  <a href="#-blockchain-verification"><b>Blockchain</b></a> •
-  <a href="#-system-architecture"><b>Architecture</b></a> •
-  <a href="#-tech-stack-deep-dive"><b>Tech Stack</b></a> •
-  <a href="#-quick-start"><b>Quick Start</b></a>
+  <a href="#overview"><b>Overview</b></a> •
+  <a href="#the-trust-problem"><b>The Trust Problem</b></a> •
+  <a href="#observation-workflow"><b>Observation Workflow</b></a> •
+  <a href="#three-intelligence-witnesses"><b>Three Witnesses</b></a> •
+  <a href="#investigation-dossier"><b>Investigation</b></a> •
+  <a href="#blockchain-verification"><b>Blockchain</b></a> •
+  <a href="#system-architecture"><b>Architecture</b></a> •
+  <a href="#tech-stack-deep-dive"><b>Tech Stack</b></a> •
+  <a href="#quick-start"><b>Quick Start</b></a>
 </p>
 
 </div>
 
 ---
+<a id="overview"></a>
 
 ## 🛰️ Overview
 
@@ -60,13 +62,14 @@ RECON cross-examines every certificate claim from three independent perspectives
 | Capability | Legacy REC Registries | RECON Observation Network |
 | :--- | :--- | :--- |
 | **Verification Basis** | Unverified self-reported utility spreadsheets | **Tri-witness cross-examination (Physics + Stats + Graph)** |
-| **Physics Verification** | None; trusted blindly | **Satellite solar elevation angles & clear-sky irradiance envelopes** |
+| **Physics Verification** | None; trusted blindly | **Open-Meteo hourly weather cross-check & diurnal solar envelope** |
 | **Trading Surveillance** | Isolated counterparty records | **NetworkX multigraph cycle detection & Louvain cluster density** |
 | **Detection Speed** | Months-delayed annual audit reconciliations | **Sub-second pre-flight scoring prior to on-chain minting** |
 | **Explainability** | Opaque pass/fail or black-box manual review | **Ranked evidence hierarchy & plain-English forensic findings** |
-| **Double-Sale Prevention**| Centralized database flag susceptible to race conditions | **On-chain `keccak256` unique generation key & permanent retirement locks** |
+| **Double-Sale Prevention**| Centralized database flag susceptible to race conditions | **On-chain `keccak256` generation key & permanent retirement locks** |
 
 ---
+<a id="the-trust-problem"></a>
 
 ## ⚡ The Trust Problem
 
@@ -74,9 +77,9 @@ RECON cross-examines every certificate claim from three independent perspectives
 
 Existing certification ecosystems face four critical failure modes that distort sustainability reporting and green finance:
 
-1. **Impossible Generation**: Solar facilities claiming power production at 02:00 AM local time, or output exceeding 100% of physical nameplate capacity.
-2. **Duplicate Minting**: The identical megawatt-hour claimed across multiple regional registries or resold after retirement.
-3. **Statistical Volumetric Cliffs**: Sudden generation surges (+6σ above regional peers) and artificial meter readouts that violate Benford’s law.
+1. **Impossible Timing**: Solar facilities claiming power production at 02:00 AM local time (outside daylight irradiance hours).
+2. **Over-Capacity Generation**: Claimed output exceeding 100% of physical nameplate capacity ($> 1.0\times \rightarrow 2.0\times$).
+3. **Statistical Volumetric Cliffs & Drift**: Rapid issuance velocity anomalies and artificial meter readouts that violate Benford’s law ($p < 0.05$).
 4. **Recirculating Trading Rings**: Colluding counterparties washing certificates in closed cycles to inflate clean energy trading volume.
 
 <br/>
@@ -86,12 +89,13 @@ Existing certification ecosystems face four critical failure modes that distort 
 </div>
 
 ---
+<a id="observation-workflow"></a>
 
 ## 🔄 Observation Workflow
 
 RECON operates on a strict principle: **No certificate enters circulation without passing multi-dimensional cross-examination.**
 
-Claims pass through pre-flight analytical pipelines where atmospheric satellite models, unsupervised machine learning, and custody graph analytics evaluate risk simultaneously.
+Claims pass through pre-flight analytical pipelines where atmospheric weather models, unsupervised machine learning, and custody graph analytics evaluate risk simultaneously.
 
 <br/>
 
@@ -110,6 +114,7 @@ When a high-risk claim enters the platform, the telemetry pulse triggers immedia
 </div>
 
 ---
+<a id="three-intelligence-witnesses"></a>
 
 ## 🧠 Three Intelligence Witnesses
 
@@ -126,7 +131,14 @@ A single fraud detector can be gamed. Three independent witnesses that share no 
 ### 1. Statistical Intelligence
 *“Does this certificate behave abnormally compared to its historical and regional peers?”*
 
-An Isolation Forest model calibrated via Platt scaling evaluates 9 engineered domain features. Volumetric cliffs, peer divergence, and leading-digit distributions drifting from Benford's law ($p < 0.05$) trigger calibrated probability scores ($r_{\text{stat}} \in [0, 1]$).
+An unsupervised Isolation Forest model (100 estimators, contamination=0.17 calibrated against the 16.9% benchmark fraud rate across 1,242 certificates) evaluates 9 engineered domain features:
+* `capacity_utilization_ratio`: Claimed output versus plant rated nameplate capacity.
+* `per_plant_min_gap_hours`: Inter-issuance gap detecting timestamp collisions (Single-Feature AUC: **0.965**).
+* `transfer_velocity`: Trading churn velocity targeting circular trading rings (Single-Feature AUC: **0.740**).
+* `generator_benford_deviation`: Chi-square goodness-of-fit against Benford's law for artificial meter readouts ($p < 0.05$).
+* `per_plant_utilization_zscore`, `issuance_velocity`, `buyer_concentration`, `time_of_day_plausibility`, and `serial_duplicate_flag`.
+
+Raw tree isolation depths are calibrated into genuine probabilities ($r_{\text{stat}} \in [0, 1]$) via **Platt scaling** (logistic calibration), with deterministic physical anchors enforcing $P = 1.0$ on binary timestamp collisions and duplicate serials.
 
 <div align="center">
   <img src="docs/assets/intelligence/statistical.svg" alt="Statistical Intelligence Scatter and Feature Weights" width="100%" style="border-radius: 12px; border: 1px solid #1e293b;" />
@@ -148,10 +160,16 @@ RECON models certificate transfers across generators, aggregators, and buyers as
 ### 3. Physical Validation
 *“Could this generation physically have occurred at the plant's GPS coordinates?”*
 
-Generation claims are cross-examined against high-resolution satellite atmospheric data from Open-Meteo at the plant’s exact latitude and longitude. Solar elevation angles below the horizon ($0.0\text{ W/m}^2$ available irradiance) trigger immediate physical disqualification.
+Generation claims are cross-examined against historical hourly weather reanalysis from **Open-Meteo** (`archive-api.open-meteo.com`) at the plant’s exact latitude and longitude:
+* **Solar Diurnal Envelope**: Solar claims outside daylight hours (06:00–18:00 IST) trigger immediate physical disqualification ($r_{\text{timing}} = 1.0$). Within daylight hours, low surface shortwave radiation ($< 50\text{ W/m}^2$) contributes gradient evidence ($0.4$). Wind generation is uniform 24h and exempt from day/night timing checks.
+* **Capacity Plausibility**: Claimed output exceeding rated capacity triggers a linear ramp ($1.0\times \rightarrow 2.0\times$) up to maximum physical impossibility ($r_{\text{capacity}} = 1.0$).
 
 <div align="center">
   <img src="docs/assets/intelligence/physical.svg" alt="Physical Validation Solar Irradiance Envelope" width="100%" style="border-radius: 12px; border: 1px solid #1e293b;" />
+</div>
+
+<div align="center">
+  <img src="docs/assets/intelligence/observation-signals.svg" alt="Three Observation Signals Combined" width="100%" style="border-radius: 12px; border: 1px solid #1e293b;" />
 </div>
 
 <br/>
@@ -166,6 +184,7 @@ $$R = 100 \times \left( 1 - \prod_{i \in \{\text{phys}, \text{stat}, \text{graph
 * Claims with $R \ge 50$ are quarantined, logged to the tamper-evident hash-chain audit ledger, and barred from tokenization.
 
 ---
+<a id="investigation-dossier"></a>
 
 ## 📋 Investigation Dossier
 
@@ -223,6 +242,7 @@ flowchart LR
 ```
 
 ---
+<a id="blockchain-verification"></a>
 
 ## 🔒 Blockchain Verification
 
@@ -242,13 +262,14 @@ RECON uses AI off-chain to detect fraud *before* minting. Once validated, the sm
 
 ### Smart Contract Guarantees (`RECRegistry.sol`)
 * **Unique Generation Key**: Prevents double-certification by enforcing a cryptographic fingerprint:
-  $$\text{RecordKey} = \text{keccak256}(\text{plantId}, \text{energyMWh}, \text{generationTimestamp})$$
-  Submitting the same generation slice twice reverts on-chain with `DuplicateGeneration()`.
-* **On-Chain Risk Scores**: The fraud score (0–100) is permanently written to the ERC-721 token metadata. Downstream green markets can programmatically reject high-risk certificates.
-* **Retirement Protection**: Calling `retire()` permanently locks the token, blocking subsequent transfers or duplicate redemption.
-* **Zero-Auth Public Verification**: Any market participant can query the smart contract or access `/verify` to inspect on-chain state without an account or API key.
+  $$\text{RecordKey} = \text{keccak256}(\text{abi.encode}(\text{plantId}, \text{energyMWh}, \text{generationTimestamp}))$$
+  Submitting the same generation slice twice reverts on-chain with `RecordAlreadyCertified(...)`. The backend pre-flights this with the free `isRecordUsed()` view function prior to gas estimation.
+* **On-Chain Risk Scores**: The fraud score (0–100) is permanently stored in the token's `Certificate` struct at mint time (`issueCertificate`). Downstream green markets can programmatically inspect and reject high-risk certificates.
+* **Permanent Retirement Protection**: Calling `retireCertificate(tokenId)` permanently sets `retired = true`. The contract overrides `_update()` to revert with `CertificateAlreadyRetired(tokenId)` if any transfer of a retired certificate is attempted.
+* **Zero-Auth Public Verification**: Any market participant can query the smart contract via JSON-RPC or call `GET /verify/{id}` to inspect on-chain state without an account or API key.
 
 ---
+<a id="system-architecture"></a>
 
 ## 🏗️ System Architecture
 
@@ -278,9 +299,9 @@ graph TB
     subgraph Intelligence ["Observation & Intelligence Layer"]
         ML["Statistical Engine<br/>(Isolation Forest + Platt)"]
         Graph["Network Engine<br/>(NetworkX MultiDiGraph)"]
-        Weather["Physical Engine<br/>(Open-Meteo Satellite API)"]
+        Weather["Physical Engine<br/>(Open-Meteo Weather API)"]
         Fusion["Noisy-OR Risk Fusion Engine"]
-        Explain["LLM Forensic Explainer<br/>(Claude 3.5 Sonnet)"]
+        Explain["Forensic Explainer<br/>(Claude 3.5 / Rule Fallback)"]
     end
 
     subgraph Persistence ["Storage & Settlement Tier"]
@@ -310,6 +331,7 @@ graph TB
 ```
 
 ---
+<a id="tech-stack-deep-dive"></a>
 
 ## 💻 Tech Stack Deep Dive
 
@@ -359,7 +381,7 @@ RECON's architecture is organized into five specialized engineering tiers, balan
 </p>
 
 * **`Solidity ^0.8.20` (`RECRegistry.sol`)**: ERC-721 standard implementation extended with an on-chain mapping `recordKeyUsed[bytes32]`. Enforces generation uniqueness:
-  $$\text{Key} = \text{keccak256}(\text{abi.encodePacked}(\text{plantId}, \text{energyMWh}, \text{generationTimestamp}))$$
+  $$\text{Key} = \text{keccak256}(\text{abi.encode}(\text{plantId}, \text{energyMWh}, \text{generationTimestamp}))$$
 * **`OpenZeppelin Contracts`**: Production-grade `ERC721Enumerable` and `Ownable` primitives ensuring standardized compliance and verified access control.
 * **`Hardhat`**: Automated compilation, deployment scripting, and fast in-process EVM test execution.
 
@@ -378,17 +400,18 @@ RECON's architecture is organized into five specialized engineering tiers, balan
 
 ### 5. Oracles, AI Explainability & Infrastructure
 <p>
-  <img src="https://img.shields.io/badge/Open--Meteo-Satellite_API-F59E0B?style=for-the-badge&logo=googleearth&logoColor=white" alt="Open-Meteo" />
+  <img src="https://img.shields.io/badge/Open--Meteo-Historical_API-F59E0B?style=for-the-badge&logo=googleearth&logoColor=white" alt="Open-Meteo" />
   <img src="https://img.shields.io/badge/Anthropic-Claude_3.5_Sonnet-D97706?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude 3.5 Sonnet" />
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
 </p>
 
-* **`Open-Meteo REST API`**: Solar radiation and astronomical models delivering historical clear-sky DNI (Direct Normal Irradiance) and sun position at high geospatial resolution.
+* **`Open-Meteo REST API`**: Historical archive endpoint (`archive-api.open-meteo.com`) delivering hourly shortwave radiation, cloud cover, and wind speed at plant GPS coordinates, cached locally in `weather_cache.json`.
 * **`Claude 3.5 Sonnet`**: Synthesizes multi-engine anomalies into concise, court-defensible plain-English dossiers, backed by a deterministic rule-based fallback.
 * **`Docker Compose`**: Multi-container declarative orchestration packaging Next.js, FastAPI, and local Hardhat into a unified local environment.
 
 ---
+<a id="quick-start"></a>
 
 ## 🚀 Quick Start
 
@@ -415,17 +438,17 @@ docker compose up --build
 
 ## 📊 Verified Metrics
 
-All statistics are verified directly against repository test suites and benchmark data:
+All statistics are verified directly against repository test suites, benchmarks, and source code:
 
 <div align="center">
 
 | Metric | Verified Value | Benchmark Reference |
 | :---: | :---: | :--- |
-| **Automated Tests** | **176+ Passing** | 13 pytest suites + 17 Hardhat tests covering backend, ML, graph, weather, and Web3 |
-| **Test Coverage** | **High** | Comprehensive coverage across core services and smart contracts |
-| **Detection Witnesses** | **3 Independent** | Atmospheric physics, isolation statistics, custody graph |
-| **Decision Threshold** | **0.50 (50 / 100)** | Calibrated noisy-OR cut point for high-risk flags |
-| **Duplicate Prevention** | **100% Guaranteed** | Reverts on-chain via unique `keccak256` generation hash |
+| **Automated Tests** | **199 Passing** | 176 backend pytest tests (12 suites) + 23 Hardhat unit & integration tests |
+| **Benchmark Dataset** | **1,242 Records** | 689 solar, 553 wind certificates across 310 market parties (16.9% fraud baseline) |
+| **Detection Witnesses** | **3 Independent** | Atmospheric physics (Open-Meteo), Isolation Forest statistics, custody multigraph |
+| **Decision Threshold** | **50 / 100 (0.50)** | Calibrated Noisy-OR cut point for high-risk flags (`FLAGGED_THRESHOLD = 0.5`) |
+| **Duplicate Prevention** | **100% Guaranteed** | Reverts on-chain via unique `keccak256` generation key in `RECRegistry.sol` |
 
 </div>
 
@@ -441,17 +464,17 @@ RECON backend services are designed for zero-config local development with insta
 
 * `USE_REAL_ML` (default: `false`): When `true`, executes the trained `IsolationForest` model (`ml/model.joblib`) with Platt scaling. When `false`, uses the calibrated statistical mock.
 * `USE_REAL_GRAPH` (default: `false`): When `true`, runs cycle detection and Louvain community analysis against the full NetworkX market graph. When `false`, uses the deterministic graph mock.
-* `USE_REAL_WEATHER` (default: `false`): When `true`, queries live satellite weather and clear-sky solar models via Open-Meteo REST API. When `false`, uses the physical calculation mock.
+* `USE_REAL_WEATHER` (default: `false`): When `true`, queries historical weather reanalysis and diurnal solar models via Open-Meteo REST API with local disk caching. When `false`, uses the physical calculation mock.
 * `USE_REAL_EXPLAIN` (default: `false`): When `true`, calls Anthropic Claude 3.5 Sonnet to synthesize plain-English findings. When `false`, uses the deterministic rule-based ranking engine.
 * `USE_REAL_LEDGER` (default: `false`): When `true`, writes every analysis event to PostgreSQL. When `false`, records to local SQLite.
 
 ### Running Test Suites
 ```bash
-# Run backend pytest suite (176+ tests)
+# Run backend pytest suite (176 tests across 12 suites)
 cd backend
 pytest -v
 
-# Run smart contract Hardhat tests
+# Run smart contract Hardhat tests (23 tests)
 cd contracts
 npx hardhat test
 ```
@@ -465,18 +488,18 @@ RECON-REC-Observation-Network/
 │   │   ├── service.py        # Noisy-OR fusion & pipeline orchestration
 │   │   ├── config.py         # 5 adapter flags & environment configuration
 │   │   └── web3_client.py    # Hardhat / Sepolia smart contract connector
-│   └── tests/                # 13 comprehensive pytest test suites
+│   └── tests/                # 12 comprehensive pytest test suites (176 tests)
 ├── contracts/                # Solidity smart contract suite
 │   ├── contracts/            # RECRegistry.sol (ERC-721 + unique record key)
 │   ├── scripts/              # Deployment and seed minting scripts
-│   └── test/                 # Hardhat unit tests
+│   └── test/                 # Hardhat unit tests (23 tests)
 ├── dashboard/                # Next.js 16 / React 19 surveillance console
 │   ├── app/                  # App router pages (dashboard, verify, issue, etc.)
 │   ├── components/           # UI components, control room charts, glass panels
 │   └── lib/                  # Web3 configuration (viem/wagmi) and API client
 ├── graph_explain/            # Graph analytics and explainability modules
 │   ├── graph/                # NetworkX cycle detection & Louvain clustering
-│   ├── weather/              # Open-Meteo API satellite integration
+│   ├── weather/              # Open-Meteo historical weather & physical check
 │   └── llm/                  # Claude explainer & deterministic rule fallback
 ├── ml/                       # Machine learning pipeline
 │   ├── model.py              # Isolation Forest + Platt scaling calibration

@@ -74,7 +74,7 @@
     <rect x="12" y="68" width="171" height="66" rx="6" fill="#0f172a"/>
     <text x="18" y="86" fill="#cbd5e1" font-size="10" class="mono">• Cycle: ISS-117 Loop</text>
     <text x="18" y="102" fill="#cbd5e1" font-size="10" class="mono">• Benford Law: p &lt; 0.03</text>
-    <text x="18" y="118" fill="#cbd5e1" font-size="10" class="mono">• Peer Drift: +6.4σ cliff</text>
+    <text x="18" y="118" fill="#cbd5e1" font-size="10" class="mono">• Over-Capacity: 2.1x rated</text>
 
     <text x="14" y="152" fill="#94a3b8" font-size="10" class="sans">Corroborating topology</text>
     <text x="14" y="168" fill="#94a3b8" font-size="10" class="sans">and statistical context</text>

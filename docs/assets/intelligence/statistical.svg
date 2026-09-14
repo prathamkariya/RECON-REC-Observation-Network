@@ -60,7 +60,7 @@
       <circle cx="0" cy="0" r="2" fill="#ffffff"/>
       <line x1="0" y1="0" x2="-35" y2="25" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,2"/>
       <rect x="-140" y="24" width="130" height="22" rx="4" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
-      <text x="-75" y="38" fill="#fca5a5" font-size="9" font-weight="700" class="mono" text-anchor="middle">ANOMALY: +6.4σ CLIFF</text>
+      <text x="-75" y="38" fill="#fca5a5" font-size="9" font-weight="700" class="mono" text-anchor="middle">ANOMALY: Z-SCORE DRIFT</text>
     </g>
 
     <g transform="translate(395, 110)">
@@ -79,22 +79,22 @@
     <line x1="16" y1="54" x2="304" y2="54" stroke="#1e293b" stroke-width="1"/>
 
     <!-- Feature 1 -->
-    <text x="16" y="74" fill="#e2e8f0" font-size="11" class="sans">Capacity Factor Drift</text>
+    <text x="16" y="74" fill="#e2e8f0" font-size="11" class="sans">Min Gap Hours (Timestamp Collision)</text>
     <rect x="180" y="65" width="120" height="10" rx="3" fill="#1e293b"/>
-    <rect x="180" y="65" width="112" height="10" rx="3" fill="#ef4444"/>
-    <text x="16" y="86" fill="#64748b" font-size="9" class="mono">AUC: 0.941 · Primary Volumetric Signal</text>
+    <rect x="180" y="65" width="116" height="10" rx="3" fill="#ef4444"/>
+    <text x="16" y="86" fill="#64748b" font-size="9" class="mono">AUC: 0.965 · Strongest Collision Signal</text>
 
     <!-- Feature 2 -->
-    <text x="16" y="110" fill="#e2e8f0" font-size="11" class="sans">Issuance Velocity vs Peers</text>
+    <text x="16" y="110" fill="#e2e8f0" font-size="11" class="sans">Transfer Velocity (Trading Churn)</text>
     <rect x="180" y="101" width="120" height="10" rx="3" fill="#1e293b"/>
-    <rect x="180" y="101" width="98" height="10" rx="3" fill="#38bdf8"/>
-    <text x="16" y="122" fill="#64748b" font-size="9" class="mono">AUC: 0.887 · Rapid Batch Timing</text>
+    <rect x="180" y="101" width="88" height="10" rx="3" fill="#38bdf8"/>
+    <text x="16" y="122" fill="#64748b" font-size="9" class="mono">AUC: 0.740 · Circular Trading Signal</text>
 
     <!-- Feature 3 -->
-    <text x="16" y="146" fill="#e2e8f0" font-size="11" class="sans">Benford First-Digit p-value</text>
+    <text x="16" y="146" fill="#e2e8f0" font-size="11" class="sans">Capacity Utilization Ratio</text>
     <rect x="180" y="137" width="120" height="10" rx="3" fill="#1e293b"/>
-    <rect x="180" y="137" width="84" height="10" rx="3" fill="#f59e0b"/>
-    <text x="16" y="158" fill="#64748b" font-size="9" class="mono">AUC: 0.832 · Synthetic Number Detection</text>
+    <rect x="180" y="137" width="98" height="10" rx="3" fill="#f59e0b"/>
+    <text x="16" y="158" fill="#64748b" font-size="9" class="mono">Claimed MWh vs Rated Plant Capacity</text>
 
     <!-- Bottom Result Strip -->
     <rect x="14" y="174" width="292" height="32" rx="6" fill="#172554" stroke="#1d4ed8"/>

@@ -88,7 +88,7 @@
       <circle cx="24" cy="24" r="10" fill="#10b981" fill-opacity="0.2"/>
       <text x="24" y="28" fill="#10b981" font-size="11" font-weight="700" class="mono" text-anchor="middle">I</text>
       <text x="44" y="22" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Atmospheric Physics</text>
-      <text x="44" y="38" fill="#94a3b8" font-size="10" class="sans">Open-Meteo satellite solar elevation &amp; clear-sky envelope</text>
+      <text x="44" y="38" fill="#94a3b8" font-size="10" class="sans">Open-Meteo weather cross-check &amp; day/night solar envelope</text>
       <text x="345" y="30" fill="#10b981" font-size="11" font-weight="700" class="mono" text-anchor="end">r_phys</text>
     </g>
 

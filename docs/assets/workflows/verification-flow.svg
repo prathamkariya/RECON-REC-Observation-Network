@@ -59,8 +59,8 @@
 
     <rect x="14" y="180" width="332" height="38" rx="6" fill="#0b1324" stroke="#1e293b"/>
     <text x="24" y="200" fill="#34d399" font-size="11" font-weight="600" class="mono">Physical:</text>
-    <text x="92" y="200" fill="#cbd5e1" font-size="11" class="sans">Open-Meteo Satellite</text>
-    <text x="24" y="211" fill="#64748b" font-size="9" class="mono">Clear-sky ceiling · Night solar check</text>
+    <text x="92" y="200" fill="#cbd5e1" font-size="11" class="sans">Open-Meteo Weather API</text>
+    <text x="24" y="211" fill="#64748b" font-size="9" class="mono">Day/night check · Irradiance floor</text>
 
     <!-- Output Payload -->
     <text x="14" y="238" fill="#f59e0b" font-size="10" font-weight="600" class="mono">OUTPUT: Score ∈ [0, 100] + Evidence Hash</text>

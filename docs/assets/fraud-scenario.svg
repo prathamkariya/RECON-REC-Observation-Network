@@ -56,12 +56,12 @@
     <rect width="200" height="155" rx="10" fill="#172238" stroke="#283858" stroke-width="1"/>
     <rect x="12" y="14" width="112" height="20" rx="4" fill="#06b6d4" fill-opacity="0.2"/>
     <text x="68" y="28" fill="#22d3ee" font-size="10" font-weight="600" class="mono" text-anchor="middle">OPEN-METEO API</text>
-    <text x="14" y="56" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Satellite Physics</text>
-    <text x="14" y="74" fill="#94a3b8" font-size="11" class="mono">Solar Elevation: -41.2°</text>
+    <text x="14" y="56" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Weather Cross-Check</text>
+    <text x="14" y="74" fill="#94a3b8" font-size="11" class="mono">Solar Window: 06–18 IST</text>
     <line x1="14" y1="88" x2="186" y2="88" stroke="#283858" stroke-width="1"/>
     <text x="14" y="108" fill="#cbd5e1" font-size="11" class="sans">Available Irradiance:</text>
     <text x="14" y="128" fill="#ef4444" font-size="14" font-weight="700" class="mono">0.0 W/m² (Pitch Dark)</text>
-    <text x="14" y="146" fill="#fca5a5" font-size="10" class="mono">Clear-sky Ceiling: 0 MWh</text>
+    <text x="14" y="146" fill="#fca5a5" font-size="10" class="mono">Timing Mismatch: 1.00</text>
   </g>
 
   <!-- Arrow 2 -->

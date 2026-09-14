@@ -86,12 +86,12 @@
     <rect width="144" height="106" rx="8" fill="#0d1424" stroke="#1e293b" stroke-width="1"/>
     
     <circle cx="16" cy="20" r="4" fill="#10b981"/>
-    <text x="26" y="24" fill="#10b981" font-size="10" font-weight="700" class="mono">SYSTEM LIVE</text>
+    <text x="26" y="24" fill="#10b981" font-size="10" font-weight="700" class="mono">AUDIT-READY</text>
     
     <line x1="12" y1="36" x2="132" y2="36" stroke="#1e293b" stroke-width="1"/>
     
-    <text x="14" y="52" fill="#64748b" font-size="9" class="mono">CHAIN ID</text>
-    <text x="14" y="66" fill="#f8fafc" font-size="11" font-weight="700" class="mono">11155111</text>
+    <text x="14" y="52" fill="#64748b" font-size="9" class="mono">NETWORK</text>
+    <text x="14" y="66" fill="#f8fafc" font-size="10" font-weight="700" class="mono">31337 / 11155111</text>
     
     <text x="14" y="84" fill="#64748b" font-size="9" class="mono">REGISTRY</text>
     <text x="14" y="98" fill="#38bdf8" font-size="11" font-weight="700" class="mono">ERC-721 · EVM</text>
