@@ -1,5 +1,32 @@
+# Runtime dependencies for the backend service.
+# Test-only dependencies live in requirements-dev.txt.
+
+# --- Web framework ---
 fastapi>=0.110.0
 uvicorn[standard]>=0.28.0
 pydantic>=2.0.0
 python-dotenv>=1.0.0
+
+# --- Persistence ---
+sqlalchemy>=2.0.0
+# Postgres driver. Unused when DATABASE_URL is left unset (SQLite default),
+# but required for the docker-compose / deployed Postgres configuration.
+psycopg2-binary>=2.9.9
+
+# --- On-chain registry (RECRegistry.sol) ---
+web3>=6.0.0
+
+# --- Sibling packages the app imports ---
+# pandas: backend/app/routers/audit.py imports graph_explain.llm.audit_chat at
+#   module load, which imports pandas — the app cannot boot without it.
+# requests: graph_explain's weather client (Open-Meteo) when USE_REAL_WEATHER=true.
+pandas>=2.0.0
 requests>=2.31.0
+
+# --- Real-source branches (USE_REAL_* flags) ---
+# Every adapter degrades to its mock when these are missing, so the service
+# still boots without them — but the real branches need them to do anything.
+networkx>=3.0
+python-louvain>=0.16
+timezonefinder>=6.2.0
+anthropic>=0.25.0

@@ -1,0 +1,154 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# A new push to the same branch makes the in-flight run obsolete.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+
+      - name: Run tests
+        # No chain or compiled contract here, so the on-chain tests skip; they
+        # run in full against a live Hardhat node in onchain.yml.
+        run: pytest --cov=backend/app --cov=ledger_cloud --cov-report=term-missing
+
+  runtime-deps:
+    name: Backend boots with runtime deps only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      # The container installs requirements.txt and nothing else. A module that
+      # only ever gets pulled in by a test dependency would boot fine locally
+      # and crash the image, so this gate installs exactly what ships.
+      - name: Install runtime dependencies only
+        run: pip install -r backend/requirements.txt
+
+      - name: Import the app and check it serves
+        run: |
+          python -c "from backend.app.main import app; print('imported', len(app.routes), 'routes')"
+          uvicorn backend.app.main:app --port 8000 &
+          for i in $(seq 1 30); do
+            curl -fsS http://localhost:8000/health && break
+            sleep 1
+          done
+          curl -fsS http://localhost:8000/health | grep -q '"ok"'
+
+  dashboard:
+    name: Dashboard lint and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+  images:
+    name: Docker images build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build only — nothing is pushed. This catches a Dockerfile that broke
+      # because a path moved, which no other job would notice.
+      - name: Build backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: backend/Dockerfile
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build dashboard image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./dashboard
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  compose:
+    name: Compose stack comes up healthy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Proves the three services actually talk to each other — Postgres
+      # reachable from the backend, backend serving, dashboard rendering —
+      # which building the images individually does not.
+      - name: Start the stack
+        run: docker compose up -d --build
+
+      - name: Wait for the API
+        run: |
+          for i in $(seq 1 60); do
+            curl -fsS http://localhost:8000/health && exit 0
+            sleep 2
+          done
+          echo "API never became healthy"; docker compose logs; exit 1
+
+      - name: Check the dashboard is serving
+        run: |
+          for i in $(seq 1 60); do
+            curl -fsS http://localhost:3000/ >/dev/null && exit 0
+            sleep 2
+          done
+          echo "Dashboard never became healthy"; docker compose logs dashboard; exit 1
+
+      - name: Exercise the pipeline end to end
+        run: |
+          curl -fsS -X POST http://localhost:8000/recs \
+            -H 'Content-Type: application/json' \
+            -d '{"certificate_id":"CI-1","plant":{"id":"P","type":"solar","capacity_mw":10,"lat":21.1,"lon":72.8},"generation":{"mwh_claimed":40,"start":"2026-01-01T02:00:00Z","end":"2026-01-01T03:00:00Z"},"issuer_id":"I","buyer_id":"B"}' \
+            | grep -q '"risk_score"'
+          curl -fsS http://localhost:8000/verify/CI-1 | grep -q '"verified":true'
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

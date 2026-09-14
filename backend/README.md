@@ -36,13 +36,44 @@ backend/
 
 ## Run it (fully mocked, zero external dependencies)
 
-From the **repo root** (imports are anchored there so real client branches
-can later reach sibling packages like `ml/`, `graph_explain/`, `ledger_cloud/`):
+With Docker, from the repo root — brings up Postgres, the API and the
+dashboard together:
+
+```bash
+docker compose up --build
+```
+
+Or locally. Run from the **repo root** (imports are anchored there so the real
+client branches can reach sibling packages like `ml/`, `graph_explain/`,
+`ledger_cloud/`):
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r backend/requirements.txt
 uvicorn backend.app.main:app --reload --port 8000
+```
+
+## Tests
+
+```bash
+pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+pytest                     # 179 tests
+pytest -m "not chain"      # skip the in-process EVM tests (faster)
+pytest --cov=backend/app --cov=ledger_cloud --cov-report=term-missing
+```
+
+`requirements.txt` is runtime-only — what the Docker image installs.
+Test-only dependencies (pytest, httpx, eth-tester, py-solc-x) are in
+`requirements-dev.txt`.
+
+The on-chain tests deploy the **real** `contracts/contracts/RECRegistry.sol`
+(from Hardhat's compiled artifact, or compiled with solc as a fallback) to a
+fresh contract per test. With no node running they use an in-process EVM and
+skip the revert-classification tests, because eth-tester destroys custom-error
+selectors. Start a node to run the full suite:
+
+```bash
+cd contracts && npm install && npx hardhat node
 ```
 
 Or run the pre-loaded demo server (5 fixtures: clean, over-capacity, trading
@@ -62,7 +93,7 @@ module is ready — no code changes needed on this side:
 
 | Flag | Wires in | Needs |
 |---|---|---|
-| `USE_REAL_ML` | `ml/model.py` | — |
+| `USE_REAL_ML` | `ml/handoff/final_stat_risk.json` (Role 1's tuned model output) | — |
 | `USE_REAL_GRAPH` | `graph_explain/graph/fraud_ring.py` | `networkx` |
 | `USE_REAL_WEATHER` | `graph_explain/weather/weather_client.py` (Open-Meteo) | network access |
 | `USE_REAL_EXPLAIN` | `graph_explain/llm/explainer.py` (Claude) | `ANTHROPIC_API_KEY` |
@@ -73,6 +104,18 @@ degrade to the mock heuristic on failure or timeout — a slow API never hangs
 or crashes a request. If a real client errors for any other reason (import
 error, bad return shape), every adapter falls back to its mock so a broken
 teammate module never blocks the pipeline.
+
+**Bulk loading with `USE_REAL_GRAPH=true`:** Role 2's real graph analysis is
+a whole-dataset computation, not something that can be built up one request
+at a time without getting progressively slower. Call
+`POST /admin/graph-preload` once with the full known transactions and
+certificates *before* bulk-loading individual certificates (see
+`backend/scripts/load_dataset.py`, which does this automatically) — it
+caches every certificate's result so subsequent `POST /recs` calls are O(1)
+instead of recomputing Louvain community detection from scratch each time.
+Certificates never part of a preload still work via live, one-at-a-time
+analysis; there's no other option since Role 2's algorithm has no
+incremental-update mode.
 
 ## Endpoints
 

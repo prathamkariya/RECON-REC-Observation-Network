@@ -1,0 +1,157 @@
+{
+  "contractName": "RECRegistry",
+  "defaultChainId": 11155111,
+  "deployments": {
+    "31337": {
+      "address": "0xA7c59f010700930003b33aB25a7a0679C860f29c",
+      "network": "localhost",
+      "chainId": 31337,
+      "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "deployTxHash": "0x5ab36918859ad5a0b09ac8e8e1161b3cdc2b4bd1b609be167f4f9d8d62849561",
+      "deployedAt": "2026-09-12T14:40:38.301Z"
+    },
+    "11155111": {
+      "address": "0x28190548E1e84fcaC6EEcc5fECaDE138e6154B59",
+      "network": "sepolia",
+      "chainId": 11155111,
+      "deployer": "0xB81ce4bc1fb783217EB4E331846D917B17970e12",
+      "deployTxHash": "0x8f97a849cca384d39b2afb985b134214d11fdc74d5e4bf37a3f1185d46c4b8a3",
+      "deployedAt": "2026-09-12T14:38:25.694Z"
+    }
+  },
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCertificate",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "plantId",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "energyMWh",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "generationTimestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fraudScore",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "retired",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct RECRegistry.Certificate",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "plantId",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "energyMWh",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "generationTimestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "isRecordUsed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}

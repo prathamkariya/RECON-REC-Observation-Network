@@ -10,8 +10,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -24,6 +24,7 @@ share/python-wheels/
 # Virtual environments
 venv/
 .venv/
+myenv/
 env/
 ENV/
 env.bak/
@@ -33,13 +34,33 @@ venv.bak/
 .env
 .env.local
 
+# Local SQLite dev database
+*.db
+
 # IDEs
 .idea/
 .vscode/
 *.swp
 *.swo
 
+# Node / Next.js
+node_modules/
+.next/
+*.tsbuildinfo
+
+# OS
+.DS_Store
+
 # Project specific caches
 weather_cache.json
 .agents
 .context
+
+# Test artifacts
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
+# Agent tooling, kept out of the repo like .agents/ and .context/ above.
+.claude/

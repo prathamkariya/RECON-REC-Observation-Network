@@ -1,0 +1,61 @@
+# Build context hygiene: everything here is either large, secret, or rebuilt
+# inside the image. Keeping it out speeds up `docker build` and, for the .env
+# entries, stops real credentials being baked into an image layer.
+
+# --- Secrets (never copy into an image) ---
+.env
+.env.*
+!.env.example
+backend/.env
+dashboard/.env.local
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+myenv/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# --- Node / Next.js ---
+node_modules/
+dashboard/node_modules/
+dashboard/.next/
+dashboard/out/
+contracts/node_modules/
+contracts/artifacts/
+contracts/cache/
+
+# --- Local databases ---
+*.db
+*.sqlite
+*.sqlite3
+backend/recon.db
+
+# --- Caches and generated artifacts not needed at runtime ---
+weather_cache.json
+graph_explain/weather_cache.json
+ml/results/
+ml/_gen_data.py
+
+# --- Tooling / VCS ---
+.git/
+.gitignore
+.github/
+.claude/
+.agents/
+.context/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# --- Docs ---
+*.md
+!backend/README.md
+docs/
