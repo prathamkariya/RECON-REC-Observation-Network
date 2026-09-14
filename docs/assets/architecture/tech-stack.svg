@@ -130,13 +130,13 @@
     <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Open-Meteo API</text>
     <text x="12" y="90" fill="#64748b" font-size="9" class="sans">Historical Weather Archive</text>
 
-    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">Claude 3.5 Sonnet</text>
-    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">Forensic Dossier Writer</text>
+    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">Groq API</text>
+    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">Ultra-Fast LLM Dossiers</text>
 
-    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">Docker Compose</text>
-    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">PostgreSQL &amp; Hardhat</text>
+    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">Vercel &amp; Docker</text>
+    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">Edge Cloud &amp; Local Node</text>
 
     <rect x="12" y="178" width="152" height="18" rx="4" fill="#78350f"/>
-    <text x="88" y="190" fill="#fde68a" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">REST &amp; RPC INTERFACES</text>
+    <text x="88" y="190" fill="#fde68a" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">LIVE ON VERCEL</text>
   </g>
 </svg>

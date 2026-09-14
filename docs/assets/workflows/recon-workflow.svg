@@ -127,7 +127,7 @@
     <!-- LLM Explanation Box -->
     <rect x="10" y="176" width="170" height="88" rx="6" fill="#0f172a" stroke="#1e293b"/>
     <text x="16" y="196" fill="#f59e0b" font-size="9.5" font-weight="700" class="mono">EXPLAINER DOSSIER</text>
-    <text x="16" y="214" fill="#e2e8f0" font-size="9" class="sans">Claude 3.5 Sonnet /</text>
+    <text x="16" y="214" fill="#e2e8f0" font-size="9" class="sans">Groq API /</text>
     <text x="16" y="228" fill="#e2e8f0" font-size="9" class="sans">Deterministic Fallback</text>
     <text x="16" y="246" fill="#94a3b8" font-size="8.5" class="mono">Plain-English reason</text>
   </g>

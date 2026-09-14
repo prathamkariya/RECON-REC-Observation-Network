@@ -204,7 +204,7 @@ Each investigation record contains:
 * **Composite Risk Score (0–100)**: Probability outcome synthesized across all three observation engines.
 * **Primary Evidence (Smoking Gun)**: The highest-ranking determining factor (e.g., night solar generation at $0\text{ W/m}^2$).
 * **Supporting Corroboration**: Secondary anomalies including trading velocity spikes, peer capacity cliffs, and Benford drift.
-* **Synthesized Finding**: Plain-English narrative generated via Claude 3.5 Sonnet (with deterministic rule-based fallback).
+* **Synthesized Finding**: Plain-English narrative generated via Groq API (with deterministic rule-based fallback).
 * **Cryptographic Verification Proof**: On-chain token ID, transaction hash, and immutable generation record key.
 
 ---
@@ -230,7 +230,7 @@ flowchart LR
     B3 --> B4
     
     Precedence --> C["Forensic Context Assembly"]
-    C --> D["Claude 3.5 Sonnet / Rule Engine"]
+    C --> D["Groq API / Rule Engine"]
     D --> E["Court-Defensible Finding"]
 
     classDef default fill:#0f172a,stroke:#334155,stroke-width:1px,color:#f8fafc;
@@ -301,7 +301,7 @@ graph TB
         Graph["Network Engine<br/>(NetworkX MultiDiGraph)"]
         Weather["Physical Engine<br/>(Open-Meteo Weather API)"]
         Fusion["Noisy-OR Risk Fusion Engine"]
-        Explain["Forensic Explainer<br/>(Claude 3.5 / Rule Fallback)"]
+        Explain["Forensic Explainer<br/>(Groq API / Rule Fallback)"]
     end
 
     subgraph Persistence ["Storage & Settlement Tier"]
@@ -401,14 +401,17 @@ RECON's architecture is organized into five specialized engineering tiers, balan
 ### 5. Oracles, AI Explainability & Infrastructure
 <p>
   <img src="https://img.shields.io/badge/Open--Meteo-Historical_API-F59E0B?style=for-the-badge&logo=googleearth&logoColor=white" alt="Open-Meteo" />
-  <img src="https://img.shields.io/badge/Anthropic-Claude_3.5_Sonnet-D97706?style=for-the-badge&logo=anthropic&logoColor=white" alt="Claude 3.5 Sonnet" />
+  <img src="https://img.shields.io/badge/Groq-LPU_Inference_API-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq API" />
+  <a href="https://recon-navy-nu.vercel.app/"><img src="https://img.shields.io/badge/Vercel-Cloud_Deployment-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" /></a>
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
 </p>
 
 * **`Open-Meteo REST API`**: Historical archive endpoint (`archive-api.open-meteo.com`) delivering hourly shortwave radiation, cloud cover, and wind speed at plant GPS coordinates, cached locally in `weather_cache.json`.
-* **`Claude 3.5 Sonnet`**: Synthesizes multi-engine anomalies into concise, court-defensible plain-English dossiers, backed by a deterministic rule-based fallback.
+* **`Groq API`**: High-speed, low-latency LLM inference engine synthesizing multi-engine anomalies into concise, court-defensible plain-English dossiers, backed by a deterministic rule-based fallback.
+* **`Vercel Cloud Deployment`**: Production edge hosting for the Next.js 16 surveillance console and interactive analyst dashboard at [`recon-navy-nu.vercel.app`](https://recon-navy-nu.vercel.app/) with automated continuous deployment.
 * **`Docker Compose`**: Multi-container declarative orchestration packaging Next.js, FastAPI, and local Hardhat into a unified local environment.
+* **`PostgreSQL 15`**: Relational persistence and audit ledger storing historical plant telemetry, certificate lineage, and analysis logs.
 
 ---
 <a id="quick-start"></a>
@@ -430,7 +433,8 @@ docker compose up --build
 
 | Service | Address | Role |
 | :--- | :--- | :--- |
-| **Surveillance Dashboard** | `http://localhost:3000` | Full operator console, registry, and analysis views |
+| **Live Production Console** | [recon-navy-nu.vercel.app](https://recon-navy-nu.vercel.app/) | Cloud edge surveillance console deployed on Vercel |
+| **Surveillance Dashboard** | `http://localhost:3000` | Local operator console, registry, and analysis views |
 | **API Documentation** | `http://localhost:8000/docs` | Interactive Swagger API explorer and schema contracts |
 | **Hardhat EVM Node** | `http://localhost:8545` | Local in-process Ethereum test environment |
 
@@ -465,7 +469,7 @@ RECON backend services are designed for zero-config local development with insta
 * `USE_REAL_ML` (default: `false`): When `true`, executes the trained `IsolationForest` model (`ml/model.joblib`) with Platt scaling. When `false`, uses the calibrated statistical mock.
 * `USE_REAL_GRAPH` (default: `false`): When `true`, runs cycle detection and Louvain community analysis against the full NetworkX market graph. When `false`, uses the deterministic graph mock.
 * `USE_REAL_WEATHER` (default: `false`): When `true`, queries historical weather reanalysis and diurnal solar models via Open-Meteo REST API with local disk caching. When `false`, uses the physical calculation mock.
-* `USE_REAL_EXPLAIN` (default: `false`): When `true`, calls Anthropic Claude 3.5 Sonnet to synthesize plain-English findings. When `false`, uses the deterministic rule-based ranking engine.
+* `USE_REAL_EXPLAIN` (default: `false`): When `true`, calls the Groq API to synthesize plain-English findings with ultra-low latency. When `false`, uses the deterministic rule-based ranking engine.
 * `USE_REAL_LEDGER` (default: `false`): When `true`, writes every analysis event to PostgreSQL. When `false`, records to local SQLite.
 
 ### Running Test Suites
@@ -493,14 +497,14 @@ RECON-REC-Observation-Network/
 │   ├── contracts/            # RECRegistry.sol (ERC-721 + unique record key)
 │   ├── scripts/              # Deployment and seed minting scripts
 │   └── test/                 # Hardhat unit tests (23 tests)
-├── dashboard/                # Next.js 16 / React 19 surveillance console
+├── dashboard/                # Next.js 16 / React 19 surveillance console (deployed on Vercel)
 │   ├── app/                  # App router pages (dashboard, verify, issue, etc.)
 │   ├── components/           # UI components, control room charts, glass panels
 │   └── lib/                  # Web3 configuration (viem/wagmi) and API client
 ├── graph_explain/            # Graph analytics and explainability modules
 │   ├── graph/                # NetworkX cycle detection & Louvain clustering
 │   ├── weather/              # Open-Meteo historical weather & physical check
-│   └── llm/                  # Claude explainer & deterministic rule fallback
+│   └── llm/                  # Groq API explainer & deterministic rule fallback
 ├── ml/                       # Machine learning pipeline
 │   ├── model.py              # Isolation Forest + Platt scaling calibration
 │   └── feature_engineering.py# 9 engineered domain features
