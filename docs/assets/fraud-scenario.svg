@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 260" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <linearGradient id="redGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+
+  <!-- Background Base Canvas -->
+  <rect width="880" height="260" rx="16" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1.5" filter="url(#shadow)"/>
+
+  <!-- Top Status Bar -->
+  <rect x="1" y="1" width="878" height="42" rx="15" fill="#131d31" fill-opacity="0.8"/>
+  <circle cx="28" cy="22" r="5" fill="#ef4444"/>
+  <text x="42" y="26" fill="#f8fafc" font-size="12" font-weight="600" class="sans" letter-spacing="0.5">FORENSIC CASE STUDY: SOLAR NIGHT GENERATION ANOMALY</text>
+  <rect x="730" y="11" width="126" height="22" rx="6" fill="#ef4444" fill-opacity="0.18" stroke="#ef4444" stroke-opacity="0.4"/>
+  <text x="793" y="26" fill="#fca5a5" font-size="10" font-weight="700" class="mono" text-anchor="middle" letter-spacing="0.8">SCORE: 99 / FLAGGED</text>
+
+  <!-- Step 1: Claim Submission -->
+  <g transform="translate(30, 68)">
+    <rect width="180" height="155" rx="10" fill="#172238" stroke="#283858" stroke-width="1"/>
+    <rect x="12" y="14" width="76" height="20" rx="4" fill="#3b82f6" fill-opacity="0.2"/>
+    <text x="50" y="28" fill="#60a5fa" font-size="10" font-weight="600" class="mono" text-anchor="middle">REC CLAIM</text>
+    <text x="14" y="56" fill="#f8fafc" font-size="14" font-weight="700" class="sans">SOLAR-PLANT-17</text>
+    <text x="14" y="74" fill="#94a3b8" font-size="11" class="mono">Gujarat · 23.02° N</text>
+    <line x1="14" y1="88" x2="166" y2="88" stroke="#283858" stroke-width="1"/>
+    <text x="14" y="108" fill="#cbd5e1" font-size="11" class="sans">Claimed Output:</text>
+    <text x="14" y="126" fill="#f8fafc" font-size="13" font-weight="700" class="mono">4.20 MWh</text>
+    <text x="14" y="144" fill="#64748b" font-size="10" class="mono">Time: 02:13:00 IST</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <g transform="translate(222, 138)">
+    <line x1="0" y1="0" x2="28" y2="0" stroke="#475569" stroke-width="2" stroke-dasharray="4,4"/>
+    <polygon points="28,-4 36,0 28,4" fill="#64748b"/>
+  </g>
+
+  <!-- Step 2: Atmospheric Physics Check -->
+  <g transform="translate(268, 68)">
+    <rect width="200" height="155" rx="10" fill="#172238" stroke="#283858" stroke-width="1"/>
+    <rect x="12" y="14" width="112" height="20" rx="4" fill="#06b6d4" fill-opacity="0.2"/>
+    <text x="68" y="28" fill="#22d3ee" font-size="10" font-weight="600" class="mono" text-anchor="middle">OPEN-METEO API</text>
+    <text x="14" y="56" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Satellite Physics</text>
+    <text x="14" y="74" fill="#94a3b8" font-size="11" class="mono">Solar Elevation: -41.2°</text>
+    <line x1="14" y1="88" x2="186" y2="88" stroke="#283858" stroke-width="1"/>
+    <text x="14" y="108" fill="#cbd5e1" font-size="11" class="sans">Available Irradiance:</text>
+    <text x="14" y="128" fill="#ef4444" font-size="14" font-weight="700" class="mono">0.0 W/m² (Pitch Dark)</text>
+    <text x="14" y="146" fill="#fca5a5" font-size="10" class="mono">Clear-sky Ceiling: 0 MWh</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <g transform="translate(480, 138)">
+    <line x1="0" y1="0" x2="28" y2="0" stroke="#ef4444" stroke-width="2"/>
+    <polygon points="28,-4 36,0 28,4" fill="#ef4444"/>
+  </g>
+
+  <!-- Step 3: Physical Conflict Engine -->
+  <g transform="translate(528, 68)">
+    <rect width="170" height="155" rx="10" fill="#24141e" stroke="#7f1d1d" stroke-width="1.5"/>
+    <rect x="12" y="14" width="102" height="20" rx="4" fill="#ef4444" fill-opacity="0.25"/>
+    <text x="63" y="28" fill="#fca5a5" font-size="10" font-weight="700" class="mono" text-anchor="middle">CROSS-EXAM</text>
+    <text x="14" y="56" fill="#f87171" font-size="14" font-weight="700" class="sans">Physical Mismatch</text>
+    <text x="14" y="74" fill="#cbd5e1" font-size="11" class="sans">Generation impossible</text>
+    <line x1="14" y1="88" x2="156" y2="88" stroke="#7f1d1d" stroke-width="1"/>
+    <text x="14" y="108" fill="#fca5a5" font-size="11" class="sans">Delta vs Model:</text>
+    <text x="14" y="126" fill="#ef4444" font-size="13" font-weight="700" class="mono">+4.20 MWh ghost</text>
+    <text x="14" y="144" fill="#94a3b8" font-size="10" class="mono">Hard physics violation</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <g transform="translate(710, 138)">
+    <line x1="0" y1="0" x2="24" y2="0" stroke="#ef4444" stroke-width="2"/>
+    <polygon points="24,-4 32,0 24,4" fill="#ef4444"/>
+  </g>
+
+  <!-- Step 4: Final Action -->
+  <g transform="translate(744, 68)">
+    <rect width="106" height="155" rx="10" fill="#300d14" stroke="#dc2626" stroke-width="2"/>
+    <circle cx="53" cy="48" r="22" fill="#ef4444" fill-opacity="0.2" stroke="#ef4444" stroke-width="2"/>
+    <path d="M43 38 L63 58 M63 38 L43 58" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
+    <text x="53" y="96" fill="#fca5a5" font-size="13" font-weight="800" class="sans" text-anchor="middle">REJECTED</text>
+    <text x="53" y="116" fill="#fecaca" font-size="10" class="mono" text-anchor="middle">BLOCKED</text>
+    <text x="53" y="138" fill="#94a3b8" font-size="9" class="mono" text-anchor="middle">No On-Chain</text>
+    <text x="53" y="150" fill="#94a3b8" font-size="9" class="mono" text-anchor="middle">Minting</text>
+  </g>
+</svg>

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bvBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#050812"/>
+    </linearGradient>
+    <linearGradient id="aiBox" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14213d"/>
+      <stop offset="100%" stop-color="#0c1629"/>
+    </linearGradient>
+    <linearGradient id="chainBox" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </linearGradient>
+    <linearGradient id="publicBox" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <marker id="bvArrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="chainArrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+
+  <!-- Background -->
+  <rect width="900" height="340" rx="16" fill="url(#bvBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <rect x="1" y="1" width="898" height="42" rx="15" fill="#0f172a" fill-opacity="0.8"/>
+  <circle cx="28" cy="22" r="5" fill="#10b981"/>
+  <text x="44" y="26" fill="#f8fafc" font-size="12" font-weight="600" class="sans" letter-spacing="0.5">SEPARATION OF RESPONSIBILITIES: AI INTELLIGENCE VS. BLOCKCHAIN AUDIT</text>
+  <text x="860" y="26" fill="#6ee7b7" font-size="11" font-weight="700" class="mono" text-anchor="end">ERC-721 · SEPOLIA / HARDHAT</text>
+
+  <!-- Zone 1: Off-Chain AI Intelligence (Left) -->
+  <g transform="translate(30, 60)">
+    <rect width="360" height="250" rx="12" fill="url(#aiBox)" stroke="#1d4ed8" stroke-width="1.5"/>
+    <rect x="14" y="14" width="130" height="22" rx="4" fill="#2563eb" fill-opacity="0.2"/>
+    <text x="79" y="29" fill="#60a5fa" font-size="10" font-weight="700" class="mono" text-anchor="middle">OFF-CHAIN ENGINE</text>
+    <text x="14" y="60" fill="#f8fafc" font-size="16" font-weight="700" class="sans">1. AI Detects &amp; Scores</text>
+    <text x="14" y="78" fill="#94a3b8" font-size="11" class="sans">Multimodal fraud cross-examination:</text>
+
+    <!-- Sub-boxes for 3 engines -->
+    <rect x="14" y="92" width="332" height="38" rx="6" fill="#0b1324" stroke="#1e293b"/>
+    <text x="24" y="112" fill="#38bdf8" font-size="11" font-weight="600" class="mono">Statistical:</text>
+    <text x="106" y="112" fill="#cbd5e1" font-size="11" class="sans">Isolation Forest + Platt scaling</text>
+    <text x="24" y="123" fill="#64748b" font-size="9" class="mono">9 features · Benford's law · peer cliff</text>
+
+    <rect x="14" y="136" width="332" height="38" rx="6" fill="#0b1324" stroke="#1e293b"/>
+    <text x="24" y="156" fill="#c084fc" font-size="11" font-weight="600" class="mono">Network:</text>
+    <text x="86" y="156" fill="#cbd5e1" font-size="11" class="sans">NetworkX MultiDiGraph</text>
+    <text x="24" y="167" fill="#64748b" font-size="9" class="mono">Wash-trade cycles · Louvain clusters</text>
+
+    <rect x="14" y="180" width="332" height="38" rx="6" fill="#0b1324" stroke="#1e293b"/>
+    <text x="24" y="200" fill="#34d399" font-size="11" font-weight="600" class="mono">Physical:</text>
+    <text x="92" y="200" fill="#cbd5e1" font-size="11" class="sans">Open-Meteo Satellite</text>
+    <text x="24" y="211" fill="#64748b" font-size="9" class="mono">Clear-sky ceiling · Night solar check</text>
+
+    <!-- Output Payload -->
+    <text x="14" y="238" fill="#f59e0b" font-size="10" font-weight="600" class="mono">OUTPUT: Score ∈ [0, 100] + Evidence Hash</text>
+  </g>
+
+  <!-- Arrow between AI and Blockchain -->
+  <g transform="translate(398, 175)">
+    <line x1="0" y1="0" x2="36" y2="0" stroke="#38bdf8" stroke-width="2.5"/>
+    <polygon points="36,-4 44,0 36,4" fill="#38bdf8"/>
+    <text x="22" y="-10" fill="#94a3b8" font-size="9" class="mono" text-anchor="middle">MINT TX</text>
+  </g>
+
+  <!-- Zone 2: Smart Contract Layer (Middle) -->
+  <g transform="translate(450, 60)">
+    <rect width="230" height="250" rx="12" fill="url(#chainBox)" stroke="#059669" stroke-width="1.5"/>
+    <rect x="14" y="14" width="105" height="22" rx="4" fill="#059669" fill-opacity="0.25"/>
+    <text x="66" y="29" fill="#34d399" font-size="10" font-weight="700" class="mono" text-anchor="middle">ON-CHAIN</text>
+    <text x="14" y="60" fill="#f8fafc" font-size="15" font-weight="700" class="sans">2. RECRegistry.sol</text>
+    <text x="14" y="78" fill="#a7f3d0" font-size="11" class="mono">ERC-721 "RECON"</text>
+
+    <!-- Key features -->
+    <rect x="12" y="92" width="206" height="42" rx="6" fill="#022c22" stroke="#047857"/>
+    <text x="18" y="108" fill="#6ee7b7" font-size="10" font-weight="700" class="mono">UNIQUE RECORD KEY</text>
+    <text x="18" y="124" fill="#e2e8f0" font-size="9" class="mono">keccak256(plant,mwh,ts)</text>
+
+    <rect x="12" y="140" width="206" height="40" rx="6" fill="#022c22" stroke="#047857"/>
+    <text x="18" y="156" fill="#6ee7b7" font-size="10" font-weight="700" class="mono">IMMUTABLE RISK</text>
+    <text x="18" y="171" fill="#e2e8f0" font-size="9" class="sans">Score stored on token</text>
+
+    <rect x="12" y="186" width="206" height="40" rx="6" fill="#022c22" stroke="#047857"/>
+    <text x="18" y="202" fill="#6ee7b7" font-size="10" font-weight="700" class="mono">RETIREMENT LOCK</text>
+    <text x="18" y="217" fill="#e2e8f0" font-size="9" class="sans">Permanent double-sale stop</text>
+
+    <text x="14" y="240" fill="#a7f3d0" font-size="9" class="mono">Authorized Issuers Only</text>
+  </g>
+
+  <!-- Arrow between Blockchain and Public Verification -->
+  <g transform="translate(688, 175)">
+    <line x1="0" y1="0" x2="30" y2="0" stroke="#10b981" stroke-width="2.5"/>
+    <polygon points="30,-4 38,0 30,4" fill="#10b981"/>
+    <text x="19" y="-10" fill="#94a3b8" font-size="9" class="mono" text-anchor="middle">READ</text>
+  </g>
+
+  <!-- Zone 3: Public Verification (Right) -->
+  <g transform="translate(734, 60)">
+    <rect width="136" height="250" rx="12" fill="url(#publicBox)" stroke="#475569" stroke-width="1.2"/>
+    <rect x="10" y="14" width="80" height="22" rx="4" fill="#475569" fill-opacity="0.3"/>
+    <text x="50" y="29" fill="#94a3b8" font-size="10" font-weight="700" class="mono" text-anchor="middle">PUBLIC</text>
+    <text x="10" y="60" fill="#f8fafc" font-size="14" font-weight="700" class="sans">3. Verify</text>
+    <text x="10" y="78" fill="#64748b" font-size="10" class="mono">/verify</text>
+
+    <circle cx="68" cy="120" r="24" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+    <path d="M58 120 L65 127 L78 114" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"/>
+
+    <text x="68" y="165" fill="#f8fafc" font-size="11" font-weight="700" class="sans" text-anchor="middle">Zero-Auth</text>
+    <text x="68" y="180" fill="#94a3b8" font-size="10" class="sans" text-anchor="middle">Direct Chain</text>
+    <text x="68" y="195" fill="#94a3b8" font-size="10" class="sans" text-anchor="middle">Reading</text>
+    <text x="68" y="215" fill="#cbd5e1" font-size="9" class="mono" text-anchor="middle">Proof of Truth</text>
+
+    <rect x="10" y="228" width="116" height="16" rx="4" fill="#10b981" fill-opacity="0.2"/>
+    <text x="68" y="239" fill="#6ee7b7" font-size="8" font-weight="700" class="mono" text-anchor="middle">NO LOGIN REQ</text>
+  </g>
+</svg>

@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 280" width="100%" height="100%">
+  <defs>
+    <linearGradient id="tsBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080e1a"/>
+      <stop offset="100%" stop-color="#03060c"/>
+    </linearGradient>
+    <linearGradient id="gBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="gCyan" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#082f49"/>
+    </linearGradient>
+    <linearGradient id="gEmerald" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </linearGradient>
+    <linearGradient id="gPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#581c87"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+    <linearGradient id="gAmber" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; }
+  </style>
+
+  <!-- Frame Background -->
+  <rect width="920" height="280" rx="14" fill="url(#tsBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title Bar -->
+  <rect x="1" y="1" width="918" height="40" rx="13" fill="#0f172a" fill-opacity="0.8"/>
+  <circle cx="26" cy="20" r="5" fill="#38bdf8"/>
+  <text x="42" y="24" fill="#f8fafc" font-size="12" font-weight="700" class="sans" letter-spacing="0.5">RECON SYSTEM TECHNOLOGY STACK &amp; INFRASTRUCTURE TIERS</text>
+  <text x="890" y="24" fill="#94a3b8" font-size="10.5" class="mono" text-anchor="end">PRODUCTION TOPOLOGY</text>
+
+  <!-- Pillar 1: AI & Graph Analytics -->
+  <g transform="translate(20, 56)">
+    <rect width="168" height="204" rx="8" fill="url(#gCyan)" stroke="#0284c7" stroke-width="1"/>
+    <text x="12" y="24" fill="#38bdf8" font-size="10" font-weight="700" class="mono">01 · ML &amp; GRAPH</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Analytics Core</text>
+    <line x1="12" y1="54" x2="156" y2="54" stroke="#0284c7" stroke-width="0.8"/>
+    
+    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">scikit-learn</text>
+    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">Isolation Forest + Platt</text>
+
+    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">NetworkX</text>
+    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">MultiDiGraph Cycles</text>
+
+    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">pandas / NumPy</text>
+    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">Telemetry Vectorization</text>
+
+    <rect x="12" y="178" width="144" height="18" rx="4" fill="#0c4a6e"/>
+    <text x="84" y="190" fill="#7dd3fc" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">9 DOMAIN FEATURES</text>
+  </g>
+
+  <!-- Pillar 2: Backend Orchestration -->
+  <g transform="translate(196, 56)">
+    <rect width="168" height="204" rx="8" fill="url(#gBlue)" stroke="#2563eb" stroke-width="1"/>
+    <text x="12" y="24" fill="#93c5fd" font-size="10" font-weight="700" class="mono">02 · BACKEND</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Gateway &amp; API</text>
+    <line x1="12" y1="54" x2="156" y2="54" stroke="#2563eb" stroke-width="0.8"/>
+    
+    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">FastAPI</text>
+    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">Async REST Gateway</text>
+
+    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">Pydantic v2</text>
+    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">Strict Type Contracts</text>
+
+    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">SQLAlchemy</text>
+    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">Hash-Chain Audit Ledger</text>
+
+    <rect x="12" y="178" width="144" height="18" rx="4" fill="#1e3a8a"/>
+    <text x="84" y="190" fill="#93c5fd" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">SUB-SECOND LATENCY</text>
+  </g>
+
+  <!-- Pillar 3: Smart Contracts -->
+  <g transform="translate(372, 56)">
+    <rect width="168" height="204" rx="8" fill="url(#gEmerald)" stroke="#059669" stroke-width="1"/>
+    <text x="12" y="24" fill="#6ee7b7" font-size="10" font-weight="700" class="mono">03 · BLOCKCHAIN</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Settlement Layer</text>
+    <line x1="12" y1="54" x2="156" y2="54" stroke="#059669" stroke-width="0.8"/>
+    
+    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Solidity 0.8.24</text>
+    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">RECRegistry.sol</text>
+
+    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">OpenZeppelin</text>
+    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">ERC-721Enumerable</text>
+
+    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">Hardhat / Sepolia</text>
+    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">In-Process &amp; Testnet</text>
+
+    <rect x="12" y="178" width="144" height="18" rx="4" fill="#064e3b"/>
+    <text x="84" y="190" fill="#6ee7b7" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">UNIQUE KECCAK256</text>
+  </g>
+
+  <!-- Pillar 4: Frontend Console -->
+  <g transform="translate(548, 56)">
+    <rect width="168" height="204" rx="8" fill="url(#gPurple)" stroke="#7c3aed" stroke-width="1"/>
+    <text x="12" y="24" fill="#d8b4fe" font-size="10" font-weight="700" class="mono">04 · FRONTEND</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Analyst Console</text>
+    <line x1="12" y1="54" x2="156" y2="54" stroke="#7c3aed" stroke-width="0.8"/>
+    
+    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Next.js 16</text>
+    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">React 19 App Router</text>
+
+    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">Tailwind CSS v4</text>
+    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">Translucent Liquid Glass</text>
+
+    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">viem / wagmi</text>
+    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">Zero-Auth On-Chain Read</text>
+
+    <rect x="12" y="178" width="144" height="18" rx="4" fill="#4c1d95"/>
+    <text x="84" y="190" fill="#d8b4fe" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">FRAMER MOTION</text>
+  </g>
+
+  <!-- Pillar 5: Oracles & Cloud -->
+  <g transform="translate(724, 56)">
+    <rect width="176" height="204" rx="8" fill="url(#gAmber)" stroke="#d97706" stroke-width="1"/>
+    <text x="12" y="24" fill="#fcd34d" font-size="10" font-weight="700" class="mono">05 · ORACLES &amp; CLOUD</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="13" font-weight="700" class="sans">External Feeds</text>
+    <line x1="12" y1="54" x2="164" y2="54" stroke="#d97706" stroke-width="0.8"/>
+    
+    <text x="12" y="76" fill="#cbd5e1" font-size="11" class="mono">Open-Meteo API</text>
+    <text x="12" y="90" fill="#64748b" font-size="9" class="sans">Satellite Solar Models</text>
+
+    <text x="12" y="114" fill="#cbd5e1" font-size="11" class="mono">Claude 3.5 Sonnet</text>
+    <text x="12" y="128" fill="#64748b" font-size="9" class="sans">Forensic Dossier Writer</text>
+
+    <text x="12" y="152" fill="#cbd5e1" font-size="11" class="mono">Docker Compose</text>
+    <text x="12" y="166" fill="#64748b" font-size="9" class="sans">PostgreSQL &amp; Hardhat</text>
+
+    <rect x="12" y="178" width="152" height="18" rx="4" fill="#78350f"/>
+    <text x="88" y="190" fill="#fde68a" font-size="8.5" font-weight="700" class="mono" text-anchor="middle">REST &amp; RPC INTERFACES</text>
+  </g>
+</svg>

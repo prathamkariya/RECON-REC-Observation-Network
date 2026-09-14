@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" width="100%" height="100%">
+  <defs>
+    <linearGradient id="sigBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#040711"/>
+    </linearGradient>
+    <linearGradient id="cyanCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#162a45"/>
+      <stop offset="100%" stop-color="#0d1b30"/>
+    </linearGradient>
+    <linearGradient id="purpleCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a1b4e"/>
+      <stop offset="100%" stop-color="#190e32"/>
+    </linearGradient>
+    <linearGradient id="emeraldCard" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#14382c"/>
+      <stop offset="100%" stop-color="#0b221a"/>
+    </linearGradient>
+    <linearGradient id="fusionCard" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+
+  <!-- Canvas Background -->
+  <rect width="900" height="320" rx="16" fill="url(#sigBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title Header -->
+  <rect x="1" y="1" width="898" height="42" rx="15" fill="#0f172a" fill-opacity="0.8"/>
+  <circle cx="28" cy="22" r="5" fill="#38bdf8"/>
+  <text x="44" y="26" fill="#f8fafc" font-size="12" font-weight="600" class="sans" letter-spacing="0.5">TRI-LAYER FRAUD DETECTION ENGINES &amp; RISK FUSION PIPELINE</text>
+  <text x="860" y="26" fill="#94a3b8" font-size="11" class="mono" text-anchor="end">RECON OBSERVATION LAYER</text>
+
+  <!-- Engine 1: Statistical Intelligence -->
+  <g transform="translate(30, 64)">
+    <rect width="255" height="165" rx="12" fill="url(#cyanCard)" stroke="#0284c7" stroke-width="1.2"/>
+    <rect x="14" y="14" width="28" height="28" rx="6" fill="#0284c7" fill-opacity="0.3"/>
+    <text x="28" y="32" fill="#38bdf8" font-size="14" font-weight="700" class="mono" text-anchor="middle">I</text>
+    <text x="52" y="32" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Statistical ML</text>
+    
+    <text x="14" y="64" fill="#38bdf8" font-size="10" font-weight="600" class="mono">ISOLATION FOREST + PLATT</text>
+    <text x="14" y="82" fill="#cbd5e1" font-size="11" class="sans">• 9 Engineered Features</text>
+    <text x="14" y="100" fill="#cbd5e1" font-size="11" class="sans">• Capacity Factor Drift &amp; Cliff</text>
+    <text x="14" y="118" fill="#cbd5e1" font-size="11" class="sans">• Issuance Velocity vs Peers</text>
+    <text x="14" y="136" fill="#cbd5e1" font-size="11" class="sans">• Benford Digit Drift (p &lt; 0.05)</text>
+
+    <rect x="14" y="146" width="227" height="14" rx="3" fill="#0369a1" fill-opacity="0.3"/>
+    <text x="127" y="156" fill="#7dd3fc" font-size="9" class="mono" text-anchor="middle">Score: r_stat ∈ [0, 1]</text>
+  </g>
+
+  <!-- Engine 2: Network Intelligence -->
+  <g transform="translate(322, 64)">
+    <rect width="255" height="165" rx="12" fill="url(#purpleCard)" stroke="#8b5cf6" stroke-width="1.2"/>
+    <rect x="14" y="14" width="28" height="28" rx="6" fill="#8b5cf6" fill-opacity="0.3"/>
+    <text x="28" y="32" fill="#c084fc" font-size="14" font-weight="700" class="mono" text-anchor="middle">II</text>
+    <text x="52" y="32" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Network Graph</text>
+    
+    <text x="14" y="64" fill="#c084fc" font-size="10" font-weight="600" class="mono">NETWORKX MULTIDIGRAPH</text>
+    <text x="14" y="82" fill="#cbd5e1" font-size="11" class="sans">• Closed Trading Cycle Detection</text>
+    <text x="14" y="100" fill="#cbd5e1" font-size="11" class="sans">• Louvain High-Density Clusters</text>
+    <text x="14" y="118" fill="#cbd5e1" font-size="11" class="sans">• Rapid Affiliated Pass-through</text>
+    <text x="14" y="136" fill="#cbd5e1" font-size="11" class="sans">• Concentration Gini &gt; 0.8</text>
+
+    <rect x="14" y="146" width="227" height="14" rx="3" fill="#6d28d9" fill-opacity="0.3"/>
+    <text x="127" y="156" fill="#d8b4fe" font-size="9" class="mono" text-anchor="middle">Score: r_graph ∈ [0, 1]</text>
+  </g>
+
+  <!-- Engine 3: Physical Validation -->
+  <g transform="translate(614, 64)">
+    <rect width="255" height="165" rx="12" fill="url(#emeraldCard)" stroke="#10b981" stroke-width="1.2"/>
+    <rect x="14" y="14" width="28" height="28" rx="6" fill="#10b981" fill-opacity="0.3"/>
+    <text x="28" y="32" fill="#34d399" font-size="14" font-weight="700" class="mono" text-anchor="middle">III</text>
+    <text x="52" y="32" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Physical Truth</text>
+    
+    <text x="14" y="64" fill="#34d399" font-size="10" font-weight="600" class="mono">OPEN-METEO SATELLITE API</text>
+    <text x="14" y="82" fill="#cbd5e1" font-size="11" class="sans">• Sun Elevation Angle vs Horizon</text>
+    <text x="14" y="100" fill="#cbd5e1" font-size="11" class="sans">• Clear-sky Irradiance Ceiling</text>
+    <text x="14" y="118" fill="#cbd5e1" font-size="11" class="sans">• Night Solar Detection (0 W/m²)</text>
+    <text x="14" y="136" fill="#cbd5e1" font-size="11" class="sans">• Wind Speed Plausibility Band</text>
+
+    <rect x="14" y="146" width="227" height="14" rx="3" fill="#047857" fill-opacity="0.3"/>
+    <text x="127" y="156" fill="#a7f3d0" font-size="9" class="mono" text-anchor="middle">Score: r_phys ∈ [0, 1]</text>
+  </g>
+
+  <!-- Arrows converging down to Fusion Layer -->
+  <path d="M 157 230 L 157 252 L 400 252" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 450 230 L 450 252" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 742 230 L 742 252 L 500 252" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Bottom Fusion Banner -->
+  <g transform="translate(180, 258)">
+    <rect width="540" height="48" rx="10" fill="#172238" stroke="#334155" stroke-width="1.5"/>
+    <rect x="12" y="10" width="160" height="28" rx="6" fill="#0f172a" stroke="#475569"/>
+    <text x="92" y="27" fill="#f8fafc" font-size="11" font-weight="700" class="mono" text-anchor="middle">NOISY-OR FUSION</text>
+    <text x="280" y="28" fill="#e2e8f0" font-size="12" font-weight="600" class="mono">R = 1 - ∏(1 - r_i)</text>
+    <rect x="390" y="10" width="138" height="28" rx="6" fill="url(#fusionCard)"/>
+    <text x="459" y="28" fill="#ffffff" font-size="11" font-weight="700" class="sans" text-anchor="middle">FRAUD SCORE: 0-100</text>
+  </g>
+</svg>

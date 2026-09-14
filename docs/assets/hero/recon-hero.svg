@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070c18"/>
+      <stop offset="50%" stop-color="#040810"/>
+      <stop offset="100%" stop-color="#020409"/>
+    </linearGradient>
+    <linearGradient id="cyanLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="emeraldLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#1e293b" stroke-width="0.75" stroke-opacity="0.6"/>
+    </pattern>
+    <marker id="mArrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8"/>
+    </marker>
+  </defs>
+
+  <style>
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; }
+  </style>
+
+  <!-- Frame Background -->
+  <rect width="920" height="360" rx="16" fill="url(#hBg)" stroke="#1e293b" stroke-width="1.5"/>
+  <rect width="920" height="360" rx="16" fill="url(#grid)"/>
+
+  <!-- Center Ambient Glow -->
+  <circle cx="460" cy="180" r="220" fill="url(#centerGlow)"/>
+
+  <!-- Top Telemetry Status Stream -->
+  <g transform="translate(30, 20)">
+    <circle cx="6" cy="6" r="3.5" fill="#10b981"/>
+    <text x="18" y="10" fill="#10b981" font-size="10" font-weight="700" class="mono">RECON SURVEILLANCE MATRIX</text>
+    <text x="210" y="10" fill="#64748b" font-size="10" class="mono">·</text>
+    <text x="225" y="10" fill="#94a3b8" font-size="10" class="mono">STREAM: LIVE</text>
+    <text x="320" y="10" fill="#64748b" font-size="10" class="mono">·</text>
+    <text x="335" y="10" fill="#38bdf8" font-size="10" class="mono">TRI-WITNESS OBSERVATION ACTIVE</text>
+  </g>
+
+  <!-- Stage 1: Physical Asset Generation (Left) -->
+  <g transform="translate(40, 70)">
+    <rect width="180" height="240" rx="12" fill="#0c1424" stroke="#1e293b" stroke-width="1.2"/>
+    <rect x="12" y="12" width="76" height="20" rx="4" fill="#3b82f6" fill-opacity="0.18"/>
+    <text x="50" y="26" fill="#60a5fa" font-size="9" font-weight="700" class="mono" text-anchor="middle">STAGE 01</text>
+    <text x="12" y="56" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Physical Plant</text>
+    <text x="12" y="74" fill="#94a3b8" font-size="11" class="sans">Meter Telemetry</text>
+
+    <!-- Solar/Wind Vector Icons -->
+    <rect x="12" y="90" width="156" height="74" rx="8" fill="#131e34"/>
+    <circle cx="44" cy="127" r="14" fill="#f59e0b" fill-opacity="0.2"/>
+    <circle cx="44" cy="127" r="7" fill="#f59e0b"/>
+    <path d="M44 107 L44 113 M44 141 L44 147 M24 127 L30 127 M58 127 L64 127" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <text x="72" y="122" fill="#cbd5e1" font-size="10" class="sans">Solar &amp; Wind</text>
+    <text x="72" y="136" fill="#f8fafc" font-size="12" font-weight="700" class="mono">MWh Output</text>
+
+    <!-- Data Spec -->
+    <text x="12" y="184" fill="#64748b" font-size="9.5" class="mono">GPS Lat/Lon Tagged</text>
+    <text x="12" y="202" fill="#64748b" font-size="9.5" class="mono">Hourly Slices Ingested</text>
+    <text x="12" y="220" fill="#38bdf8" font-size="9.5" class="mono">Candidate Hash Formed</text>
+  </g>
+
+  <!-- Flow Connector 1 -->
+  <path d="M 220 190 L 260 190" stroke="#38bdf8" stroke-width="2" marker-end="url(#mArrow)"/>
+
+  <!-- Stage 2: RECON Observation Engine (Center) -->
+  <g transform="translate(265, 55)">
+    <rect width="390" height="265" rx="14" fill="#0b1322" stroke="#2563eb" stroke-width="1.5"/>
+    <rect x="14" y="14" width="160" height="22" rx="4" fill="#2563eb" fill-opacity="0.2"/>
+    <text x="94" y="29" fill="#38bdf8" font-size="10" font-weight="700" class="mono" text-anchor="middle">RECON OBSERVATION LAYER</text>
+    <text x="14" y="58" fill="#f8fafc" font-size="16" font-weight="800" class="sans">Tri-Witness Cross Examination</text>
+
+    <!-- 3 Mini Engine Rows -->
+    <!-- Row 1: Physical -->
+    <g transform="translate(14, 76)">
+      <rect width="362" height="48" rx="8" fill="#111c30" stroke="#10b981" stroke-width="1"/>
+      <circle cx="24" cy="24" r="10" fill="#10b981" fill-opacity="0.2"/>
+      <text x="24" y="28" fill="#10b981" font-size="11" font-weight="700" class="mono" text-anchor="middle">I</text>
+      <text x="44" y="22" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Atmospheric Physics</text>
+      <text x="44" y="38" fill="#94a3b8" font-size="10" class="sans">Open-Meteo satellite solar elevation &amp; clear-sky envelope</text>
+      <text x="345" y="30" fill="#10b981" font-size="11" font-weight="700" class="mono" text-anchor="end">r_phys</text>
+    </g>
+
+    <!-- Row 2: Statistical -->
+    <g transform="translate(14, 132)">
+      <rect width="362" height="48" rx="8" fill="#111c30" stroke="#0284c7" stroke-width="1"/>
+      <circle cx="24" cy="24" r="10" fill="#0284c7" fill-opacity="0.2"/>
+      <text x="24" y="28" fill="#38bdf8" font-size="11" font-weight="700" class="mono" text-anchor="middle">II</text>
+      <text x="44" y="22" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Statistical Anomaly ML</text>
+      <text x="44" y="38" fill="#94a3b8" font-size="10" class="sans">Isolation Forest + Platt scaling on 9 engineered features</text>
+      <text x="345" y="30" fill="#38bdf8" font-size="11" font-weight="700" class="mono" text-anchor="end">r_stat</text>
+    </g>
+
+    <!-- Row 3: Network -->
+    <g transform="translate(14, 188)">
+      <rect width="362" height="48" rx="8" fill="#111c30" stroke="#8b5cf6" stroke-width="1"/>
+      <circle cx="24" cy="24" r="10" fill="#8b5cf6" fill-opacity="0.2"/>
+      <text x="24" y="28" fill="#c084fc" font-size="11" font-weight="700" class="mono" text-anchor="middle">III</text>
+      <text x="44" y="22" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Custody Graph Topology</text>
+      <text x="44" y="38" fill="#94a3b8" font-size="10" class="sans">NetworkX elementary cycle detection &amp; Louvain clusters</text>
+      <text x="345" y="30" fill="#c084fc" font-size="11" font-weight="700" class="mono" text-anchor="end">r_graph</text>
+    </g>
+
+    <!-- Probabilistic Fusion Callout -->
+    <text x="14" y="254" fill="#cbd5e1" font-size="10" class="mono">Noisy-OR Fusion: <tspan fill="#f59e0b" font-weight="700">R = 1 - ∏(1 - r_i)</tspan> → Calibrated Fraud Score [0–100]</text>
+  </g>
+
+  <!-- Flow Connector 2 -->
+  <path d="M 655 190 L 695 190" stroke="#10b981" stroke-width="2" marker-end="url(#mArrow)"/>
+
+  <!-- Stage 3: Immutable Trust & Verification (Right) -->
+  <g transform="translate(700, 70)">
+    <rect width="180" height="240" rx="12" fill="#071a14" stroke="#059669" stroke-width="1.5"/>
+    <rect x="12" y="12" width="76" height="20" rx="4" fill="#059669" fill-opacity="0.25"/>
+    <text x="50" y="26" fill="#6ee7b7" font-size="9" font-weight="700" class="mono" text-anchor="middle">STAGE 03</text>
+    <text x="12" y="56" fill="#f8fafc" font-size="14" font-weight="700" class="sans">Verified Record</text>
+    <text x="12" y="74" fill="#a7f3d0" font-size="11" class="mono">RECRegistry.sol</text>
+
+    <!-- On-chain verification seal -->
+    <rect x="12" y="90" width="156" height="74" rx="8" fill="#042a1e" stroke="#10b981" stroke-width="1"/>
+    <circle cx="36" cy="127" r="14" fill="#10b981" fill-opacity="0.2"/>
+    <path d="M30 127 L35 132 L44 122" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+    
+    <text x="58" y="122" fill="#6ee7b7" font-size="11" font-weight="700" class="mono">ERC-721</text>
+    <text x="58" y="138" fill="#cbd5e1" font-size="10" class="sans">Never Resold</text>
+
+    <!-- Trust Guarantees -->
+    <text x="12" y="184" fill="#6ee7b7" font-size="9.5" class="mono">Unique keccak256 Key</text>
+    <text x="12" y="202" fill="#6ee7b7" font-size="9.5" class="mono">Permanent Fraud Score</text>
+    <text x="12" y="220" fill="#34d399" font-size="9.5" class="mono">Public /verify Read</text>
+  </g>
+</svg>

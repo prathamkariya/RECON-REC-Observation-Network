@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="netBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#050811"/>
+    </linearGradient>
+    <linearGradient id="alertGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </linearGradient>
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cyanGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#ef4444"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+
+  <!-- Frame Background -->
+  <rect width="880" height="340" rx="16" fill="url(#netBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Bar -->
+  <rect x="1" y="1" width="878" height="42" rx="15" fill="#0f172a" fill-opacity="0.7"/>
+  <circle cx="28" cy="22" r="5" fill="#f59e0b"/>
+  <text x="44" y="26" fill="#f8fafc" font-size="12" font-weight="600" class="sans" letter-spacing="0.5">NETWORK INTELLIGENCE: CUSTODY TOPOLOGY &amp; TRADING CYCLES</text>
+  <rect x="690" y="11" width="168" height="22" rx="6" fill="#f59e0b" fill-opacity="0.15" stroke="#f59e0b" stroke-opacity="0.4"/>
+  <text x="774" y="26" fill="#fcd34d" font-size="10" font-weight="700" class="mono" text-anchor="middle">LOUVAIN COMMUNITY: HIGH DENSITY</text>
+
+  <!-- Left: Suspicious Cycle Topology Visual -->
+  <g transform="translate(40, 60)">
+    <!-- Subgraph cluster bounding box -->
+    <rect x="20" y="20" width="460" height="230" rx="14" fill="#131d31" fill-opacity="0.4" stroke="#ef4444" stroke-opacity="0.3" stroke-dasharray="6,6"/>
+    <text x="36" y="44" fill="#f87171" font-size="11" font-weight="700" class="mono">DETECTION: CLOSED REC RECIRCULATION LOOP (CYCLE_LEN=3)</text>
+
+    <!-- Cycle Edges (Red Curved Arrows) -->
+    <!-- Node A (Issuer) to Node B (Trader Alpha) -->
+    <path d="M 130 115 C 190 75, 270 75, 330 115" fill="none" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+    <!-- Node B to Node C (Shell Fund) -->
+    <path d="M 360 155 C 370 200, 310 225, 250 225" fill="none" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+    <!-- Node C to Node D (Affiliate / Loopback to A) -->
+    <path d="M 210 220 C 150 220, 110 190, 105 155" fill="none" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+
+    <!-- External Honest Participant for Contrast -->
+    <line x1="400" y1="90" x2="445" y2="60" stroke="#334155" stroke-width="1.5" marker-end="url(#arrowGray)"/>
+    <circle cx="455" cy="50" r="14" fill="#1e293b" stroke="#475569"/>
+    <text x="455" y="54" fill="#94a3b8" font-size="9" class="mono" text-anchor="middle">Retail</text>
+
+    <!-- Node A: Generator / Issuer -->
+    <g transform="translate(100, 130)">
+      <circle cx="0" cy="0" r="28" fill="url(#nodeGlow)"/>
+      <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+      <text x="0" y="4" fill="#f8fafc" font-size="9" font-weight="700" class="mono" text-anchor="middle">ISSUER</text>
+      <text x="0" y="34" fill="#cbd5e1" font-size="10" font-weight="600" class="sans" text-anchor="middle">ISS-117</text>
+      <text x="0" y="46" fill="#94a3b8" font-size="8" class="mono" text-anchor="middle">TerraVolt</text>
+    </g>
+
+    <!-- Node B: Trader Alpha -->
+    <g transform="translate(360, 130)">
+      <circle cx="0" cy="0" r="28" fill="url(#nodeGlow)"/>
+      <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+      <text x="0" y="4" fill="#f8fafc" font-size="9" font-weight="700" class="mono" text-anchor="middle">BUYER 1</text>
+      <text x="0" y="34" fill="#cbd5e1" font-size="10" font-weight="600" class="sans" text-anchor="middle">Trader A</text>
+      <text x="0" y="46" fill="#94a3b8" font-size="8" class="mono" text-anchor="middle">0xA5c0...9f42</text>
+    </g>
+
+    <!-- Node C: Shell Fund / Intermediary -->
+    <g transform="translate(230, 220)">
+      <circle cx="0" cy="0" r="28" fill="url(#nodeGlow)"/>
+      <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+      <text x="0" y="4" fill="#f8fafc" font-size="9" font-weight="700" class="mono" text-anchor="middle">BUYER 2</text>
+      <text x="0" y="34" fill="#cbd5e1" font-size="10" font-weight="600" class="sans" text-anchor="middle">Kite Trading</text>
+      <text x="0" y="46" fill="#94a3b8" font-size="8" class="mono" text-anchor="middle">0x9B2d...5B77</text>
+    </g>
+
+    <!-- Center Warning Pill -->
+    <rect x="175" y="125" width="110" height="26" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="230" y="142" fill="#fca5a5" font-size="10" font-weight="700" class="mono" text-anchor="middle">WASH TRADE LOOP</text>
+  </g>
+
+  <!-- Right: Forensic Intelligence Metrics Panel -->
+  <g transform="translate(550, 68)">
+    <rect width="295" height="240" rx="12" fill="#131d31" stroke="#283858" stroke-width="1"/>
+    <rect x="14" y="14" width="130" height="20" rx="4" fill="#3b82f6" fill-opacity="0.2"/>
+    <text x="79" y="28" fill="#60a5fa" font-size="10" font-weight="700" class="mono" text-anchor="middle">GRAPH METRICS</text>
+
+    <!-- Metric 1: Cycle Length -->
+    <text x="16" y="58" fill="#94a3b8" font-size="11" class="sans">Elementary Cycle Length</text>
+    <text x="16" y="78" fill="#f87171" font-size="16" font-weight="700" class="mono">3 Hops (Closed Loop)</text>
+
+    <!-- Metric 2: Transfer Velocity -->
+    <text x="16" y="106" fill="#94a3b8" font-size="11" class="sans">Transfer Velocity vs Baseline</text>
+    <text x="16" y="126" fill="#f59e0b" font-size="16" font-weight="700" class="mono">4.8x Market Median</text>
+
+    <!-- Metric 3: Graph Density -->
+    <text x="16" y="154" fill="#94a3b8" font-size="11" class="sans">Community Subgraph Density</text>
+    <text x="16" y="174" fill="#ef4444" font-size="16" font-weight="700" class="mono">3.4x (Threshold: 3.0x)</text>
+
+    <line x1="16" y1="190" x2="279" y2="190" stroke="#283858" stroke-width="1"/>
+
+    <!-- Verdict -->
+    <rect x="14" y="200" width="267" height="28" rx="6" fill="#7f1d1d" fill-opacity="0.4" stroke="#dc2626"/>
+    <text x="147" y="218" fill="#fecaca" font-size="11" font-weight="700" class="sans" text-anchor="middle">SUSPICIOUS TRADING CYCLE DETECTED</text>
+  </g>
+</svg>

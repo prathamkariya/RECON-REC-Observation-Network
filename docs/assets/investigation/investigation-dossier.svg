@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 270" width="100%" height="100%">
+  <defs>
+    <linearGradient id="dhBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c1322"/>
+      <stop offset="100%" stop-color="#060a14"/>
+    </linearGradient>
+    <linearGradient id="scoreGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+    <marker id="dhArrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <style>
+    .mono { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+
+  <!-- Frame Background -->
+  <rect width="880" height="270" rx="16" fill="url(#dhBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title Bar -->
+  <rect x="1" y="1" width="878" height="40" rx="15" fill="#111c30" fill-opacity="0.8"/>
+  <circle cx="28" cy="21" r="5" fill="#ef4444"/>
+  <text x="44" y="25" fill="#f8fafc" font-size="12" font-weight="600" class="sans" letter-spacing="0.5">FORENSIC INVESTIGATION DOSSIER: EVIDENCE HIERARCHY</text>
+  <text x="850" y="25" fill="#94a3b8" font-size="10" font-weight="600" class="mono" text-anchor="end">EXPLAINABILITY PIPELINE</text>
+
+  <!-- Level 1: Composite Risk -->
+  <g transform="translate(30, 58)">
+    <rect width="145" height="185" rx="10" fill="#182338" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="14" width="70" height="20" rx="4" fill="#3b82f6" fill-opacity="0.2"/>
+    <text x="47" y="28" fill="#60a5fa" font-size="10" font-weight="700" class="mono" text-anchor="middle">LEVEL 1</text>
+    <text x="14" y="56" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Unified Risk</text>
+    
+    <rect x="14" y="68" width="117" height="60" rx="8" fill="url(#scoreGlow)"/>
+    <text x="72" y="102" fill="#ffffff" font-size="26" font-weight="800" class="mono" text-anchor="middle">99</text>
+    <text x="72" y="118" fill="#fca5a5" font-size="10" font-weight="700" class="mono" text-anchor="middle">CRITICAL RISK</text>
+    
+    <text x="14" y="148" fill="#94a3b8" font-size="10" class="sans">Noisy-OR score</text>
+    <text x="14" y="164" fill="#94a3b8" font-size="10" class="mono">threshold: ≥ 50</text>
+  </g>
+
+  <!-- Arrow 1 to 2 -->
+  <path d="M 180 150 L 206 150" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#dhArrow)"/>
+
+  <!-- Level 2: Primary Evidence (Smoking Gun) -->
+  <g transform="translate(214, 58)">
+    <rect width="185" height="185" rx="10" fill="#221524" stroke="#7f1d1d" stroke-width="1.2"/>
+    <rect x="12" y="14" width="105" height="20" rx="4" fill="#ef4444" fill-opacity="0.2"/>
+    <text x="64" y="28" fill="#f87171" font-size="10" font-weight="700" class="mono" text-anchor="middle">LEVEL 2: PRIMARY</text>
+    <text x="14" y="56" fill="#f87171" font-size="13" font-weight="700" class="sans">Physics Invalidation</text>
+
+    <rect x="12" y="68" width="161" height="54" rx="6" fill="#170d18" stroke="#ef4444" stroke-opacity="0.3"/>
+    <text x="18" y="86" fill="#fca5a5" font-size="10" font-weight="700" class="mono">PHYSICAL_MISMATCH</text>
+    <text x="18" y="102" fill="#e2e8f0" font-size="11" class="sans">Night claim: 02:13 IST</text>
+    <text x="18" y="115" fill="#94a3b8" font-size="10" class="mono">Irradiance: 0.0 W/m²</text>
+
+    <text x="14" y="146" fill="#fca5a5" font-size="10" class="sans">Hard physical constraint</text>
+    <text x="14" y="162" fill="#94a3b8" font-size="10" class="sans">Takes precedent in ranking</text>
+  </g>
+
+  <!-- Arrow 2 to 3 -->
+  <path d="M 404 150 L 430 150" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#dhArrow)"/>
+
+  <!-- Level 3: Supporting Signals -->
+  <g transform="translate(438, 58)">
+    <rect width="195" height="185" rx="10" fill="#182338" stroke="#334155" stroke-width="1"/>
+    <rect x="12" y="14" width="120" height="20" rx="4" fill="#8b5cf6" fill-opacity="0.2"/>
+    <text x="72" y="28" fill="#c084fc" font-size="10" font-weight="700" class="mono" text-anchor="middle">LEVEL 3: SUPPORTING</text>
+    <text x="14" y="56" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Network &amp; Stat Drift</text>
+
+    <rect x="12" y="68" width="171" height="66" rx="6" fill="#0f172a"/>
+    <text x="18" y="86" fill="#cbd5e1" font-size="10" class="mono">• Cycle: ISS-117 Loop</text>
+    <text x="18" y="102" fill="#cbd5e1" font-size="10" class="mono">• Benford Law: p &lt; 0.03</text>
+    <text x="18" y="118" fill="#cbd5e1" font-size="10" class="mono">• Peer Drift: +6.4σ cliff</text>
+
+    <text x="14" y="152" fill="#94a3b8" font-size="10" class="sans">Corroborating topology</text>
+    <text x="14" y="168" fill="#94a3b8" font-size="10" class="sans">and statistical context</text>
+  </g>
+
+  <!-- Arrow 3 to 4 -->
+  <path d="M 638 150 L 664 150" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#dhArrow)"/>
+
+  <!-- Level 4: Plain English Synthesis & Decision -->
+  <g transform="translate(672, 58)">
+    <rect width="178" height="185" rx="10" fill="#152824" stroke="#059669" stroke-width="1.2"/>
+    <rect x="12" y="14" width="112" height="20" rx="4" fill="#10b981" fill-opacity="0.2"/>
+    <text x="68" y="28" fill="#34d399" font-size="10" font-weight="700" class="mono" text-anchor="middle">LEVEL 4: SYNTHESIS</text>
+    <text x="14" y="56" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Auditor Dossier</text>
+
+    <rect x="12" y="68" width="154" height="68" rx="6" fill="#0a1d18"/>
+    <text x="18" y="86" fill="#34d399" font-size="10" font-weight="700" class="sans">Explainable Finding:</text>
+    <text x="18" y="100" fill="#cbd5e1" font-size="9.5" class="sans">"Night generation</text>
+    <text x="18" y="114" fill="#cbd5e1" font-size="9.5" class="sans">physically impossible</text>
+    <text x="18" y="128" fill="#cbd5e1" font-size="9.5" class="sans">at 0 W/m² irradiance."</text>
+
+    <rect x="12" y="146" width="154" height="26" rx="5" fill="#ef4444"/>
+    <text x="89" y="163" fill="#ffffff" font-size="10" font-weight="800" class="sans" text-anchor="middle">DISQUALIFIED</text>
+  </g>
+</svg>

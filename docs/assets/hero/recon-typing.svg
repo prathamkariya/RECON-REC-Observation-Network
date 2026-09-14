@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 44" width="100%" height="44">
+  <style>
+    .mono {
+      font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+      font-size: 16px;
+      font-weight: 600;
+      fill: #38bdf8;
+      text-anchor: middle;
+      letter-spacing: 0.5px;
+    }
+    .cursor {
+      fill: #10b981;
+      animation: blink 0.9s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+
+  <!-- Ground pill -->
+  <rect x="10" y="2" width="740" height="40" rx="20" fill="#0b1324" stroke="#1e293b" stroke-width="1.2"/>
+  
+  <!-- Terminal Prompt Symbol -->
+  <circle cx="36" cy="22" r="4.5" fill="#10b981"/>
+  <text x="54" y="27" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">&gt;_</text>
+
+  <!-- Cycling Animated Text Lines via SVG animation -->
+  <text x="400" y="27" class="mono">
+    <tspan>
+      <animate attributeName="opacity" 
+        values="0;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0" 
+        dur="18s" repeatCount="indefinite" />
+      AI-Powered REC Fraud Intelligence &amp; Forensic Surveillance
+    </tspan>
+  </text>
+  <text x="400" y="27" class="mono">
+    <tspan>
+      <animate attributeName="opacity" 
+        values="0;0;0;1;1;1;0;0;0;0;0;0;0;0;0;0;0;0" 
+        dur="18s" repeatCount="indefinite" />
+      Tri-Witness Cross Examination: Physics · Statistics · Custody
+    </tspan>
+  </text>
+  <text x="400" y="27" class="mono">
+    <tspan>
+      <animate attributeName="opacity" 
+        values="0;0;0;0;0;0;1;1;1;0;0;0;0;0;0;0;0;0" 
+        dur="18s" repeatCount="indefinite" />
+      Physical Truth: Satellite Solar Elevation &amp; Clear-Sky Irradiance
+    </tspan>
+  </text>
+  <text x="400" y="27" class="mono">
+    <tspan>
+      <animate attributeName="opacity" 
+        values="0;0;0;0;0;0;0;0;0;1;1;1;0;0;0;0;0;0" 
+        dur="18s" repeatCount="indefinite" />
+      Custody Forensics: Directed Multigraph Wash-Trading Cycles
+    </tspan>
+  </text>
+  <text x="400" y="27" class="mono">
+    <tspan>
+      <animate attributeName="opacity" 
+        values="0;0;0;0;0;0;0;0;0;0;0;0;1;1;1;0;0;0" 
+        dur="18s" repeatCount="indefinite" />
+      Probabilistic Noisy-OR Fusion: Calibrated Fraud Score [0–100]
+    </tspan>
+  </text>
+  <text x="400" y="27" class="mono">
+    <tspan>
+      <animate attributeName="opacity" 
+        values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;1;1;1" 
+        dur="18s" repeatCount="indefinite" />
+      Cryptographic Integrity: ERC-721 Smart Contract on Sepolia
+    </tspan>
+  </text>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="statBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1324"/>
+      <stop offset="100%" stop-color="#040711"/>
+    </linearGradient>
+    <linearGradient id="scatterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; }
+  </style>
+
+  <!-- Frame Background -->
+  <rect width="860" height="300" rx="14" fill="url(#statBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title Bar -->
+  <rect x="1" y="1" width="858" height="40" rx="13" fill="#0f172a" fill-opacity="0.8"/>
+  <circle cx="26" cy="20" r="5" fill="#38bdf8"/>
+  <text x="42" y="24" fill="#f8fafc" font-size="12" font-weight="700" class="sans" letter-spacing="0.5">STATISTICAL INTELLIGENCE: ISOLATION FOREST + PLATT CALIBRATION</text>
+  <rect x="710" y="9" width="134" height="22" rx="4" fill="#0284c7" fill-opacity="0.2"/>
+  <text x="777" y="24" fill="#7dd3fc" font-size="10" font-weight="700" class="mono" text-anchor="middle">9 DOMAIN FEATURES</text>
+
+  <!-- Left: 2D Feature Space Scatter Plot Simulation -->
+  <g transform="translate(30, 56)">
+    <rect width="460" height="220" rx="10" fill="#080e1a" stroke="#1e293b" stroke-width="1"/>
+    
+    <!-- Coordinate grid lines -->
+    <line x1="60" y1="20" x2="60" y2="180" stroke="#1e293b" stroke-width="1"/>
+    <line x1="60" y1="180" x2="430" y2="180" stroke="#1e293b" stroke-width="1"/>
+    <line x1="60" y1="100" x2="430" y2="100" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3"/>
+    <line x1="245" y1="20" x2="245" y2="180" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+    <!-- Axis labels -->
+    <text x="50" y="26" fill="#64748b" font-size="9" class="mono" text-anchor="end">Capacity Cliff (σ)</text>
+    <text x="430" y="196" fill="#64748b" font-size="9" class="mono" text-anchor="end">Issuance Velocity →</text>
+
+    <!-- Normal Distribution Cluster (Green/Cyan Dots) -->
+    <ellipse cx="180" cy="140" rx="65" ry="32" fill="#10b981" fill-opacity="0.08" stroke="#10b981" stroke-opacity="0.25" stroke-dasharray="4,4"/>
+    <text x="180" y="144" fill="#10b981" font-size="10" font-weight="600" class="mono" text-anchor="middle">PEER BASELINE CLUSTER</text>
+    
+    <!-- Normal Inliers -->
+    <circle cx="150" cy="130" r="3.5" fill="#38bdf8" opacity="0.8"/>
+    <circle cx="165" cy="145" r="4" fill="#34d399" opacity="0.8"/>
+    <circle cx="185" cy="125" r="3" fill="#38bdf8" opacity="0.8"/>
+    <circle cx="195" cy="150" r="3.5" fill="#34d399" opacity="0.8"/>
+    <circle cx="170" cy="135" r="4.5" fill="#10b981" opacity="0.9"/>
+    <circle cx="210" cy="138" r="3" fill="#38bdf8" opacity="0.8"/>
+    <circle cx="140" cy="148" r="3.5" fill="#34d399" opacity="0.8"/>
+    <circle cx="200" cy="128" r="4" fill="#10b981" opacity="0.8"/>
+
+    <!-- Isolated Anomaly Points (Red) -->
+    <g transform="translate(370, 48)">
+      <circle cx="0" cy="0" r="14" fill="#ef4444" fill-opacity="0.2"/>
+      <circle cx="0" cy="0" r="6" fill="#ef4444"/>
+      <circle cx="0" cy="0" r="2" fill="#ffffff"/>
+      <line x1="0" y1="0" x2="-35" y2="25" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,2"/>
+      <rect x="-140" y="24" width="130" height="22" rx="4" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+      <text x="-75" y="38" fill="#fca5a5" font-size="9" font-weight="700" class="mono" text-anchor="middle">ANOMALY: +6.4σ CLIFF</text>
+    </g>
+
+    <g transform="translate(395, 110)">
+      <circle cx="0" cy="0" r="10" fill="#f59e0b" fill-opacity="0.2"/>
+      <circle cx="0" cy="0" r="5" fill="#f59e0b"/>
+      <text x="12" y="4" fill="#fcd34d" font-size="9" class="mono">Benford Drift</text>
+    </g>
+  </g>
+
+  <!-- Right: Feature Engineering & Model Weights Panel -->
+  <g transform="translate(510, 56)">
+    <rect width="320" height="220" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="16" y="28" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Engineered Signal Pipeline</text>
+    <text x="16" y="44" fill="#94a3b8" font-size="10" class="mono">Trained on 16.9% synthetic fraud benchmark</text>
+    <line x1="16" y1="54" x2="304" y2="54" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Feature 1 -->
+    <text x="16" y="74" fill="#e2e8f0" font-size="11" class="sans">Capacity Factor Drift</text>
+    <rect x="180" y="65" width="120" height="10" rx="3" fill="#1e293b"/>
+    <rect x="180" y="65" width="112" height="10" rx="3" fill="#ef4444"/>
+    <text x="16" y="86" fill="#64748b" font-size="9" class="mono">AUC: 0.941 · Primary Volumetric Signal</text>
+
+    <!-- Feature 2 -->
+    <text x="16" y="110" fill="#e2e8f0" font-size="11" class="sans">Issuance Velocity vs Peers</text>
+    <rect x="180" y="101" width="120" height="10" rx="3" fill="#1e293b"/>
+    <rect x="180" y="101" width="98" height="10" rx="3" fill="#38bdf8"/>
+    <text x="16" y="122" fill="#64748b" font-size="9" class="mono">AUC: 0.887 · Rapid Batch Timing</text>
+
+    <!-- Feature 3 -->
+    <text x="16" y="146" fill="#e2e8f0" font-size="11" class="sans">Benford First-Digit p-value</text>
+    <rect x="180" y="137" width="120" height="10" rx="3" fill="#1e293b"/>
+    <rect x="180" y="137" width="84" height="10" rx="3" fill="#f59e0b"/>
+    <text x="16" y="158" fill="#64748b" font-size="9" class="mono">AUC: 0.832 · Synthetic Number Detection</text>
+
+    <!-- Bottom Result Strip -->
+    <rect x="14" y="174" width="292" height="32" rx="6" fill="#172554" stroke="#1d4ed8"/>
+    <text x="24" y="194" fill="#93c5fd" font-size="10.5" font-weight="700" class="mono">OUTPUT: Platt-scaled risk score r_stat ∈ [0, 1]</text>
+  </g>
+</svg>

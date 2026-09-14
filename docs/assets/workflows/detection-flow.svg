@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="detBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#040711"/>
+    </linearGradient>
+    <filter id="pGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <style>
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; }
+  </style>
+
+  <!-- Ground -->
+  <rect width="900" height="240" rx="14" fill="url(#detBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title Bar -->
+  <rect x="1" y="1" width="898" height="38" rx="13" fill="#0f172a" fill-opacity="0.8"/>
+  <circle cx="26" cy="19" r="4.5" fill="#ef4444"/>
+  <text x="40" y="23" fill="#f8fafc" font-size="11.5" font-weight="700" class="sans" letter-spacing="0.5">FORENSIC SURVEILLANCE PIPELINE: DETECTION IN ACTION</text>
+  <text x="870" y="23" fill="#94a3b8" font-size="10.5" class="mono" text-anchor="end">AUTOMATED REAL-TIME TRACE</text>
+
+  <!-- Connecting Backbone Rail -->
+  <line x1="120" y1="130" x2="780" y2="130" stroke="#1e293b" stroke-width="3"/>
+
+  <!-- Animated Pulse traveling across the rail -->
+  <circle r="6" fill="#38bdf8" filter="url(#pGlow)">
+    <animateMotion path="M 120 130 L 780 130" dur="4.5s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- Node 1: Ingest Claim -->
+  <g transform="translate(100, 130)">
+    <circle cx="0" cy="0" r="28" fill="#0f172a" stroke="#38bdf8" stroke-width="2">
+      <animate attributeName="stroke" values="#38bdf8;#60a5fa;#38bdf8" dur="4.5s" repeatCount="indefinite" />
+    </circle>
+    <text x="0" y="4" fill="#ffffff" font-size="10" font-weight="700" class="mono" text-anchor="middle">INGEST</text>
+    <text x="0" y="42" fill="#cbd5e1" font-size="10" font-weight="600" class="sans" text-anchor="middle">Solar Claim</text>
+    <text x="0" y="54" fill="#64748b" font-size="8.5" class="mono" text-anchor="middle">02:13 IST</text>
+  </g>
+
+  <!-- Node 2: Physical Evaluation -->
+  <g transform="translate(270, 130)">
+    <circle cx="0" cy="0" r="28" fill="#180e14" stroke="#ef4444" stroke-width="2">
+      <animate attributeName="stroke-width" values="1.5;3.5;1.5" dur="4.5s" repeatCount="indefinite" />
+    </circle>
+    <text x="0" y="4" fill="#fca5a5" font-size="10" font-weight="700" class="mono" text-anchor="middle">PHYSICS</text>
+    <text x="0" y="42" fill="#ef4444" font-size="10" font-weight="700" class="sans" text-anchor="middle">0 W/m² Dark</text>
+    <text x="0" y="54" fill="#94a3b8" font-size="8.5" class="mono" text-anchor="middle">r_phys = 0.99</text>
+  </g>
+
+  <!-- Node 3: Statistical Evaluation -->
+  <g transform="translate(440, 130)">
+    <circle cx="0" cy="0" r="28" fill="#18140c" stroke="#f59e0b" stroke-width="2"/>
+    <text x="0" y="4" fill="#fcd34d" font-size="10" font-weight="700" class="mono" text-anchor="middle">STATS</text>
+    <text x="0" y="42" fill="#f59e0b" font-size="10" font-weight="600" class="sans" text-anchor="middle">+6.4σ Cliff</text>
+    <text x="0" y="54" fill="#94a3b8" font-size="8.5" class="mono" text-anchor="middle">r_stat = 0.85</text>
+  </g>
+
+  <!-- Node 4: Custody Network Graph -->
+  <g transform="translate(610, 130)">
+    <circle cx="0" cy="0" r="28" fill="#180e14" stroke="#ef4444" stroke-width="2"/>
+    <text x="0" y="4" fill="#fca5a5" font-size="10" font-weight="700" class="mono" text-anchor="middle">GRAPH</text>
+    <text x="0" y="42" fill="#ef4444" font-size="10" font-weight="700" class="sans" text-anchor="middle">Wash Loop</text>
+    <text x="0" y="54" fill="#94a3b8" font-size="8.5" class="mono" text-anchor="middle">r_graph = 0.70</text>
+  </g>
+
+  <!-- Node 5: Fusion Verdict -->
+  <g transform="translate(780, 130)">
+    <circle cx="0" cy="0" r="32" fill="#3b070c" stroke="#dc2626" stroke-width="2.5" filter="url(#pGlow)">
+      <animate attributeName="r" values="30;34;30" dur="2s" repeatCount="indefinite" />
+    </circle>
+    <text x="0" y="-4" fill="#ffffff" font-size="12" font-weight="900" class="mono" text-anchor="middle">99</text>
+    <text x="0" y="10" fill="#fca5a5" font-size="7.5" font-weight="800" class="mono" text-anchor="middle">CRITICAL</text>
+    <text x="0" y="46" fill="#ef4444" font-size="11" font-weight="800" class="sans" text-anchor="middle">DISQUALIFIED</text>
+    <text x="0" y="58" fill="#94a3b8" font-size="8.5" class="mono" text-anchor="middle">Minting Blocked</text>
+  </g>
+</svg>

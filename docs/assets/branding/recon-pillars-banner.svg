@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pbBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090e18"/>
+      <stop offset="100%" stop-color="#04070d"/>
+    </linearGradient>
+    <linearGradient id="pGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; }
+  </style>
+
+  <!-- Ground -->
+  <rect width="860" height="100" rx="12" fill="url(#pbBg)" stroke="#1e293b" stroke-width="1.2"/>
+
+  <!-- Pillar 1: Physical Truth -->
+  <g transform="translate(16, 12)">
+    <rect width="198" height="76" rx="8" fill="#0f172a" fill-opacity="0.6" stroke="#1e293b" stroke-width="1"/>
+    <circle cx="22" cy="24" r="10" fill="#10b981" fill-opacity="0.2"/>
+    <path d="M22 17 L22 31 M15 24 L29 24 M17 19 L27 29 M17 29 L27 19" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="38" y="28" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Physical Truth</text>
+    <text x="14" y="48" fill="#94a3b8" font-size="10" class="sans">Satellite irradiance envelope</text>
+    <text x="14" y="62" fill="#64748b" font-size="9.5" class="mono">&amp; solar elevation angles</text>
+  </g>
+
+  <!-- Pillar 2: Statistical Precision -->
+  <g transform="translate(226, 12)">
+    <rect width="198" height="76" rx="8" fill="#0f172a" fill-opacity="0.6" stroke="#1e293b" stroke-width="1"/>
+    <circle cx="22" cy="24" r="10" fill="#38bdf8" fill-opacity="0.2"/>
+    <path d="M16 28 L20 22 L24 25 L28 18" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="38" y="28" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Statistical Precision</text>
+    <text x="14" y="48" fill="#94a3b8" font-size="10" class="sans">Isolation Forest + Platt</text>
+    <text x="14" y="62" fill="#64748b" font-size="9.5" class="mono">9 peer &amp; velocity features</text>
+  </g>
+
+  <!-- Pillar 3: Network Intelligence -->
+  <g transform="translate(436, 12)">
+    <rect width="198" height="76" rx="8" fill="#0f172a" fill-opacity="0.6" stroke="#1e293b" stroke-width="1"/>
+    <circle cx="22" cy="24" r="10" fill="#c084fc" fill-opacity="0.2"/>
+    <circle cx="17" cy="21" r="2.5" fill="#c084fc"/>
+    <circle cx="27" cy="21" r="2.5" fill="#c084fc"/>
+    <circle cx="22" cy="28" r="2.5" fill="#c084fc"/>
+    <line x1="17" y1="21" x2="27" y2="21" stroke="#c084fc" stroke-width="1"/>
+    <line x1="17" y1="21" x2="22" y2="28" stroke="#c084fc" stroke-width="1"/>
+    <line x1="27" y1="21" x2="22" y2="28" stroke="#c084fc" stroke-width="1"/>
+    <text x="38" y="28" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Network Topology</text>
+    <text x="14" y="48" fill="#94a3b8" font-size="10" class="sans">Custody multigraph cycles</text>
+    <text x="14" y="62" fill="#64748b" font-size="9.5" class="mono">&amp; Louvain cluster density</text>
+  </g>
+
+  <!-- Pillar 4: Cryptographic Trust -->
+  <g transform="translate(646, 12)">
+    <rect width="198" height="76" rx="8" fill="#0f172a" fill-opacity="0.6" stroke="#1e293b" stroke-width="1"/>
+    <circle cx="22" cy="24" r="10" fill="#f59e0b" fill-opacity="0.2"/>
+    <rect x="18" y="21" width="8" height="7" rx="1.5" fill="#f59e0b"/>
+    <path d="M19 21 L19 18 C19 16.5, 25 16.5, 25 18 L25 21" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="38" y="28" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Cryptographic Trust</text>
+    <text x="14" y="48" fill="#94a3b8" font-size="10" class="sans">ERC-721 immutable record</text>
+    <text x="14" y="62" fill="#64748b" font-size="9.5" class="mono">&amp; on-chain double-sale stop</text>
+  </g>
+</svg>

@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 380" width="100%" height="100%">
+  <defs>
+    <linearGradient id="wfBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090e1a"/>
+      <stop offset="100%" stop-color="#03060c"/>
+    </linearGradient>
+    <linearGradient id="nodeBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="nodeCyan" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#082f49"/>
+    </linearGradient>
+    <linearGradient id="nodePurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6d28d9"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+    <linearGradient id="nodeGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </linearGradient>
+    <linearGradient id="nodeRed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b91c1c"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </linearGradient>
+    <marker id="wfArrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="wfGreenArrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <style>
+    .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; }
+  </style>
+
+  <!-- Ground -->
+  <rect width="940" height="380" rx="16" fill="url(#wfBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title -->
+  <rect x="1" y="1" width="938" height="42" rx="15" fill="#0f172a" fill-opacity="0.85"/>
+  <circle cx="28" cy="22" r="5" fill="#38bdf8"/>
+  <text x="44" y="26" fill="#f8fafc" font-size="12" font-weight="700" class="sans" letter-spacing="0.5">END-TO-END OBSERVATION, FUSION &amp; VERIFICATION WORKFLOW</text>
+  <text x="910" y="26" fill="#94a3b8" font-size="11" class="mono" text-anchor="end">PIPELINE TOPOLOGY</text>
+
+  <!-- Stage 1: Ingestion -->
+  <g transform="translate(30, 65)">
+    <rect width="140" height="280" rx="10" fill="url(#nodeBlue)" stroke="#1d4ed8" stroke-width="1.2"/>
+    <rect x="10" y="12" width="60" height="18" rx="3" fill="#2563eb" fill-opacity="0.3"/>
+    <text x="40" y="25" fill="#93c5fd" font-size="9" font-weight="700" class="mono" text-anchor="middle">STEP 01</text>
+    <text x="10" y="52" fill="#f8fafc" font-size="13" font-weight="700" class="sans">REC Claim</text>
+    <text x="10" y="68" fill="#94a3b8" font-size="10.5" class="sans">Submission</text>
+    
+    <line x1="10" y1="80" x2="130" y2="80" stroke="#1e3a8a" stroke-width="1"/>
+
+    <text x="10" y="104" fill="#cbd5e1" font-size="10" class="mono">• Plant ID</text>
+    <text x="10" y="122" fill="#cbd5e1" font-size="10" class="mono">• MWh Claim</text>
+    <text x="10" y="140" fill="#cbd5e1" font-size="10" class="mono">• GPS Lat/Lon</text>
+    <text x="10" y="158" fill="#cbd5e1" font-size="10" class="mono">• Timestamp</text>
+    <text x="10" y="176" fill="#cbd5e1" font-size="10" class="mono">• Beneficiary</text>
+
+    <rect x="10" y="210" width="120" height="54" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="16" y="228" fill="#60a5fa" font-size="9.5" font-weight="700" class="mono">PRE-FLIGHT</text>
+    <text x="16" y="244" fill="#94a3b8" font-size="8.5" class="sans">Zero gas spent</text>
+    <text x="16" y="256" fill="#94a3b8" font-size="8.5" class="sans">before scoring</text>
+  </g>
+
+  <!-- Connectors from Step 1 to Step 2 (Three branches) -->
+  <path d="M 170 145 L 205 105 L 220 105" fill="none" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#wfArrow)"/>
+  <path d="M 170 205 L 220 205" fill="none" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#wfArrow)"/>
+  <path d="M 170 265 L 205 305 L 220 305" fill="none" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#wfArrow)"/>
+
+  <!-- Stage 2: Tri-Witness Engines -->
+  <!-- 2A: Statistical -->
+  <g transform="translate(225, 65)">
+    <rect width="210" height="80" rx="8" fill="url(#nodeCyan)" stroke="#0284c7" stroke-width="1.2"/>
+    <text x="12" y="24" fill="#38bdf8" font-size="10" font-weight="700" class="mono">STATISTICAL ENGINE</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Isolation Forest + Platt</text>
+    <text x="12" y="60" fill="#94a3b8" font-size="9.5" class="sans">9 features · Cliff detection · Benford</text>
+    <text x="198" y="72" fill="#7dd3fc" font-size="10" font-weight="700" class="mono" text-anchor="end">r_stat</text>
+  </g>
+
+  <!-- 2B: Network -->
+  <g transform="translate(225, 165)">
+    <rect width="210" height="80" rx="8" fill="url(#nodePurple)" stroke="#8b5cf6" stroke-width="1.2"/>
+    <text x="12" y="24" fill="#c084fc" font-size="10" font-weight="700" class="mono">NETWORK ENGINE</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Custody Graph Forensics</text>
+    <text x="12" y="60" fill="#94a3b8" font-size="9.5" class="sans">Cycle detection · Louvain density</text>
+    <text x="198" y="72" fill="#d8b4fe" font-size="10" font-weight="700" class="mono" text-anchor="end">r_graph</text>
+  </g>
+
+  <!-- 2C: Physical -->
+  <g transform="translate(225, 265)">
+    <rect width="210" height="80" rx="8" fill="url(#nodeGreen)" stroke="#10b981" stroke-width="1.2"/>
+    <text x="12" y="24" fill="#34d399" font-size="10" font-weight="700" class="mono">PHYSICAL ENGINE</text>
+    <text x="12" y="44" fill="#f8fafc" font-size="12" font-weight="700" class="sans">Open-Meteo Satellite API</text>
+    <text x="12" y="60" fill="#94a3b8" font-size="9.5" class="sans">Clear-sky ceiling · Solar elevation</text>
+    <text x="198" y="72" fill="#a7f3d0" font-size="10" font-weight="700" class="mono" text-anchor="end">r_phys</text>
+  </g>
+
+  <!-- Convergence to Fusion Layer -->
+  <path d="M 435 105 L 460 105 L 480 180" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+  <path d="M 435 205 L 480 205" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+  <path d="M 435 305 L 460 305 L 480 230" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+
+  <!-- Stage 3: Risk Fusion & Dossier -->
+  <g transform="translate(485, 65)">
+    <rect width="190" height="280" rx="10" fill="#131e34" stroke="#f43f5e" stroke-width="1.2"/>
+    <rect x="10" y="12" width="60" height="18" rx="3" fill="#be123c" fill-opacity="0.3"/>
+    <text x="40" y="25" fill="#fda4af" font-size="9" font-weight="700" class="mono" text-anchor="middle">STEP 02</text>
+    
+    <text x="10" y="52" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Probabilistic Fusion</text>
+    <text x="10" y="68" fill="#fda4af" font-size="10" font-weight="700" class="mono">R = 1 - ∏(1 - r_i)</text>
+    
+    <line x1="10" y1="80" x2="180" y2="80" stroke="#283858" stroke-width="1"/>
+
+    <!-- Signal Sorter Box -->
+    <rect x="10" y="92" width="170" height="74" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="16" y="110" fill="#6ee7b7" font-size="9.5" font-weight="700" class="mono">SIGNAL RANKING:</text>
+    <text x="16" y="126" fill="#cbd5e1" font-size="8.5" class="mono">1. PHYSICAL MISMATCH</text>
+    <text x="16" y="139" fill="#cbd5e1" font-size="8.5" class="mono">2. GRAPH CYCLE LOOP</text>
+    <text x="16" y="152" fill="#cbd5e1" font-size="8.5" class="mono">3. STATISTICAL CLIFF</text>
+
+    <!-- LLM Explanation Box -->
+    <rect x="10" y="176" width="170" height="88" rx="6" fill="#0f172a" stroke="#1e293b"/>
+    <text x="16" y="196" fill="#f59e0b" font-size="9.5" font-weight="700" class="mono">EXPLAINER DOSSIER</text>
+    <text x="16" y="214" fill="#e2e8f0" font-size="9" class="sans">Claude 3.5 Sonnet /</text>
+    <text x="16" y="228" fill="#e2e8f0" font-size="9" class="sans">Deterministic Fallback</text>
+    <text x="16" y="246" fill="#94a3b8" font-size="8.5" class="mono">Plain-English reason</text>
+  </g>
+
+  <!-- Connectors to Trust & Verification -->
+  <path d="M 675 145 L 710 145" fill="none" stroke="#10b981" stroke-width="2" marker-end="url(#wfGreenArrow)"/>
+  <path d="M 675 265 L 710 265" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#wfArrow)"/>
+
+  <!-- Stage 4A: Clean On-Chain Minting (Top Right) -->
+  <g transform="translate(715, 65)">
+    <rect width="195" height="130" rx="10" fill="#042218" stroke="#10b981" stroke-width="1.2"/>
+    <rect x="10" y="10" width="80" height="18" rx="3" fill="#10b981" fill-opacity="0.25"/>
+    <text x="50" y="23" fill="#6ee7b7" font-size="9" font-weight="700" class="mono" text-anchor="middle">CLEAN (R &lt; 50)</text>
+    <text x="10" y="48" fill="#f8fafc" font-size="13" font-weight="700" class="sans">On-Chain Mint</text>
+    <text x="10" y="64" fill="#a7f3d0" font-size="10" class="mono">RECRegistry.sol (ERC-721)</text>
+
+    <text x="10" y="86" fill="#cbd5e1" font-size="9" class="sans">• Unique keccak256 hash</text>
+    <text x="10" y="100" fill="#cbd5e1" font-size="9" class="sans">• Fraud score baked into token</text>
+    <text x="10" y="114" fill="#10b981" font-size="9" font-weight="700" class="mono">VERIFIED AT /verify</text>
+  </g>
+
+  <!-- Stage 4B: Quarantined / Rejected (Bottom Right) -->
+  <g transform="translate(715, 215)">
+    <rect width="195" height="130" rx="10" fill="#2d080c" stroke="#dc2626" stroke-width="1.2"/>
+    <rect x="10" y="10" width="86" height="18" rx="3" fill="#ef4444" fill-opacity="0.25"/>
+    <text x="53" y="23" fill="#fca5a5" font-size="9" font-weight="700" class="mono" text-anchor="middle">FLAGGED (R ≥ 50)</text>
+    <text x="10" y="48" fill="#f8fafc" font-size="13" font-weight="700" class="sans">Audit Quarantine</text>
+    <text x="10" y="64" fill="#fca5a5" font-size="10" class="mono">Rejection Recorded</text>
+
+    <text x="10" y="86" fill="#cbd5e1" font-size="9" class="sans">• Blocked from public trading</text>
+    <text x="10" y="100" fill="#cbd5e1" font-size="9" class="sans">• Hash-chain audit logged</text>
+    <text x="10" y="114" fill="#ef4444" font-size="9" font-weight="700" class="mono">DISQUALIFIED RECORD</text>
+  </g>
+</svg>
