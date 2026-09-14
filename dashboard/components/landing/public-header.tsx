@@ -13,10 +13,11 @@ const LINKS = [
   { href: "/#registry", label: "Live registry" },
   { href: "/how-it-works", label: "How it works", key: "how-it-works" },
   { href: "/verify", label: "Verify", key: "verify" },
+  { href: "/about", label: "About", key: "about" },
 ];
 
 /** Floating liquid-glass pill. Condenses (tighter, more opaque) once the page scrolls. */
-export function PublicHeader({ current }: { current?: "how-it-works" | "verify" }) {
+export function PublicHeader({ current }: { current?: "how-it-works" | "verify" | "about" }) {
   const { scrollY } = useScroll();
   const [condensed, setCondensed] = useState(false);
   const [open, setOpen] = useState(false);

@@ -46,6 +46,7 @@ export function SiteFooter() {
         <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-recon-ink-dim">
           <Link href="/how-it-works" className="hover:text-recon-ink">How it works</Link>
           <Link href="/verify" className="hover:text-recon-ink">Verify</Link>
+          <Link href="/about" className="hover:text-recon-ink">About</Link>
           <Link href="/dashboard" className="hover:text-recon-ink">Dashboard</Link>
           <Link href="/signin" className="hover:text-recon-ink">Sign in</Link>
         </nav>
